@@ -11,3 +11,6 @@ are correctly installed.
 
 FILES
 -----
+device.cpp / device.h : the abstracted freenect device class
+cups.cpp / cups.h : functions to help identify and located cups
+main.cpp : the main file
