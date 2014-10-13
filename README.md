@@ -5,6 +5,7 @@
 1. Install OpenCV
 2. Install libfreeenct
 3. Install Eigen
+4. Install FTDI drivers http://www.ftdichip.com/Drivers/VCP.htm
 
 If Eigen libraries are not found, run the following commands:
 
@@ -12,7 +13,7 @@ If Eigen libraries are not found, run the following commands:
 * sudo ln -sf eigen3/Eigen Eigen
 * sudo ln -sf eigen3/unsupported unsupport
 
-Preferably package manager (use homebrew on OSX) - this ensures that dependencies
+Preferably use a package manager (use homebrew on OSX) - this ensures that dependencies
 are correctly installed.
 
 ###FILES
