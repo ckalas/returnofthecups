@@ -2,8 +2,8 @@ all: main
 
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
-	CFLAGS=-fPIC -g -Wall  $(shell pkg-config --cflags opencv) -I /usr/local/include/libusb-1.0/ 
-	LIBS = $(shell pkg-config --libs opencv)
+	CFLAGS=-fPIC -g -Wall  `pkg-config --cflags opencv` -I /usr/local/include/libusb-1.0/ 
+	LIBS = `pkg-config --libs opencv`
 	INCLUDE = -I /usr/local/include/libfreenect
 	FREE_LIBS = -L/usr/local/lib -lfreenect
 else
@@ -14,8 +14,8 @@ else
 endif
 
 
-main: device.cpp cups.cpp main.cpp 
-	$(CXX) $(INCLUDE) $(CFLAGS) $? -o $@  $(LIBS) $(FREE_LIBS) 
+main: device.o cups.o main.o 
+	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS) 
 
 %.o: %.cpp
 	$(CXX) -c $(CFLAGS) $< -o $@

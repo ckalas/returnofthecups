@@ -43,3 +43,12 @@ bool MyFreenectDevice::getDepth(Mat& output) {
 			return false;
 		}
 	}
+
+void MyFreenectDevice::getCameraParams(Mat *mtx, Mat *dist, Mat *mtxInv) {
+	// hard coded in values
+	double camera[] = {507.10760296, 0, 318.69253398, 0,512.9704932, 220.92629737, 0,0,1};
+	double distCoeffs[] = {0.14619644,-0.24519646, -0.02039532, 0.00233164, -0.00931531};
+	*mtx = Mat(3,3, CV_64F,camera);
+	*dist = Mat(5,1,CV_64F, distCoeffs);
+	*mtxInv = mtx->inv();
+}

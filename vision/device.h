@@ -46,6 +46,7 @@ class MyFreenectDevice : public Freenect::FreenectDevice {
 		void DepthCallback(void* _depth, uint32_t timestamp);
 		bool getVideo(Mat& output);
 		bool getDepth(Mat& output);
+		void getCameraParams(Mat *mtx, Mat *dist, Mat *mtxInv) ;
 
 	private:
 		std::vector<uint8_t> m_buffer_depth;
@@ -54,6 +55,7 @@ class MyFreenectDevice : public Freenect::FreenectDevice {
 		Mat depthMat;
 		Mat rgbMat;
 		Mat ownMat;
+		//Mat dist = zeros(8, 1, CV_64F);
 		myMutex m_rgb_mutex;
 		myMutex m_depth_mutex;
 		bool m_new_rgb_frame;

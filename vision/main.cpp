@@ -24,6 +24,8 @@ int main(int argc, char **argv) {
 	Mat depthf (Size(640,480),CV_8UC1);
 	Mat rgbMat(Size(640,480),CV_8UC3,Scalar(0));
 	Mat ownMat(Size(640,480),CV_8UC3,Scalar(0));
+
+	Mat cameraMatrix, dist, cameraInv;
 	
 	Freenect::Freenect freenect;
 	MyFreenectDevice &device = freenect.createDevice<MyFreenectDevice>(0);
@@ -32,7 +34,7 @@ int main(int argc, char **argv) {
 	namedWindow("depth",CV_WINDOW_AUTOSIZE);
 	device.startVideo();
 	device.startDepth();
-
+	device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
 	while (!die) {
 		device.getVideo(rgbMat);
 		device.getDepth(depthMat);
