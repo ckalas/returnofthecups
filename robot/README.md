@@ -7,7 +7,6 @@ http://youngmok.com/simple-c-code-for-dynamixel-servo-motor/
 
 Click the Download and check the file for understanding how to use.
 
-# Andy check the new folder i added
 
 <CPP-AXControl from http://softwaresouls.com/softwaresouls/2012/03/05/linux-c-dynamixel-reading-and-writing-example/>
 
