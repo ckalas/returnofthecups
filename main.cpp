@@ -1,4 +1,3 @@
-
 #include "cups.h"
 #include "device.h"
 #include <iostream>
