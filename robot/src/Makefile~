@@ -1,0 +1,4 @@
+LIBS = -L../lib/ -ldxl
+
+
+all
