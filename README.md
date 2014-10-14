@@ -16,4 +16,4 @@ are correctly installed.
 * main.cpp : the main program
 
 ####Robot
-<This required a rebuild in the Multi_Dynamixel_Robot_Control folder - need to make a better Makefile without the QT rubbish>
+<p>This required a rebuild in the Multi_Dynamixel_Robot_Control folder - need to make a better Makefile without the QT rubbish</p>

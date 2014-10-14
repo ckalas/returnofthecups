@@ -20,6 +20,8 @@ CMulti_DNMX_Motor::~CMulti_DNMX_Motor()
 
 bool CMulti_DNMX_Motor::initialization(baudnum){
     
+    // make variable array lengths
+
     //int GoalPos[2] = {0, 4095}; // for Ex series
     deviceIndex = 0;
     PresentPos[0] = 0;
