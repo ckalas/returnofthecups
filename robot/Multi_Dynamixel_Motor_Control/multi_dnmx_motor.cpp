@@ -18,7 +18,7 @@ CMulti_DNMX_Motor::~CMulti_DNMX_Motor()
 }
 
 
-bool CMulti_DNMX_Motor::initialization(baudnum){
+bool CMulti_DNMX_Motor::initialization(int baudnum){
     
     // make variable array lengths
 

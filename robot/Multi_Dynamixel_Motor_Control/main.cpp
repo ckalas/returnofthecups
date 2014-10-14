@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     int goal_pos[4] ={500,500,500,500};
     int curr_pos[4] ={0,0,0,0};
-    int temp;
+    //int temp;
 
     // init with baud 20k, refer to bauds.txt for mapping
     Motors.initialization(9);
