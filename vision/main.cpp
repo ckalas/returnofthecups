@@ -38,17 +38,25 @@ int main(int argc, char **argv) {
 	device.startDepth();
 	device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
 	while (!die) {
+		// Get new frames
 		device.getVideo(rgbMat);
 		device.getDepth(depthMat);
 
-		detect_cups(&rgbMat, rectCup);
+		//detect_cups(&rgbMat, rectCup);
 
 		cv::imshow("rgb", rgbMat);
 		cv::moveWindow("rgb", 0, 0);
 
 		depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
+		// Detect and locate cup/s
+		// detect_cups(&rgbMat, &depthMat, rectCup, &cameraInv);
+
+		cv::imshow("rgb", rgbMat);
+		cv::moveWindow("rgb", 0, 0);
+
 		cv::imshow("depth",depthf); 
 		cv::moveWindow("depth", 650, 0);
+
 		char k = cvWaitKey(5);
 
 		if( k == 'q' || k == 'Q' ){
