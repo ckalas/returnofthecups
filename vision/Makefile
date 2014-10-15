@@ -1,4 +1,5 @@
 all: main
+	./main
 
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
