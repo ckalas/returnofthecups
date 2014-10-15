@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
 
     // Variables to determine FPS
     long int e1, e2;
+    double t;
     int fps;
 
     // Load classifier
@@ -69,7 +70,8 @@ int main(int argc, char **argv) {
 	// Calculate the fps and finding the time diff executing the code
 	// in between
 	e2 = cv::getTickCount();
-	fps = int( 1 / (e2 - e1) / cv::getTickFrequency() );
+	t = double((e2 - e1) / cv::getTickFrequency());
+	fps = int( 1 / t );
 	cout << "FPS: " << fps << endl;
     }
 
