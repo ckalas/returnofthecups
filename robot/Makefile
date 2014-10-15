@@ -1,6 +1,6 @@
 all: main
-	./main
 
+	./main
 
 
 main: main.o multi_dnmx_motor.o dynamixel.o dxl_hal.o

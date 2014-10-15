@@ -2,11 +2,14 @@
 
 ###INSTALLATION
 
-1. Install OpenCV
-2. Install libfreeenct
+1. opencv
+2. libfreeenct
+3. libftdi
 
-Preferably use a package manager (use homebrew on OSX) - this ensures that dependencies
-are correctly installed.
+<p>Preferably use a package manager (use homebrew on OSX) - this ensures that dependencies
+are correctly installed.</p>
+
+<p>Note to self: need to use libftdi1 in makefile</p>
 
 ###FILES
 

@@ -9,9 +9,9 @@
 #define MULTI_DNMX_MOTOR_H
 
 #include <stdio.h>
-#include <termio.h>
+#include <termios.h>
 #include <unistd.h>
-#include <dynamixel.h>
+#include "dynamixel.h"
 
 // Control table address
 #define P_GOAL_POSITION_L	30
