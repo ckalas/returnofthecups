@@ -73,8 +73,6 @@ void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
         }
 
     }
-
-
 }
 
 

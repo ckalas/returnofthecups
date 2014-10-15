@@ -9,7 +9,8 @@ int main( int argc, char *argv[] )
 	
     CMulti_DNMX_Motor Motors;
 
-    int goal_pos[3] ={256,256,256};
+    int a = 256;
+    int goal_pos[3] = {a,a,a};//{512,512,512};
     int curr_pos[3] ={0,0,0};
     //int temp;
 
@@ -17,7 +18,7 @@ int main( int argc, char *argv[] )
     Motors.initialization(34);
 
 
-    for (int j=0; j<5; j++) {
+    for (int j=0; j<20; j++) {
 	Motors.move_to_goal_pos(goal_pos,curr_pos);
 
 	for(int i=0;i<3;i++){
@@ -25,7 +26,7 @@ int main( int argc, char *argv[] )
 	}
     }
 
-    Motors.no_torque_generate();
+    //Motors.no_torque_generate();
 
     dxl_terminate();
     cout << "dxl_terminate" << endl;
