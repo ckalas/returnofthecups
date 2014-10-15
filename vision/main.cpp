@@ -36,11 +36,13 @@ int main(int argc, char **argv) {
 	device.startDepth();
 	device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
 	while (!die) {
+		// Get new frames
 		device.getVideo(rgbMat);
 		device.getDepth(depthMat);
-		detect_cups(&rgbMat, rectCup);
-		cv::imshow("rgb", rgbMat);
 		depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
+		// Detect and locate cup/s
+		detect_cups(&rgbMat, &depthMat, rectCup, &cameraInv);
+		cv::imshow("rgb", rgbMat);
 		cv::imshow("depth",depthf); 
 		char k = cvWaitKey(5);
 
