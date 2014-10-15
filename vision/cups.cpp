@@ -22,27 +22,9 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inv
 	Point br (matches[i].x+matches[i].width, matches[i].y+matches[i].height);
 	rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
 	// Get depth of cup
-	Mat roi(*depthMat, matches[i]);
-	imshow("test", roi);
-	// depthPtr =  (uint8_t*)roi.col(matches[i].width / 2).data;
-	depthPtr = roi.col(matches[i].width / 2).data;
-	int fix = 0;
-	/*	
-	z = 0;
+	double depth = depthMat->at<double>(matches[i].x+matches[i].width/2, matches[i].y + matches[i].height/2);
+            cout << depth << endl;
 
-
-	while (!z) {
-
-	    // cout << depthPtr[matches[i].height/2] << endl;
-	    z = 1;
-	    /*
-	    z = (uint8_t)depthPtr[matches[i].height/2 + fix] ;
-	    fix += 1;
-	    cout << z << endl;
-
-	}
-	cout << z << endl;
-	*/
 	// Calculate distance from camera
 	//Mat imageCoords = (Mat_<double>(1,3) << x*, -1, 0, -1, 5, -1, 0, -1, 0);
 	//cameraCoords = *inverseCamera * 

@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 
 	depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
 	// Detect and locate cup/s
-	detect_cups(&rgbMat, &depthf, rectCup, &cameraInv);
+	detect_cups(&rgbMat, &depthMat, rectCup, &cameraInv);
 
 	cv::imshow("rgb", rgbMat);
 	cv::moveWindow("rgb", 0, 0);
