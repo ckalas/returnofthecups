@@ -57,8 +57,8 @@ void dxl_txrx_packet(void);
 int dxl_get_result(void);
 #define	COMM_TXSUCCESS		(0)
 #define COMM_RXSUCCESS		(1)
-#define COMM_TXFAIL		(2)
-#define COMM_RXFAIL		(3)
+#define COMM_TXFAIL			(2)
+#define COMM_RXFAIL			(3)
 #define COMM_TXERROR		(4)
 #define COMM_RXWAITING		(5)
 #define COMM_RXTIMEOUT		(6)

@@ -22,13 +22,12 @@
 #define P_TORQUE_ENABLE		24
 
 // User setting
-#define BAUD_NUM                34      // 1: 1Mbps 34:57142bps
-#define NUM_OF_MOTORS           1       // Number of motors
+#define BAUD_NUM                1      // 1: 1Mbps 34:57142bps
+#define NUM_OF_MOTORS           3       // Number of motors
 
 #define MOTOR_ID_1              1 // Motor 1 ID
 #define MOTOR_ID_2              2 // Motor 2 ID
 #define MOTOR_ID_3              3 // Motor 3 ID
-#define MOTOR_ID_4              4 // Motor 4 ID
 
 
 void PrintCommStatus(int CommStatus);

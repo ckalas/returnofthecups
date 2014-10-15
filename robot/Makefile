@@ -1,7 +1,5 @@
 all: main
-
-	./main
-
+	sudo ./main
 
 main: main.o multi_dnmx_motor.o dynamixel.o dxl_hal.o
 	g++ main.o multi_dnmx_motor.o dynamixel.o dxl_hal.o -o main 
@@ -17,9 +15,6 @@ dynamixel.o: dynamixel.c
 
 dxl_hal.o: dxl_hal.c
 	g++ -c dxl_hal.c
-
-
-
 
 clean:
 	rm main *.o

@@ -27,12 +27,11 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     PresentPos[0] = 0;
     PresentPos[1] = 0;
     PresentPos[2] = 0;
-    PresentPos[3] = 0;
+    
 
     Motor_ID[0] = MOTOR_ID_1;
     Motor_ID[1] = MOTOR_ID_2;
     Motor_ID[2] = MOTOR_ID_3;
-    Motor_ID[3] = MOTOR_ID_4;
 
     printf( "\n\n Motor initialization \n\n" );
 

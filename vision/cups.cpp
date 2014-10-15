@@ -36,7 +36,7 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inv
 }
 
 void show_fps(Mat *rgbMat, int fps) {
-    string text = string(to_string(fps) +" FPS");
+    string text = string(std::to_string(fps) +" FPS");
     int fontFace = FONT_HERSHEY_DUPLEX;
     double fontScale = 1;
     int thickness = 2;
