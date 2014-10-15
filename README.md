@@ -19,4 +19,4 @@ are correctly installed.</p>
 * main.cpp : the main program
 
 ####Robot
-<p>This required a rebuild in the Multi_Dynamixel_Robot_Control folder - need to make a better Makefile without the QT rubbish</p>
+<p> On OSX the serial device will appear as `/dev/cu.xxxxx` and `/dev/tty.xxxxx`. `cu` is the "callout" device, it's what you use when you establish a connection to the serial device and start talking to it. `tty` is the "dialin" device, used for monitoring a port for incoming calls for e.g. a fax listener. To that end, the connection must be established to `cu`.</p>
