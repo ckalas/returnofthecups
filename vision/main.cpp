@@ -56,9 +56,6 @@ int main(int argc, char **argv) {
 	// Detect and locate cup/s
 	detect_cups(&rgbMat, &depthMat, rectCup, &cameraInv);
 
-	imshow("rgb", rgbMat);
-	imshow("depth",depthf); 
-
 	char k = cvWaitKey(1);
 
 	if( k == 'q' || k == 'Q' ){
@@ -68,11 +65,13 @@ int main(int argc, char **argv) {
 	}
 
 	// Calculate the fps and finding the time diff executing the code
-	// in between
 	e2 = cv::getTickCount();
 	t = double((e2 - e1) / cv::getTickFrequency());
 	fps = int( 1 / t );
-	cout << "FPS: " << fps << endl;
+	show_fps(&rgbMat, fps);
+
+            imshow("rgb", rgbMat);
+            //imshow("depth",depthf); 
     }
 
     device.stopVideo();

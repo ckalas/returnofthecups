@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdio.h>
+
 #include <highgui.h>
 #include "cups.h"
 
@@ -32,4 +33,12 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inv
             }
 	
     }
+}
+
+void show_fps(Mat *rgbMat, int fps) {
+    string text = string(to_string(fps) +" FPS");
+    int fontFace = FONT_HERSHEY_DUPLEX;
+    double fontScale = 1;
+    int thickness = 2;
+    putText(*rgbMat, text, Point(10,40), fontFace, fontScale, Scalar::all(255), thickness, 5);
 }
