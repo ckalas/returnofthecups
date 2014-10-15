@@ -15,8 +15,6 @@ int main(int argc, char **argv) {
 
     // Variables to determine FPS
     long int e1, e2;
-    char k;
-    double t;
     int fps;
 
     // Load classifier
@@ -42,9 +40,10 @@ int main(int argc, char **argv) {
     device.startVideo();
     device.startDepth();
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
+
     while (!die) {
 	// Check the clock tick
-	//1 = 
+	e1 = cv::getTickCount();
 
 	// Get new frames
 	device.getVideo(rgbMat);
@@ -72,6 +71,12 @@ int main(int argc, char **argv) {
 	    cvDestroyWindow("depth");
 	    break;
 	}
+
+	// Calculate the fps and finding the time diff executing the code
+	// in between
+	e2 = cv::getTickCount();
+	fps = int( 1 / (e2 - e1) / cv::getTickFrequency() );
+	cout << "FPS: " << fps << endl;
     }
 
     device.stopVideo();
