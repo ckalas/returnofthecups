@@ -15,8 +15,6 @@ int main(int argc, char **argv) {
 
     // Variables to determine FPS
     long int e1, e2;
-    char k;
-    double t;
     int fps;
 
     // Load classifier
@@ -39,31 +37,26 @@ int main(int argc, char **argv) {
 	
     namedWindow("rgb",CV_WINDOW_AUTOSIZE);
     namedWindow("depth",CV_WINDOW_AUTOSIZE);
+    moveWindow("rgb", 0, 0);
+    moveWindow("depth", 650, 0);
     device.startVideo();
     device.startDepth();
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
+
     while (!die) {
 	// Check the clock tick
-	//1 = 
+	e1 = cv::getTickCount();
 
 	// Get new frames
 	device.getVideo(rgbMat);
 	device.getDepth(depthMat);
 
-	//detect_cups(&rgbMat, rectCup);
-
-	cv::imshow("rgb", rgbMat);
-	cv::moveWindow("rgb", 0, 0);
-
 	depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
 	// Detect and locate cup/s
 	detect_cups(&rgbMat, &depthMat, rectCup, &cameraInv);
 
-	cv::imshow("rgb", rgbMat);
-	cv::moveWindow("rgb", 0, 0);
-
-	cv::imshow("depth",depthf); 
-	cv::moveWindow("depth", 650, 0);
+	imshow("rgb", rgbMat);
+	imshow("depth",depthf); 
 
 	char k = cvWaitKey(1);
 
@@ -72,6 +65,12 @@ int main(int argc, char **argv) {
 	    cvDestroyWindow("depth");
 	    break;
 	}
+
+	// Calculate the fps and finding the time diff executing the code
+	// in between
+	e2 = cv::getTickCount();
+	fps = int( 1 / (e2 - e1) / cv::getTickFrequency() );
+	cout << "FPS: " << fps << endl;
     }
 
     device.stopVideo();

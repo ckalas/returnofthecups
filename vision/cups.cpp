@@ -9,8 +9,7 @@ using namespace std;
 void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inverseCamera) {
 
     std::vector<cv::Rect> matches;
-    Mat gray, cameraCoords; // make this a vector of them ultimately
-    uint8_t *depthPtr, z = 0;
+    Mat gray, cameraCoords; // make this a vector of them ultimately pointer
     cvtColor(*rgbMat, gray, CV_BGR2GRAY);
     equalizeHist(gray,gray);
 
@@ -22,13 +21,15 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inv
 	Point br (matches[i].x+matches[i].width, matches[i].y+matches[i].height);
 	rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
 	// Get depth of cup
-	double depth = depthMat->at<double>(matches[i].x+matches[i].width/2, matches[i].y + matches[i].height/2);
-            cout << depth << endl;
-
-	// Calculate distance from camera
-	//Mat imageCoords = (Mat_<double>(1,3) << x*, -1, 0, -1, 5, -1, 0, -1, 0);
-	//cameraCoords = *inverseCamera * 
-
+	double depth = depthMat->at<unsigned short>(matches[i].x+matches[i].width/2,
+                                      matches[i].y + matches[i].height/2)  / 10.0;
+            if (depth > 40) {
+                cout << depth << " cm" << endl;
+                // Calculate distance from camera
+                Mat imageCoords = (Mat_<double>(3,1) << matches[i].x*depth, matches[i].y*depth, depth);
+                cameraCoords = *inverseCamera * imageCoords;
+                cout << "Cup location: " << cameraCoords << endl;
+            }
 	
     }
 }
