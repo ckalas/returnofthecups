@@ -10,7 +10,7 @@
 #ifndef _LINUX_SERIAL_H
 #define _LINUX_SERIAL_H
 
-#include <linux/types.h>
+#include "my_linux_types.h"
 
 #include <linux/tty_flags.h>
 
