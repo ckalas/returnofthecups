@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
+//#include <termio.h>
 #include <linux/serial.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>

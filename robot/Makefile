@@ -1,14 +1,17 @@
+CFLAGS = $(shell pkg-config --cflags opencv)
+LIBS = $(shell pkg-config --libs opencv)
+
 all: main
 	sudo ./main
 
-main: main.o multi_dnmx_motor.o dynamixel.o dxl_hal.o
-	g++ main.o multi_dnmx_motor.o dynamixel.o dxl_hal.o -o main 
+main: main.o multi_motor.o dynamixel.o dxl_hal.o
+	g++ main.o multi_motor.o dynamixel.o dxl_hal.o -o main $(LIBS)
 
 main.o: main.cpp
-	g++ -c main.cpp
+	g++ $(CFLAGS) -c main.cpp
 
-multi_dnmx_motor.o: multi_dnmx_motor.cpp
-	g++ -c multi_dnmx_motor.cpp
+multi_motor.o: multi_motor.cpp
+	g++ -c multi_motor.cpp
 
 dynamixel.o: dynamixel.c
 	g++ -c dynamixel.c
