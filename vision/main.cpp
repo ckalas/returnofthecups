@@ -1,5 +1,6 @@
 #include "cups.h"
 #include "device.h"
+#include "fiducial.h"
 #include <iostream>
 #include <vector>
 #include <cmath>

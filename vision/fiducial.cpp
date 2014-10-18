@@ -2,67 +2,67 @@
 
 #include "fiducial.h"
 
-bool find_fid(Mat *rgbMat, Mat *depthMat, Mat *inverseCamera) {
+bool find_fid(Mat *rgbMat, Mat *cameraMtx, Mat *distCoeffs) {
     try {
-	if (siftFeature(img, mtx, dist)) {
+	if (sift_feature(rgbMat, cameraMtx, distCoeffs)) {
 	    return true;
 	} else {
 	    return false;
 	}
     }
-    catch {
-	cout << "cv error in fiducial.find";
-	return false;
+    catch (int e) {
+	   cout << "cv error in fiducial.find" << endl;
+	   return false;
     }
 }
 
-bool siftFeature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
+bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
     
     //id7 is fiducial marker
     Mat id7 = imread("./id7.png", CV_LOAD_IMAGE_GRAYSCALE); 
     
     //convert rgbMat to grayscale, as grayIm
     Mat grayIm;
-    cvtcolor(*rgbMat, grayIm, CV_BGR2GRAY);
+    cvtColor(*rgbMat, grayIm, CV_BGR2GRAY);
 
-    // ----- Detect the keypoints using Sift Detector
-    SiftFeatureDetector detector; //use default constructor for this class
+    SurfFeatureDetector detector; //use default constructor for this class
 
     std::vector<KeyPoint> keypoints_id7, keypoints_grayIm;
     detector.detect(id7, keypoints_id7);
     detector.detect(grayIm, keypoints_grayIm);
 
-    //neccessary??? just copied from Andy's fiducial.py code, I would expect
-    //and exception if there are no keypoint later on though
-    if ( (keypoints_id7 == NULL) || (keypoints_grayIm == NULL) ) {
-	return false;
+    if ( keypoints_id7.empty() || keypoints_grayIm.empty() ) {
+	   return false;
     }
 
-    // ----- Calculate descriptors for key points
+    // Calculate descriptors for key points
     SiftDescriptorExtractor extractor;
 
     Mat descriptors_id7, descriptors_grayIm;
 
     extractor.compute(id7, keypoints_id7, descriptors_id7);
-    extractor.compute(grayIm, keypoints_grayIm, descriptors_graIm);
+    extractor.compute(grayIm, keypoints_grayIm, descriptors_grayIm);
     
-    // ----- Descriptor Matching using flann matcher
+    // Descriptor Matching using flann matcher
     FlannBasedMatcher matcher; 
     std::vector<DMatch> matches;
 
     matcher.match(descriptors_id7, descriptors_grayIm, matches);
 
-    // ----- get the min distance of keypoints -> NOTE distance here is a
-    // measure of "goodness" of matches.... Apparently
-    double dist_min = 100000; //set dist_min to a large value initially
+    /* Get the min distance of keypoints -> NOTE distance here is a
+      measure of "goodness" of matches.... Apparently */
+    double min_dist = 100000; //set dist_min to a large value initially
 
     for (int i = 0; i < descriptors_id7.rows; i++) {
-	double dist = mathes[i].distance;
-	if (dist < min_dist) min_dist = dist;
+        double dist = matches[i].distance;
+
+        if (dist < min_dist) {
+            min_dist = dist;
+        }
     }
 
-    // ----- save good matches and corresponding keypoints
-    std::vector<Dmatch> good_matches;
+    // Save good matches and corresponding keypoints
+    std::vector<DMatch> good_matches;
     std::vector<Point2f> goodKp_id7;
     std::vector<Point2f> goodKp_grayIm;
     int goodMatchCount = 0;
@@ -82,7 +82,7 @@ bool siftFeature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
     }
     Mat homoMat = findHomography(goodKp_id7, goodKp_grayIm, CV_RANSAC); 
 
-    // ----- get the corners from the train image id7, and grayIm
+    // Get the corners from the train image id7, and grayIm
     std::vector<Point2f> id7_corners, grayIm_corners;
 
     id7_corners[0] = cvPoint(0, 0);
@@ -92,14 +92,14 @@ bool siftFeature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
 
     perspectiveTransform(id7_corners, grayIm_corners, homoMat);
 
-    //Draw the lines around object in grayIm 
-    line(rgbMat, grayIm_corners[0], grayIm_corners[1], Scalar(0, 255, 0), 4);
-    line(rgbMat, grayIm_corners[1], grayIm_corners[2], Scalar(0, 255, 0), 4);
-    line(rgbMat, grayIm_corners[2], grayIm_corners[3], Scalar(0, 255, 0), 4);
-    line(rgbMat, grayIm_corners[3], grayIm_corners[0], Scalar(0, 255, 0), 4);
+    // Draw the lines around object in grayIm 
+    line(*rgbMat, grayIm_corners[0], grayIm_corners[1], Scalar(0, 255, 0), 4);
+    line(*rgbMat, grayIm_corners[1], grayIm_corners[2], Scalar(0, 255, 0), 4);
+    line(*rgbMat, grayIm_corners[2], grayIm_corners[3], Scalar(0, 255, 0), 4);
+    line(*rgbMat, grayIm_corners[3], grayIm_corners[0], Scalar(0, 255, 0), 4);
     
-    //show fiducial was found
-    imshow("Fiducial found", rgbMat);
+    // Show fiducial was found
+    imshow("Fiducial found", *rgbMat);
 
     waitKey(0);
     
@@ -108,15 +108,16 @@ bool siftFeature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
 
     solvePnP(goodKp_id7, goodKp_grayIm, *cameraMat, *distCoeffs, rvec, tvec); 
     
-    //reconfigure_reference(tvec, rvec); 
+    reconfigure_reference(&tvec, &rvec); 
 
     return true;
 } 
 
-void reconfigure_reference(Mat rvec, Mat tvec, Mat *Homogeneous_Transform) {
+Mat reconfigure_reference(Mat *rvec, Mat *tvec) {
     //NOTE: x,y & z are in units of cm  
-    float x = tvec[0], y = tvec[1], z = tvec[2];
-    float rotx = rvec[0], roty = rvec[1], rotz = rvec[2];
+    float x = tvec->at<double>(0), y = tvec->at<double>(1), z = tvec->at<double>(2);
+    float rotx = rvec->at<double>(0), roty = rvec->at<double>(1), rotz = rvec->at<double>(2);
+
 
     x = (x - FID_WIDTH/2);
     
@@ -125,7 +126,7 @@ void reconfigure_reference(Mat rvec, Mat tvec, Mat *Homogeneous_Transform) {
     rotx = (rotx - 0.27);
 
     //maths, nothing custom
-    *Homogeneous_Transform = (Mat_<float>(4, 4) << 
+    Mat HT = (Mat_<float>(4, 4) << 
 	    cos(rotz) * cos(roty), 
 	    cos(rotz) * sin(roty) * sin(rotx) - sin(rotz) * cos(rotx), 
 	    cos(rotz) * sin(roty) * cos(rotx) + sin(rotz) * sin(rotx),
@@ -143,5 +144,7 @@ void reconfigure_reference(Mat rvec, Mat tvec, Mat *Homogeneous_Transform) {
 	    
 	    0, 0, 0, 1);
 
-    cout << Homogeneous_Transform;
+    cout << HT << endl;
+
+    return HT;
 }

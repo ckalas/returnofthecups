@@ -7,17 +7,23 @@
 #include <iostream>
 #include <cmath>
 
+#include "opencv2/core/core.hpp"
+#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/nonfree/features2d.hpp"
+#include "opencv2/nonfree/nonfree.hpp"
+
 #include <highgui.h>
 #include <cv.h>
+
+#define MIN_MATCH_COUNT 10
+#define FID_WIDTH 4.6 // cm
 
 using namespace std;
 using namespace cv;
 
 bool find_fid(Mat *rgbMat, Mat *depthMat, Mat *inverseCamera);
-bool siftFeature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs);
-Mat reconfigure_reference(Mat rvec, Mat tvec);
+bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs);
+Mat reconfigure_reference(Mat *rvec, Mat *tvec);
 
-#define MIN_MATCH_COUTN = 10
-#define FID_WIDTH = 4.6 //[cm]
 
-#endif //FIDUCIAL_H
+#endif
