@@ -4,7 +4,6 @@
 
 1. opencv
 2. libfreeenct
-3. libftdi (maybe no need for this)
 
 <p>Preferably use a package manager (use homebrew on OSX) - this ensures that dependencies
 are correctly installed.</p>
