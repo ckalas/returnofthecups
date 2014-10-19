@@ -20,4 +20,4 @@ dxl_hal.o: dxl_hal.c
 	g++ -c dxl_hal.c
 
 clean:
-	rm main *.o
+	rm main *.o *~ *#

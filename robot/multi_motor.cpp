@@ -28,7 +28,11 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     PresentPos[1] = 0;
     PresentPos[2] = 0;
     
-
+    /* 
+     * Motor 1 is the base
+     * Motor 2 is the elbow joint
+     * Motor 3 is the wrist joint
+     */
     Motor_ID[0] = MOTOR_ID_1;
     Motor_ID[1] = MOTOR_ID_2;
     Motor_ID[2] = MOTOR_ID_3;
@@ -63,8 +67,8 @@ void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
 
         if( CommStatus == COMM_RXSUCCESS )
         {
-//                printf( "%d   %d\n",GoalPos[i], PresentPos[i] );
-                PrintErrorCode();
+	    // printf( "%d   %d\n",GoalPos[i], PresentPos[i] );
+	    PrintErrorCode();
         }
         else
         {
