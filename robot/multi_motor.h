@@ -13,13 +13,27 @@
 #include <unistd.h>
 #include "dynamixel.h"
 
+/**
+ * Note, only the lower byte might by need to 
+ * read or write values.
+ * Verify this is the case
+ */
+
 // Control table address
 #define P_GOAL_POSITION_L	30
 #define P_GOAL_POSITION_H	31
 #define P_PRESENT_POSITION_L	36
 #define P_PRESENT_POSITION_H	37
-#define P_MOVING		90
-#define P_TORQUE_ENABLE		80
+
+#define P_MOVING_SPEED_L        32
+#define P_MOVING_SPEED_H        33
+#define P_PRESENT_SPEED_L       38
+#define P_PRESENT_SPEED_H       39
+#define P_MOVING		46
+
+#define P_TORQUE_ENABLE		24
+#define P_TORQUE_LIMIT_L        34
+#define P_TORQUE_LIMIT_H        35
 
 // User setting
 #define BAUD_NUM                34      // 1: 1Mbps 34:57142bps

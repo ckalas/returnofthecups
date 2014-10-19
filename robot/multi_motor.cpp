@@ -41,14 +41,14 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
 
     ///////// Open USB2Dynamixel ////////////
     if( dxl_initialize(deviceIndex, baudnum) == 0 )
-    {
+	{
             printf( "Failed to open USB2Dynamixel!\n" );
             printf( "Press Enter key to terminate...\n" );
             getchar();
             return 0;
-    }
+	}
     else
-            printf( "Succeed to open USB2Dynamixel!\n" );
+	printf( "Succeed to open USB2Dynamixel!\n" );
 
 }
 
@@ -66,15 +66,15 @@ void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
         CommStatus = dxl_get_result();
 
         if( CommStatus == COMM_RXSUCCESS )
-        {
-	    // printf( "%d   %d\n",GoalPos[i], PresentPos[i] );
-	    PrintErrorCode();
-        }
+	    {
+		// printf( "%d   %d\n",GoalPos[i], PresentPos[i] );
+		PrintErrorCode();
+	    }
         else
-        {
+	    {
                 PrintCommStatus(CommStatus);
                 break;
-        }
+	    }
 
     }
 }
@@ -84,61 +84,61 @@ void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
 // Print communication result
 void CMulti_DNMX_Motor::PrintCommStatus(int CommStatus)
 {
-        switch(CommStatus)
+    switch(CommStatus)
         {
         case COMM_TXFAIL:
-                printf("COMM_TXFAIL: Failed transmit instruction packet!\n");
-                break;
+	    printf("COMM_TXFAIL: Failed transmit instruction packet!\n");
+	    break;
 
         case COMM_TXERROR:
-                printf("COMM_TXERROR: Incorrect instruction packet!\n");
-                break;
+	    printf("COMM_TXERROR: Incorrect instruction packet!\n");
+	    break;
 
         case COMM_RXFAIL:
-                printf("COMM_RXFAIL: Failed get status packet from device!\n");
-                break;
+	    printf("COMM_RXFAIL: Failed get status packet from device!\n");
+	    break;
 
         case COMM_RXWAITING:
-                printf("COMM_RXWAITING: Now recieving status packet!\n");
-                break;
+	    printf("COMM_RXWAITING: Now recieving status packet!\n");
+	    break;
 
         case COMM_RXTIMEOUT:
-                printf("COMM_RXTIMEOUT: There is no status packet!\n");
-                break;
+	    printf("COMM_RXTIMEOUT: There is no status packet!\n");
+	    break;
 
         case COMM_RXCORRUPT:
-                printf("COMM_RXCORRUPT: Incorrect status packet!\n");
-                break;
+	    printf("COMM_RXCORRUPT: Incorrect status packet!\n");
+	    break;
 
         default:
-                printf("This is unknown error code!\n");
-                break;
+	    printf("This is unknown error code!\n");
+	    break;
         }
 }
 
 // Print error bit of status packet
 void CMulti_DNMX_Motor::PrintErrorCode()
 {
-        if(dxl_get_rxpacket_error(ERRBIT_VOLTAGE) == 1)
-                printf("Input voltage error!\n");
+    if(dxl_get_rxpacket_error(ERRBIT_VOLTAGE) == 1)
+	printf("Input voltage error!\n");
 
-        if(dxl_get_rxpacket_error(ERRBIT_ANGLE) == 1)
-                printf("Angle limit error!\n");
+    if(dxl_get_rxpacket_error(ERRBIT_ANGLE) == 1)
+	printf("Angle limit error!\n");
 
-        if(dxl_get_rxpacket_error(ERRBIT_OVERHEAT) == 1)
-                printf("Overheat error!\n");
+    if(dxl_get_rxpacket_error(ERRBIT_OVERHEAT) == 1)
+	printf("Overheat error!\n");
 
-        if(dxl_get_rxpacket_error(ERRBIT_RANGE) == 1)
-                printf("Out of range error!\n");
+    if(dxl_get_rxpacket_error(ERRBIT_RANGE) == 1)
+	printf("Out of range error!\n");
 
-        if(dxl_get_rxpacket_error(ERRBIT_CHECKSUM) == 1)
-                printf("Checksum error!\n");
+    if(dxl_get_rxpacket_error(ERRBIT_CHECKSUM) == 1)
+	printf("Checksum error!\n");
 
-        if(dxl_get_rxpacket_error(ERRBIT_OVERLOAD) == 1)
-                printf("Overload error!\n");
+    if(dxl_get_rxpacket_error(ERRBIT_OVERLOAD) == 1)
+	printf("Overload error!\n");
 
-        if(dxl_get_rxpacket_error(ERRBIT_INSTRUCTION) == 1)
-                printf("Instruction code error!\n");
+    if(dxl_get_rxpacket_error(ERRBIT_INSTRUCTION) == 1)
+	printf("Instruction code error!\n");
 }
 
 

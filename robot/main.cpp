@@ -34,7 +34,7 @@ int main( int argc, char *argv[] )
      * The MX-12W works the current code
      */
 
-    While10 (1) {
+    while (1) {
 	
 	cin.get();
 
