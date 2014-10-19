@@ -28,7 +28,7 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     PresentPos[1] = 0;
     PresentPos[2] = 0;
     
-    /* 
+    /**
      * Motor 1 is the base
      * Motor 2 is the elbow joint
      * Motor 3 is the wrist joint
@@ -55,6 +55,10 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
 
 void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
 
+    // add do while loop if it is still moving or has not at least reached it's 
+    // goal position (need function to check if +- 5-->10 bit )
+
+    // add acceleration depending on diff of goal and curr pos
 
     for(int i=0;i<NUM_OF_MOTORS ;i++){
 
@@ -63,23 +67,56 @@ void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
 
         // Read present position
         PresentPos[i] = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );
-        CommStatus = dxl_get_result();
 
-        if( CommStatus == COMM_RXSUCCESS )
-	    {
-		// printf( "%d   %d\n",GoalPos[i], PresentPos[i] );
-		PrintErrorCode();
-	    }
-        else
-	    {
-                PrintCommStatus(CommStatus);
-                break;
-	    }
-
+        if (check_com_status() != 0)
+            break;
     }
 }
 
+int CMulti_DNMX_Motor::check_com_status(void) {
+    CommStatus = dxl_get_result();
 
+    if( CommStatus == COMM_RXSUCCESS ) {
+        // printf( "%d   %d\n",GoalPos[i], PresentPos[i] );
+        PrintErrorCode();
+    } else {
+	    PrintCommStatus(CommStatus);
+	    return 1;
+    }
+
+    return 0;
+}
+
+void CMulti_DNMX_Motor::set_torque(int torque){
+    for (int i=0; i<NUM_OF_MOTORS; i++) {
+        int ret = dxl_read_word( Motor_ID[i], P_TORQUE_ENABLE);
+        printf("Motor No. %d, Torque enabled: %d\n", i, ret);
+
+        dxl_write_word( Motor_ID[i], P_TORQUE_LIMIT_L, torque);
+
+        ret = dxl_read_word( Motor_ID[i], P_TORQUE_LIMIT_L);
+        printf("Motor No. %d, Torque applied: %d\n", i, ret);
+
+        if (check_com_status() != 0)
+            break;
+    }
+}
+
+void CMulti_DNMX_Motor::set_speed(int speed) {
+    for (int i=0; i<NUM_OF_MOTORS; i++) {
+        dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, speed);
+
+        if (check_com_status() != 0)
+            break;
+    }
+}
+
+void CMulti_DNMX_Motor::read_speed(void) {
+    for (int i=0; i < NUM_OF_MOTORS; i++) {
+        int ret = dxl_read_word( Motor_ID[i], P_MOVING_SPEED_L);
+        printf("Motor No. %d, Speed value: %d\n", i, ret);
+    }
+}
 
 // Print communication result
 void CMulti_DNMX_Motor::PrintCommStatus(int CommStatus)

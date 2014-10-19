@@ -13,16 +13,30 @@ int main( int argc, char *argv[] )
     CMulti_DNMX_Motor Motors;
 
     int a = 512;
-    int goal_pos[3] = {2048, a, a};
+    int goal_pos[3] = {100, a, a};
     int curr_pos[3] ={0,0,0};
     //int temp;
 
     // init with baud 20k, rgefer to bauds.txt for mapping
     Motors.initialization(34);
+    Motors.set_torque(1023);    
+    Motors.set_speed(80);
+    Motors.read_speed();
+    
+    goal_pos[0] = 2048;
+    goal_pos[1] = 512;
+    goal_pos[2] = 512;
 
     Motors.move_to_goal_pos(goal_pos, curr_pos);
+    sleep(3);
 
-    char k;
+    goal_pos[0] = 100;
+    goal_pos[1] += 100;
+    goal_pos[2] += 300;
+    Motors.move_to_goal_pos( goal_pos, curr_pos);
+    sleep(3);
+
+    //char k;
 
     /****************
      * Need to get the motors to move at small increment to allow smooth movement
@@ -34,6 +48,7 @@ int main( int argc, char *argv[] )
      * The MX-12W works the current code
      */
 
+    /*  
     while (1) {
 	
 	cin.get();
@@ -47,8 +62,10 @@ int main( int argc, char *argv[] )
 	    cout << i << ": " << curr_pos[i] << endl;
 	}
     }
-
-    //Motors.no_torque_generate();
+    */
+    
+    Motors.no_torque_generate();
+    Motors.set_torque(0);
 
     dxl_terminate();
     cout << "dxl_terminate" << endl;
