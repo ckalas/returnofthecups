@@ -13,9 +13,10 @@ int main( int argc, char *argv[] )
     CMulti_DNMX_Motor Motors;
 
     int a = 512;
-    int goal_pos[3] = {100, a, a};
-    int curr_pos[3] ={0,0,0};
-    //int temp;
+    int goal_pos[4] = {100, a, a, a};
+    int curr_pos[4] ={0,0,0,0};
+
+    int base_rotation = 0;
 
     // init with baud 20k, rgefer to bauds.txt for mapping
     Motors.initialization(34);
@@ -23,18 +24,23 @@ int main( int argc, char *argv[] )
     Motors.set_speed(80);
     Motors.read_speed();
     
-    goal_pos[0] = 2048;
-    goal_pos[1] = 512;
+    goal_pos[0] = 300;
+    goal_pos[1] = 512; //512;
     goal_pos[2] = 512;
 
     Motors.move_to_goal_pos(goal_pos, curr_pos);
-    sleep(3);
+    //sleep(3);
 
-    goal_pos[0] = 100;
-    goal_pos[1] += 100;
-    goal_pos[2] += 300;
-    Motors.move_to_goal_pos( goal_pos, curr_pos);
-    sleep(3);
+    //goal_pos[0] = 300; //100;
+    while (1) {
+
+        cout << "elbow rotation: ";
+        cin >> base_rotation;
+
+        goal_pos[3] = base_rotation;
+        Motors.move_to_goal_pos( goal_pos, curr_pos);
+        //sleep(3);
+    }
 
     //char k;
 

@@ -37,11 +37,12 @@
 
 // User setting
 #define BAUD_NUM                  34      // 1: 1Mbps 34:57142bps
-#define NUM_OF_MOTORS             3       // Number of motors
+#define NUM_OF_MOTORS             4       // Number of motors
 
 #define MOTOR_ID_1                4 // Motor 1 ID
 #define MOTOR_ID_2                2 // Motor 2 ID
 #define MOTOR_ID_3                3 // Motor 3 ID
+#define MOTOR_ID_4                1 // Motor 4 ID
 
 
 void PrintCommStatus(int CommStatus);
