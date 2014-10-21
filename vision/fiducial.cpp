@@ -2,9 +2,9 @@
 
 #include "fiducial.h"
 
-bool find_fid(Mat *rgbMat, Mat *cameraMtx, Mat *distCoeffs) {
+bool find_fid(Mat *rgbMat, Mat *cameraMtx, Mat *distCoeffs, Mat *HT) {
     try {
-	if (sift_feature(rgbMat, cameraMtx, distCoeffs)) {
+	if (sift_feature(rgbMat, cameraMtx, distCoeffs, HT)) {
 	    return true;
 	} else {
 	    return false;
@@ -16,23 +16,23 @@ bool find_fid(Mat *rgbMat, Mat *cameraMtx, Mat *distCoeffs) {
     }
 }
 
-bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
+bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
     
     //id7 is fiducial marker
-    Mat id7 = imread("./id7.png", CV_LOAD_IMAGE_GRAYSCALE); 
+    Mat id7 = imread("id7.png", CV_LOAD_IMAGE_GRAYSCALE); 
     
     //convert rgbMat to grayscale, as grayIm
     Mat grayIm;
     cvtColor(*rgbMat, grayIm, CV_BGR2GRAY);
 
-    SurfFeatureDetector detector; //use default constructor for this class
+    SiftFeatureDetector detector; //use default constructor for this class
 
     std::vector<KeyPoint> keypoints_id7, keypoints_grayIm;
     detector.detect(id7, keypoints_id7);
     detector.detect(grayIm, keypoints_grayIm);
 
     if ( keypoints_id7.empty() || keypoints_grayIm.empty() ) {
-	   return false;
+        return false;
     }
 
     // Calculate descriptors for key points
@@ -51,24 +51,27 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
 
     /* Get the min distance of keypoints -> NOTE distance here is a
       measure of "goodness" of matches.... Apparently */
-    double min_dist = 100000; //set dist_min to a large value initially
 
-    for (int i = 0; i < descriptors_id7.rows; i++) {
+    //-- Quick calculation of max and min distances between keypoints
+    for( int i = 0; i < descriptors_1.rows; i++ ) { 
         double dist = matches[i].distance;
-
-        if (dist < min_dist) {
-            min_dist = dist;
-        }
+        if( dist < min_dist ) min_dist = dist;
+        if( dist > max_dist ) max_dist = dist;
     }
 
     // Save good matches and corresponding keypoints
     std::vector<DMatch> good_matches;
     std::vector<Point2f> goodKp_id7;
     std::vector<Point2f> goodKp_grayIm;
+
+    // stuff here
+    KeyPoint::convert(keypoints1, points1, queryIdxs);
+    KeyPoint::convert(keypoints2, points2, trainIdxs);
+    
     int goodMatchCount = 0;
     
     for (int i = 0; i < descriptors_id7.rows; i++) {
-	if (matches[i].distance < 3*min_dist){
+	if (matches[i].distance <= max(2*min_dist, 0.02)){
 	    good_matches.push_back(matches[i]); //push_back appends
 	    goodKp_id7.push_back(keypoints_id7[matches[i].trainIdx].pt);
 	    goodKp_grayIm.push_back(keypoints_grayIm[matches[i].queryIdx].pt);
@@ -84,11 +87,10 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
 
     // Get the corners from the train image id7, and grayIm
     std::vector<Point2f> id7_corners, grayIm_corners;
-
-    id7_corners[0] = cvPoint(0, 0);
-    id7_corners[1] = cvPoint(id7.cols, 0);
-    id7_corners[2] = cvPoint(id7.cols, id7.rows);
-    id7_corners[3] = cvPoint(0, id7.rows);
+    id7_corners.push_back(Point(0, 0));
+    id7_corners.push_back(Point(id7.cols, 0));
+    id7_corners.push_back(Point(id7.cols, id7.rows));
+    id7_corners.push_back(Point(0, id7.rows));
 
     perspectiveTransform(id7_corners, grayIm_corners, homoMat);
 
@@ -96,24 +98,22 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs) {
     line(*rgbMat, grayIm_corners[0], grayIm_corners[1], Scalar(0, 255, 0), 4);
     line(*rgbMat, grayIm_corners[1], grayIm_corners[2], Scalar(0, 255, 0), 4);
     line(*rgbMat, grayIm_corners[2], grayIm_corners[3], Scalar(0, 255, 0), 4);
-    line(*rgbMat, grayIm_corners[3], grayIm_corners[0], Scalar(0, 255, 0), 4);
+    line(*rgbMat, grayIm_corners[3], grayIm_corners[0], Scalar(0, 255, 0), 4); 
     
-    // Show fiducial was found
-    imshow("Fiducial found", *rgbMat);
-
+    imshow("fiducial", *rgbMat);
     waitKey(0);
-    
-    Mat rvec;
-    Mat tvec;
-
+    cout << grayIm_corners[0] << endl;
+    // Show fiducial was found    
+    Mat rvec, tvec;
+    cout <<goodKp_id7 << endl << goodKp_grayIm << endl;
     solvePnP(goodKp_id7, goodKp_grayIm, *cameraMat, *distCoeffs, rvec, tvec); 
     
-    reconfigure_reference(&tvec, &rvec); 
+    reconfigure_reference(&tvec, &rvec, HT); 
 
     return true;
 } 
 
-Mat reconfigure_reference(Mat *rvec, Mat *tvec) {
+void reconfigure_reference(Mat *rvec, Mat *tvec, Mat *HT) {
     //NOTE: x,y & z are in units of cm  
     float x = tvec->at<double>(0), y = tvec->at<double>(1), z = tvec->at<double>(2);
     float rotx = rvec->at<double>(0), roty = rvec->at<double>(1), rotz = rvec->at<double>(2);
@@ -126,7 +126,7 @@ Mat reconfigure_reference(Mat *rvec, Mat *tvec) {
     rotx = (rotx - 0.27);
 
     //maths, nothing custom
-    Mat HT = (Mat_<float>(4, 4) << 
+    *HT = (Mat_<float>(4, 4) << 
 	    cos(rotz) * cos(roty), 
 	    cos(rotz) * sin(roty) * sin(rotx) - sin(rotz) * cos(rotx), 
 	    cos(rotz) * sin(roty) * cos(rotx) + sin(rotz) * sin(rotx),
@@ -144,7 +144,5 @@ Mat reconfigure_reference(Mat *rvec, Mat *tvec) {
 	    
 	    0, 0, 0, 1);
 
-    cout << HT << endl;
-
-    return HT;
+    cout <<"FID at: " << endl << HT << endl;
 }

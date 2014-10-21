@@ -23,7 +23,7 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inv
 	rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
 	// Get depth of cup
 	double depth = depthMat->at<unsigned short>(matches[i].x+matches[i].width/2,
-                                      matches[i].y + matches[i].height/2)  / 10.0;
+                                      matches[i].y + matches[i].height/2 + 1)  / 10.0;
             if (depth > 40) {
                 cout << depth << " cm" << endl;
                 // Calculate distance from camera

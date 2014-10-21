@@ -12,7 +12,7 @@
 
 #include "my_linux_types.h"
 
-#include <linux/tty_flags.h>
+#include "tty_flags.h"
 
 
 struct serial_struct {

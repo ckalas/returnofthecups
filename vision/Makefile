@@ -15,7 +15,7 @@ endif
 
 
 main: fiducial.o device.o cups.o main.o 
-	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS) 
+	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS)  -g
 
 %.o: %.cpp
 	$(CXX) -c $(CFLAGS) $< -o $@

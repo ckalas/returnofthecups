@@ -21,9 +21,9 @@
 using namespace std;
 using namespace cv;
 
-bool find_fid(Mat *rgbMat, Mat *depthMat, Mat *inverseCamera);
-bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs);
-Mat reconfigure_reference(Mat *rvec, Mat *tvec);
+bool find_fid(Mat *rgbMat, Mat *depthMat, Mat *inverseCamera, Mat *HT);
+bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT);
+void reconfigure_reference(Mat *rvec, Mat *tvec, Mat *HT);
 
 
 #endif

@@ -31,6 +31,7 @@ int main(int argc, char **argv) {
     Mat depthf (Size(640,480),CV_8UC1);
     Mat rgbMat(Size(640,480),CV_8UC3,Scalar(0));
     Mat ownMat(Size(640,480),CV_8UC3,Scalar(0));
+    Mat HT;
 
     Mat cameraMatrix, dist, cameraInv;
 	
@@ -43,7 +44,11 @@ int main(int argc, char **argv) {
     moveWindow("depth", 650, 0);
     device.startVideo();
     device.startDepth();
+
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
+    while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) {
+        device.getVideo(rgbMat);
+    }
 
     while (!die) {
 	// Check the clock tick

@@ -2,7 +2,7 @@
 #define my_linux_types_h
 
 #ifdef __linux__
-# include "linux/types.h"
+# include <linux/types.h>
 #else
 # include <stdint.h>
 typedef int32_t __s32;
