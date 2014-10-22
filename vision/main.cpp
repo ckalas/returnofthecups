@@ -47,11 +47,12 @@ int main(int argc, char **argv) {
 
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
 
-    while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) {
+    do {
         device.getVideo(rgbMat);
         imshow("fid ", rgbMat);
         waitKey(1);
     }
+    while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) ;
 
     while (!die) {
 	// Check the clock tick

@@ -22,7 +22,7 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
         Point tl (matches[i].x, matches[i].y);
         Point br (matches[i].x+matches[i].width, matches[i].y+matches[i].height);
         rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
-        // Get depth of cup
+        // Get depth of cup  -- Depth(Y,X)
         double depth = depthMat.at<unsigned short>(matches[i].y + matches[i].height/2, matches[i].x+matches[i].width/2 )/10.0 ;
 
         if (depth > 40 and depth < 150) {
