@@ -5,6 +5,21 @@
 #include <iostream>
 #include <vector>
 
-void ikine(void);
+// The following are in mm units:
+#define L1			150
+#define L2			95
+#define L3			30
+//#define L4			10
+
+#define THETA_A_OFFSET	0
+#define THETA_B_OFFSET	0
+#define THETA_C_OFFSET 	0
+
+using namespace std;
+
+//void ikine(vector<double> coords);
+//void ikine(void);
+void ikine( vector<double> coords, vector<double> * angles );
+void print_values( vector<double>* values );
 
 #endif

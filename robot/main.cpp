@@ -13,17 +13,21 @@ int main( int argc, char *argv[] )
 {
     cout << "hello world" << endl;
 
-    cout << "sqrt: " << sqrt(9) << endl;
-
-    ikine();
+    //cout << "sqrt: " << sqrt(9) << endl;
+    vector<double> angles (3);
+    vector<double> coords (3);
+    coords.at(0) = 0;
+    coords.at(1) = 95;
+    coords.at(2) = 150;
+    
+    ikine(coords, &angles);
 	
     CMulti_DNMX_Motor Motors;
 
     int a = 512;
-    int goal_pos[4] = {100, a, a, a};
+    int goal_pos[4] = {2096, a, a, a};
     int curr_pos[4] ={0,0,0,0};
 
-    int rotation = 0;
 
     // init with baud 20k, rgefer to bauds.txt for mapping
     /*
@@ -32,32 +36,32 @@ int main( int argc, char *argv[] )
     Motors.set_speed(80);
     Motors.read_speed();
     
-    goal_pos[0] = 300;
-    goal_pos[1] = 512; //512;
-    goal_pos[2] = 512;
-
     Motors.move_to_goal_pos(goal_pos, curr_pos);
-    //sleep(3);
-
     */
-    //goal_pos[0] = 300; //100;
-
-    /*
+    
+    /**
+     * From you view:
+     *      left vs right is the x direction
+     *      closer vs further is the y direction
+     *      up vs down is the z direction
+     */
     while (1) {
-        cout << "Input rotation angle in degrees: ";
-        cin >> rotation;
+        cout << "x: ";
+        cin >> coords.at(0);
+        cout << "y: ";
+        cin >> coords.at(1);
+        cout << "z: ";
+        cin >> coords.at(2);
 
-        cout << "Bits: " << Motors.ax12a_angle2bits(rotation) << endl;
+        ikine(coords, &angles);
 
-        cout << "elbow rotation: ";
-        cin >> base_rotation;
-
-        goal_pos[3] = base_rotation;
+        /*
+        goal_pos[0] = Motors.mx12w_angle2bits(angles[0]);
+        goal_pos[1] = Motors.ax12a_angle2bits(angles[1]);
+        goal_pos[2] = Motors.ax12a_angle2bits(angles[2]);
         Motors.move_to_goal_pos( goal_pos, curr_pos);
-        //sleep(3);
+        */
     }
-    */
-
 
     //char k;
 

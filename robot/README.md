@@ -9,3 +9,8 @@ MX-12W
 http://support.robotis.com/en/product/dynamixel/mx_series/mx-12w.htm
 
 Take note of the control table, it allows setting of available parameters
+
+
+The following pdf were used to find the inverse kinematics
+
+http://www.hessmer.org/uploads/RobotArm/Inverse%2520Kinematics%2520for%2520Robot%2520Arm.pdf

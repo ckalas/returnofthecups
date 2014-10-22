@@ -1,9 +1,8 @@
-CFLAGS = $(shell pkg-config --cflags opencv)
-LIBS = $(shell pkg-config --libs opencv)
+CFLAGS = $(shell pkg-config --cflags opencv) -g
 
 all: main
-	sudo ./main
-
+	./main
+	
 main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o
 	g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o -o main $(LIBS)
 
