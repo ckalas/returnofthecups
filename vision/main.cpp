@@ -49,8 +49,6 @@ int main(int argc, char **argv) {
 
     do {
         device.getVideo(rgbMat);
-        imshow("fid ", rgbMat);
-        waitKey(1);
     }
     while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) ;
 

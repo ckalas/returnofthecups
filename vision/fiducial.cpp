@@ -47,6 +47,7 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
     extractor.compute(grayIm, keypoints_grayIm, descriptors_grayIm);
     
     // Descriptor Matching using flann matcher
+  
     FlannBasedMatcher matcher; 
     std::vector<DMatch> matches;
 
@@ -55,7 +56,7 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
     /* Get the min distance of keypoints -> NOTE distance here is a
       measure of "goodness" of matches.... Apparently */
 
-    double min_dist = 100000, max_dist;
+    double min_dist = 1000, max_dist = 0;
 
     //-- Quick calculation of max and min distances between keypoints
     for( int i = 0; i < descriptors_id7.rows; i++ ) { 
@@ -71,31 +72,34 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
 
     
     int goodMatchCount = 0;
-    std::vector<char> mask;
-    
-    
-    for (int i = 0; i < descriptors_id7.rows; i++) {
-	if (matches[i].distance < min_dist * 3){
-	    good_matches.push_back(matches[i]);
-	    goodKp_id7.push_back(keypoints_id7[matches[i].trainIdx].pt);
-	    goodKp_grayIm.push_back(keypoints_grayIm[matches[i].queryIdx].pt);
-	    mask.push_back(1);
-	    goodMatchCount++;
-	} else {
-	    mask.push_back(0);
-	}
-    }
-    
+    //std::vector<char> mask;
+
     Mat outIm;
     drawMatches(id7, keypoints_id7, grayIm, keypoints_grayIm, matches, outIm, CV_RGB(0, 255, 0), CV_RGB(0, 0, 255), mask, 0);
     imshow("matches", outIm);
     waitKey(0);
+    
+    for (int i = 0; i < descriptors_id7.rows; i++) {
+	if (matches[i].distance < min_dist * 3 /*&& matches[i].distance > max_dist*0.35 */ ){
+	    good_matches.push_back(matches[i]);
+	    goodKp_id7.push_back(keypoints_id7[matches[i].trainIdx].pt);
+	    goodKp_grayIm.push_back(keypoints_grayIm[matches[i].queryIdx].pt);
+	    //mask.push_back(1);
+	    goodMatchCount++;
+	} else {
+	   // mask.push_back(0);
+	}
+    }
+    
 
     //exit if there isn't a minimum number of good matches
     if (goodMatchCount < MIN_MATCH_COUNT) {
 	return false;
     }
-    Mat homoMat = findHomography(goodKp_id7, goodKp_grayIm, CV_RANSAC, 1); 
+
+    cout << goodKp_id7 << endl;
+    Mat homoMat = findHomography(goodKp_id7, goodKp_grayIm, CV_RANSAC, 5);
+    cout << mask << endl;
 
     //Get the corners from the train image id7, and grayIm
     std::vector<Point2f> id7_corners, grayIm_corners;
@@ -110,10 +114,10 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
 
     cout << grayIm_corners << endl;
     // Draw the lines around object in grayIm 
-    line(grayIm, grayIm_corners[0], grayIm_corners[1], Scalar(0, 255, 0), 4);
-    line(grayIm, grayIm_corners[1], grayIm_corners[2], Scalar(0, 255, 0), 4);
-    line(grayIm, grayIm_corners[2], grayIm_corners[3], Scalar(0, 255, 0), 4);
-    line(grayIm, grayIm_corners[3], grayIm_corners[0], Scalar(0, 255, 0), 4); 
+    line(grayIm, grayIm_corners[0], grayIm_corners[1], Scalar(255, 255,255), 4);
+    line(grayIm, grayIm_corners[1], grayIm_corners[2], Scalar(255, 255, 255), 4);
+    line(grayIm, grayIm_corners[2], grayIm_corners[3], Scalar(255, 255, 255), 4);
+    line(grayIm, grayIm_corners[3], grayIm_corners[0], Scalar(255, 255, 255), 4); 
     
     imshow("fid", grayIm);
     waitKey(0);

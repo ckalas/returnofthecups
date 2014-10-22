@@ -15,7 +15,7 @@
 #include <highgui.h>
 #include <cv.h>
 
-#define MIN_MATCH_COUNT 10 
+#define MIN_MATCH_COUNT 10
 #define FID_WIDTH 4.6 // cm
 
 using namespace std;
