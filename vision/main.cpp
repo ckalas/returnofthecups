@@ -46,8 +46,11 @@ int main(int argc, char **argv) {
     device.startDepth();
 
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
+
     /*while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) {
         device.getVideo(rgbMat);
+        imshow("fid ", rgbMat);
+        waitKey(1);
     }*/
 
     while (!die) {

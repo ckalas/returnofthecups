@@ -14,24 +14,29 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat inve
     cvtColor(*rgbMat, gray, CV_BGR2GRAY);
     equalizeHist(gray,gray);
 
-    cascade.detectMultiScale(gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
-	
+    cascade.detectMultiScale(gray, matches, 1.4, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
+
     for (size_t i = 0; i < matches.size(); i++) {
-	// Draw rectangle
-	Point tl (matches[i].x, matches[i].y);
-	Point br (matches[i].x+matches[i].width, matches[i].y+matches[i].height);
-	rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
-	// Get depth of cup
-	double depth = depthMat->at<unsigned short>(matches[i].x+matches[i].width/2,
-                                      matches[i].y + matches[i].height/2 + 1)  / 10.0;
-            if (depth > 40) {
-                cout << depth << " cm" << endl;
-                // Calculate distance from camera
-                Mat imageCoords = (Mat_<double>(3,1) << matches[i].x*depth, matches[i].y*depth, depth);
-                cameraCoords = inverseCamera * imageCoords;
-                cout << "Cup location: " << cameraCoords << endl;
-            }
-	
+
+        // Draw rectangle
+        Point tl (matches[i].x, matches[i].y);
+        Point br (matches[i].x+matches[i].width, matches[i].y+matches[i].height);
+        rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
+        rectangle(*depthMat, tl ,br, Scalar( 255, 255, 255 ), +2, 4);
+
+        // Get depth of cup
+        double depth = depthMat->at<unsigned short>(matches[i].x+matches[i].width/2,
+                                                                              matches[i].y + matches[i].height/2 + 1) ;
+        cout <<depth<<endl;
+
+        if (depth > 40 and depth < 150) {
+            cout << depth << " cm" << endl;
+            // Calculate distance from camera
+            Mat imageCoords = (Mat_<double>(3,1) << matches[i].x*depth, matches[i].y*depth, depth);
+            cameraCoords = inverseCamera * imageCoords;
+            cout << "Cup location: " << cameraCoords << endl;
+        }
+
     }
 }
 
