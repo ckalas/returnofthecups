@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 	device.getVideo(rgbMat);
 	device.getDepth(depthMat);
 
-	depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
+	//depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
 	// Detect and locate cup/s
 	detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 	show_fps(&rgbMat, fps);
 
             imshow("rgb", rgbMat);
-            imshow("depth",depthf); 
+            //imshow("depth",depthf); 
     }
 
     device.stopVideo();

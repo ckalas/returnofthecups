@@ -35,7 +35,7 @@ class MyFreenectDevice : public Freenect::FreenectDevice {
 			rgbMat(Size(640,480), CV_8UC3, Scalar(0)),ownMat(Size(640,480),CV_8UC3,Scalar(0)), 
 			m_new_rgb_frame(false),m_new_depth_frame(false) {
 
-			//setDepthFormat(FREENECT_DEPTH_REGISTERED);
+			setDepthFormat(FREENECT_DEPTH_REGISTERED);
 			for( unsigned int i = 0 ; i < 2048 ; i++) {
 				float v = i/2048.0;
 				v = std::pow(v, 3)* 6;
