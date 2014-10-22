@@ -10,6 +10,7 @@ else
 	CFLAGS= -std=c++11 -fPIC -g -Wall  $(shell pkg-config --cflags opencv libusb-1.0)  -I /usr/local/include/libusb-1.0/ 
 
 	CFLAGS= -std=c++11 -fPIC -g -Wall  $(shell pkg-config --cflags opencv libusb-1.0)  -I/usr/local/include/libusb-1.0/ 
+>>>>>>> Stashed changes
 	LIBS = $(shell pkg-config --libs opencv)
 	INCLUDE = $(shell pkg-config --cflags libfreenect )
 	FREE_LIBS = $(shell pkg-config --libs libfreenect)
