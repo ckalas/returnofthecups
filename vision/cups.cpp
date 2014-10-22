@@ -7,14 +7,14 @@
 using namespace cv;
 using namespace std;
 
-void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat inverseCamera) {
+void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera) {
 
     std::vector<cv::Rect> matches;
     Mat gray, cameraCoords; // make this a vector of them ultimately pointer
     cvtColor(*rgbMat, gray, CV_BGR2GRAY);
     equalizeHist(gray,gray);
 
-    cascade.detectMultiScale(gray, matches, 1.4, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
+    cascade.detectMultiScale(gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
 
     for (size_t i = 0; i < matches.size(); i++) {
 
@@ -22,12 +22,9 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat inve
         Point tl (matches[i].x, matches[i].y);
         Point br (matches[i].x+matches[i].width, matches[i].y+matches[i].height);
         rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
-        rectangle(*depthMat, tl ,br, Scalar( 255, 255, 255 ), +2, 4);
-
         // Get depth of cup
-        double depth = depthMat->at<unsigned short>(matches[i].x+matches[i].width/2,
-                                                                              matches[i].y + matches[i].height/2 + 1) ;
-        cout <<depth<<endl;
+        double depth = depthMat.at<unsigned short>(matches[i].x+(matches[i].width/2),
+                                                                              matches[i].y + matches[i].height/2 )/10.0 ;
 
         if (depth > 40 and depth < 150) {
             cout << depth << " cm" << endl;
