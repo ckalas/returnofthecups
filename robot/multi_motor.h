@@ -20,29 +20,35 @@
  */
 
 // Control table address
-#define P_GOAL_POSITION_L	      30
-#define P_GOAL_POSITION_H	      31
-#define P_PRESENT_POSITION_L	  36
-#define P_PRESENT_POSITION_H	  37
+#define P_GOAL_POSITION_L	    30
+#define P_GOAL_POSITION_H	    31
+#define P_PRESENT_POSITION_L	36
+#define P_PRESENT_POSITION_H	37
 
-#define P_MOVING_SPEED_L          32
-#define P_MOVING_SPEED_H          33
-#define P_PRESENT_SPEED_L         38
-#define P_PRESENT_SPEED_H         39
-#define P_MOVING		          46
+#define P_MOVING_SPEED_L        32
+#define P_MOVING_SPEED_H        33
+#define P_PRESENT_SPEED_L       38
+#define P_PRESENT_SPEED_H       39
+#define P_MOVING		        46
 
-#define P_TORQUE_ENABLE		      24
-#define P_TORQUE_LIMIT_L          34
-#define P_TORQUE_LIMIT_H          35
+#define P_TORQUE_ENABLE		    24
+#define P_TORQUE_LIMIT_L        34
+#define P_TORQUE_LIMIT_H        35
 
 // User setting
-#define BAUD_NUM                  34      // 1: 1Mbps 34:57142bps
-#define NUM_OF_MOTORS             4       // Number of motors
+#define BAUD_NUM                34      // 1: 1Mbps 34:57142bps
+#define NUM_OF_MOTORS           4       // Number of motors
 
-#define MOTOR_ID_1                4 // Motor 1 ID
-#define MOTOR_ID_2                2 // Motor 2 ID
-#define MOTOR_ID_3                3 // Motor 3 ID
-#define MOTOR_ID_4                1 // Motor 4 ID
+#define MOTOR_ID_1              4 // Motor 1 ID
+#define MOTOR_ID_2              2 // Motor 2 ID
+#define MOTOR_ID_3              3 // Motor 3 ID
+#define MOTOR_ID_4              1 // Motor 4 ID
+
+#define MX_12W_BITS             4096          
+#define MX_12W_ANGLE            360
+
+#define AX_12A_BITS             1024
+#define AX_12A_ANGLE            300
 
 
 void PrintCommStatus(int CommStatus);
@@ -74,6 +80,10 @@ public:
     void read_speed(void);
     void no_torque_generate();
 
+
+    // converts the angle in degrees to bits (refer to the motor datasheet)
+    int mx12w_angle2bits( double degress );
+    int ax12a_angle2bits( double degrees );
 };
 
 #endif // MULTI_DNMX_MOTOR_H
