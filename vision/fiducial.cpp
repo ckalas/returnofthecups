@@ -70,10 +70,12 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
     int goodMatchCount = 0;
     
     for (int i = 0; i < descriptors_id7.rows; i++) {
+    cout << "pre: "  << keypoints_grayIm[matches[i].queryIdx].pt;
 	if (matches[i].distance <= max(2*min_dist, 0.02)){
-	    good_matches.push_back(matches[i]); //push_back appends
+	    good_matches.push_back(matches[i]);
 	    goodKp_id7.push_back(keypoints_id7[matches[i].trainIdx].pt);
 	    goodKp_grayIm.push_back(keypoints_grayIm[matches[i].queryIdx].pt);
+	    cout << "post: "  << keypoints_grayIm[matches[i].queryIdx].pt;
 	    goodMatchCount++;
 	}
     }
