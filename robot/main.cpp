@@ -2,6 +2,9 @@
 #include "multi_motor.h"
 #include <cv.h>
 #include <highgui.h>
+#include <math.h>
+
+#include "ikine.h"
 
 using namespace std;
 using namespace cv;
@@ -9,6 +12,10 @@ using namespace cv;
 int main( int argc, char *argv[] ) 
 {
     cout << "hello world" << endl;
+
+    cout << "sqrt: " << sqrt(9) << endl;
+
+    ikine();
 	
     CMulti_DNMX_Motor Motors;
 
@@ -16,9 +23,10 @@ int main( int argc, char *argv[] )
     int goal_pos[4] = {100, a, a, a};
     int curr_pos[4] ={0,0,0,0};
 
-    int base_rotation = 0;
+    int rotation = 0;
 
     // init with baud 20k, rgefer to bauds.txt for mapping
+    /*
     Motors.initialization(34);
     Motors.set_torque(1023);    
     Motors.set_speed(80);
@@ -31,8 +39,15 @@ int main( int argc, char *argv[] )
     Motors.move_to_goal_pos(goal_pos, curr_pos);
     //sleep(3);
 
+    */
     //goal_pos[0] = 300; //100;
+
+    /*
     while (1) {
+        cout << "Input rotation angle in degrees: ";
+        cin >> rotation;
+
+        cout << "Bits: " << Motors.ax12a_angle2bits(rotation) << endl;
 
         cout << "elbow rotation: ";
         cin >> base_rotation;
@@ -41,6 +56,8 @@ int main( int argc, char *argv[] )
         Motors.move_to_goal_pos( goal_pos, curr_pos);
         //sleep(3);
     }
+    */
+
 
     //char k;
 

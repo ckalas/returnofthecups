@@ -89,21 +89,6 @@ int CMulti_DNMX_Motor::check_com_status(void) {
     return 0;
 }
 
-void CMulti_DNMX_Motor::set_torque(int torque){
-    for (int i=0; i<NUM_OF_MOTORS; i++) {
-        int ret = dxl_read_word( Motor_ID[i], P_TORQUE_ENABLE);
-        printf("Motor No. %d, Torque enabled: %d\n", i, ret);
-
-        dxl_write_word( Motor_ID[i], P_TORQUE_LIMIT_L, torque);
-
-        ret = dxl_read_word( Motor_ID[i], P_TORQUE_LIMIT_L);
-        printf("Motor No. %d, Torque applied: %d\n", i, ret);
-
-        if (check_com_status() != 0)
-            break;
-    }
-}
-
 void CMulti_DNMX_Motor::set_speed(int speed) {
     for (int i=0; i<NUM_OF_MOTORS; i++) {
         dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, speed);
@@ -181,9 +166,35 @@ void CMulti_DNMX_Motor::PrintErrorCode()
 }
 
 
+void CMulti_DNMX_Motor::set_torque(int torque){
+    for (int i=0; i<NUM_OF_MOTORS; i++) {
+        int ret = dxl_read_word( Motor_ID[i], P_TORQUE_ENABLE);
+        printf("Motor No. %d, Torque enabled: %d\n", i, ret);
+
+        dxl_write_word( Motor_ID[i], P_TORQUE_LIMIT_L, torque);
+
+        ret = dxl_read_word( Motor_ID[i], P_TORQUE_LIMIT_L);
+        printf("Motor No. %d, Torque applied: %d\n", i, ret);
+
+        if (check_com_status() != 0)
+            break;
+    }
+}
+
 void CMulti_DNMX_Motor::no_torque_generate(){
     for (int i=0;i<NUM_OF_MOTORS;i++){
         dxl_write_word( Motor_ID[i], P_TORQUE_ENABLE, 0 );
     }
 
+}
+
+
+int CMulti_DNMX_Motor::mx12w_angle2bits( double degrees ) {
+    double actual_angle = MX_12W_ANGLE / 2 - degrees;
+    return int( actual_angle / MX_12W_ANGLE * MX_12W_BITS);
+}
+
+int CMulti_DNMX_Motor::ax12a_angle2bits( double degrees ) {
+    double actual_angle = AX_12A_ANGLE / 2 - degrees;
+    return int( actual_angle / AX_12A_ANGLE * AX_12A_BITS);
 }
