@@ -52,8 +52,10 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
     /* Get the min distance of keypoints -> NOTE distance here is a
       measure of "goodness" of matches.... Apparently */
 
+    double min_dist, max_dist;
+
     //-- Quick calculation of max and min distances between keypoints
-    for( int i = 0; i < descriptors_1.rows; i++ ) { 
+    for( int i = 0; i < descriptors_id7.rows; i++ ) { 
         double dist = matches[i].distance;
         if( dist < min_dist ) min_dist = dist;
         if( dist > max_dist ) max_dist = dist;
@@ -64,9 +66,6 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
     std::vector<Point2f> goodKp_id7;
     std::vector<Point2f> goodKp_grayIm;
 
-    // stuff here
-    KeyPoint::convert(keypoints1, points1, queryIdxs);
-    KeyPoint::convert(keypoints2, points2, trainIdxs);
     
     int goodMatchCount = 0;
     

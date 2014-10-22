@@ -7,7 +7,7 @@
 using namespace cv;
 using namespace std;
 
-void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inverseCamera) {
+void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat inverseCamera) {
 
     std::vector<cv::Rect> matches;
     Mat gray, cameraCoords; // make this a vector of them ultimately pointer
@@ -28,7 +28,7 @@ void detect_cups(Mat *rgbMat, Mat *depthMat, CascadeClassifier cascade, Mat *inv
                 cout << depth << " cm" << endl;
                 // Calculate distance from camera
                 Mat imageCoords = (Mat_<double>(3,1) << matches[i].x*depth, matches[i].y*depth, depth);
-                cameraCoords = *inverseCamera * imageCoords;
+                cameraCoords = inverseCamera * imageCoords;
                 cout << "Cup location: " << cameraCoords << endl;
             }
 	

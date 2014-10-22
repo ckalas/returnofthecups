@@ -46,9 +46,9 @@ int main(int argc, char **argv) {
     device.startDepth();
 
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
-    while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) {
+    /*while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) {
         device.getVideo(rgbMat);
-    }
+    }*/
 
     while (!die) {
 	// Check the clock tick
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
 
 	depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
 	// Detect and locate cup/s
-	detect_cups(&rgbMat, &depthMat, rectCup, &cameraInv);
+	detect_cups(&rgbMat, &depthMat, rectCup, cameraInv);
 
 	char k = cvWaitKey(1);
 
