@@ -30,14 +30,14 @@ int main( int argc, char *argv[] )
 
 
     // init with baud 20k, rgefer to bauds.txt for mapping
-    /*
+    
     Motors.initialization(34);
     Motors.set_torque(1023);    
     Motors.set_speed(80);
     Motors.read_speed();
     
     Motors.move_to_goal_pos(goal_pos, curr_pos);
-    */
+    
     
     /**
      * From you view:
@@ -55,12 +55,11 @@ int main( int argc, char *argv[] )
 
         ikine(coords, &angles);
 
-        /*
         goal_pos[0] = Motors.mx12w_angle2bits(angles[0]);
         goal_pos[1] = Motors.ax12a_angle2bits(angles[1]);
         goal_pos[2] = Motors.ax12a_angle2bits(angles[2]);
         Motors.move_to_goal_pos( goal_pos, curr_pos);
-        */
+        
     }
 
     //char k;

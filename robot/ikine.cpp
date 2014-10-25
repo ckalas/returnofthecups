@@ -1,6 +1,6 @@
 #include "ikine.h"
 
-// Input x, y ,z
+// Input x, y ,z and the angle vector returns the values to input to the  motors
 void ikine(vector<double> coords, vector<double>* angles) {
 	//cout << endl << "Andy Ikine says, hello world" << endl << endl;
 
@@ -30,11 +30,11 @@ void ikine(vector<double> coords, vector<double>* angles) {
 
 	// equation from the online source
 	double temp1 = (pow(y,2) + pow(z,2) - pow(L2,2) - pow(L3,2)) / (2 * L2 * L3);
-	temp1 = -sqrt( 1 - pow(temp1, 2) );
-	double temp2 = (pow(y,2) + pow(z,2) - pow(L2,2) - pow(L3,2) / (2 * L2 * L3));
-
+	double temp2 = -sqrt( 1 - pow(temp1, 2) );
+	
 	// theta C
-	angles->at(2) = atan2( temp1, temp2);
+	angles->at(2) = atan2( temp2, temp1);
+
 
 	double k1 = L2 + L3 * cos(angles->at(2));
 	double k2 = L3 * sin(angles->at(2));

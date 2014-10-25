@@ -7,8 +7,8 @@
 
 // The following are in mm units:
 #define L1			150
-#define L2			95
-#define L3			30
+#define L2			80
+#define L3			80
 //#define L4			10
 
 #define THETA_A_OFFSET	0
