@@ -7,8 +7,6 @@ RRR manipulator can pick up the cups in turn and move them to various dispensing
 standalone code for the vision and the manipulator as well as the main program which combines them.
 
 
----
-
 ###INSTALLATION
 
 
