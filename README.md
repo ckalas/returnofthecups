@@ -1,10 +1,8 @@
 #returnofthecups
 
-<img align="right" src="cup.jpg">
+<img align="right" hspace=15 src="cup.jpg">
 
-This repository contains code to ultimately detect, locate and track coffee cups in such a manner that a 
-RRR manipulator can pick up the cups in turn and move them to various dispensing locations. It contains 
-standalone code for the vision and the manipulator as well as the main program which combines them.
+<p align="justify">This repository contains code to ultimately detect, locate and track coffee cups in such a manner that a RRR manipulator can pick up the cups in turn and move them to various dispensing locations. It contains standalone code for the vision and the manipulator as well as the main program which combines them.</p>
 
 
 ###INSTALLATION
