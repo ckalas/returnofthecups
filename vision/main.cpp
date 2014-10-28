@@ -18,14 +18,14 @@ int main(int argc, char **argv) {
     long int e1, e2;
     double t;
     int fps;
-
+    
     // Load classifier
     CascadeClassifier rectCup;
     if (!rectCup.load("rectCup.xml")) {
 	cout << "Error loading classifier" << endl;
     }
 	
-    bool die(false);
+    bool die(false), showFrames(false), showDepth(false);
 	
     Mat depthMat(Size(640,480),CV_16UC1);
     Mat depthf (Size(640,480),CV_8UC1);
@@ -39,22 +39,21 @@ int main(int argc, char **argv) {
     MyFreenectDevice &device = freenect.createDevice<MyFreenectDevice>(0);
 	
     namedWindow("rgb",CV_WINDOW_AUTOSIZE);
-    namedWindow("depth",CV_WINDOW_AUTOSIZE);
     moveWindow("rgb", 0, 0);
-    moveWindow("depth", 650, 0);
     device.startVideo();
     device.startDepth();
 
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
 
 
-    Point2f point;
+    // Variables for object tracking
+    int newCups = 0;
     vector<Point2f> points[2];
-    bool needToInit = true;
     Mat gray, prevGray, image;
     TermCriteria termcrit(TermCriteria::COUNT|TermCriteria::EPS,20,0.03);
     Size subPixWinSize(10,10), winSize(31,31);
 
+    // Fiducial locating of origin
     /*
     do {
         device.getVideo(rgbMat);
@@ -62,64 +61,80 @@ int main(int argc, char **argv) {
     while(!find_fid(&rgbMat, &cameraMatrix, &dist, &HT)) ; */
 
     while (!die) {
-	// Check the clock tick
-	//e1 = cv::getTickCount();
+    	// Check the clock tick
+    	e1 = cv::getTickCount();
 
-            device.getVideo(rgbMat);
-            device.getDepth(depthMat);
-            //depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
+        device.getVideo(rgbMat);
+        device.getDepth(depthMat);
+        
+        cvtColor(rgbMat, gray, COLOR_BGR2GRAY);
 
-            cvtColor(rgbMat, gray, COLOR_BGR2GRAY);
+        newCups = find_cups(&gray, rectCup, &points[1]);
+        cout <<  newCups << endl;
 
-            int newCups = find_cups(&gray, rectCup, &points[1]);
-            cout <<  newCups << endl;
+        if (!points[0].empty()) {
+            // Detect and locate cup/s
+            //detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
+            vector<uchar> status;
+            vector<float> err;
+            if(prevGray.empty()) gray.copyTo(prevGray);
 
-            if (!points[0].empty()) {
-                // Detect and locate cup/s
-                //detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
-                vector<uchar> status;
-                vector<float> err;
-                if(prevGray.empty()) gray.copyTo(prevGray);
+            calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize,3, termcrit, 0, 0.001);
+            size_t i, k;
+            for( i = k = 0; i < points[1].size(); i++ ) {
 
-                calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize,3, termcrit, 0, 0.001);
-                size_t i, k;
-                for( i = k = 0; i < points[1].size(); i++ ) {
+                if( !status[i] ) continue;
 
-                    if( norm(point - points[1][i]) <= 5 ) continue;
-
-                    if( !status[i] ) continue;
-
-                    points[1][k++] = points[1][i];
-                    circle(rgbMat, points[1][i], 3, Scalar(0,255,255), -1, 8);
-                    points[1].resize(k);
-                }
+                points[1][k++] = points[1][i];
+                circle(rgbMat, points[1][i], 3, Scalar(0,255,255), -1, 8);
+                points[1].resize(k);
             }
+        }
 
-                needToInit = false;
+        if (showFrames) {
+            // Calculate the fps and finding the time diff executing the code
+            e2 = cv::getTickCount();
+            t = double((e2 - e1) / cv::getTickFrequency());
+            fps = int( 1 / t );
+            show_fps(&rgbMat, fps);
+        }
 
-        // Calculate the fps and finding the time diff executing the code
-                /*
-        e2 = cv::getTickCount();
-        t = double((e2 - e1) / cv::getTickFrequency());
-        fps = int( 1 / t );
-        show_fps(&rgbMat, fps); */
+        if (showDepth) {
+            depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
+            imshow("depth", depthf);
+        }
+
+
         imshow("rgb", rgbMat);
 
         char c = (char)waitKey(10);
-        if( c == 27 )
-            break;
-        switch( c ) {
-        case 'r':
-            needToInit = true;
-            break;
-        case 'c':
-            points[0].clear();
-            points[1].clear();
+
+        if(c == 27) {
             break;
         }
 
+        switch(c) {
+            case 'f':
+                showFrames ^= showFrames;
+                break;
+            case 'd':
+                showDepth ^= showDepth;
+                if (!showDepth){
+                    destroyWindow("depth");
+                }
+                else {
+                    namedWindow("depth", CV_WINDOW_AUTOSIZE);
+                    moveWindow("depth", 650, 0);
+                }
+                break;
+
+            case 'c':
+                points[0].clear();
+                points[1].clear();
+                break;
+            }
+
         std::swap(points[1], points[0]);
-        //cout << points[1] << endl;
         cv::swap(prevGray, gray);
 
     }
