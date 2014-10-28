@@ -36,18 +36,21 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
     }
 }
 
-void find_cups(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points) {
+int find_cups(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points) {
     
     std::vector<cv::Rect> matches;
+    int newCups = 0;
     cascade.detectMultiScale(*gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
 
-    points->resize(matches.size());
-
     for (size_t i = 0; i < matches.size(); i++) {
+
         Point centre = Point(matches[i].x+matches[i].width/2,matches[i].y + matches[i].height/2);
+        if  (points->size() > 0 && norm (centre-(*points)[i]) <= 5 ) continue;
+        newCups++;
         points->push_back(centre);
     }
 
+    return newCups;
 
 /*                  
                     if( norm(point - points[1][i]) <= 5 ) {

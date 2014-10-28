@@ -54,7 +54,6 @@ int main(int argc, char **argv) {
     Mat gray, prevGray, image;
     TermCriteria termcrit(TermCriteria::COUNT|TermCriteria::EPS,20,0.03);
     Size subPixWinSize(10,10), winSize(31,31);
-    bool addRemovePt = false;
 
     /*
     do {
@@ -72,7 +71,9 @@ int main(int argc, char **argv) {
 
             cvtColor(rgbMat, gray, COLOR_BGR2GRAY);
 
-            find_cups(&gray, rectCup, &points[1]);
+            int newCups = find_cups(&gray, rectCup, &points[1]);
+            cout <<  newCups << endl;
+
             if (!points[0].empty()) {
                 // Detect and locate cup/s
                 //detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
@@ -81,9 +82,10 @@ int main(int argc, char **argv) {
                 if(prevGray.empty()) gray.copyTo(prevGray);
 
                 calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize,3, termcrit, 0, 0.001);
-
                 size_t i, k;
                 for( i = k = 0; i < points[1].size(); i++ ) {
+
+                    if( norm(point - points[1][i]) <= 5 ) continue;
 
                     if( !status[i] ) continue;
 
@@ -117,7 +119,7 @@ int main(int argc, char **argv) {
         }
 
         std::swap(points[1], points[0]);
-        cout << points[1] << endl;
+        //cout << points[1] << endl;
         cv::swap(prevGray, gray);
 
     }
