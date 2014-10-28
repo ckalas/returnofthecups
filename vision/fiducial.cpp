@@ -72,7 +72,7 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
 
     
     int goodMatchCount = 0;
-    //std::vector<char> mask;
+    std::vector<char> mask;
 
     Mat outIm;
     drawMatches(id7, keypoints_id7, grayIm, keypoints_grayIm, matches, outIm, CV_RGB(0, 255, 0), CV_RGB(0, 0, 255), mask, 0);
@@ -99,7 +99,6 @@ bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT) {
 
     cout << goodKp_id7 << endl;
     Mat homoMat = findHomography(goodKp_id7, goodKp_grayIm, CV_RANSAC, 5);
-    cout << mask << endl;
 
     //Get the corners from the train image id7, and grayIm
     std::vector<Point2f> id7_corners, grayIm_corners;

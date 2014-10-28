@@ -36,6 +36,35 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
     }
 }
 
+void find_cups(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points) {
+    
+    std::vector<cv::Rect> matches;
+    cascade.detectMultiScale(*gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
+
+    points->resize(matches.size());
+
+    for (size_t i = 0; i < matches.size(); i++) {
+        Point centre = Point(matches[i].x+matches[i].width/2,matches[i].y + matches[i].height/2);
+        points->push_back(centre);
+    }
+
+
+/*                  
+                    if( norm(point - points[1][i]) <= 5 ) {
+                        addRemovePt = false;
+                        continue;
+                    }
+                    if( addRemovePt && points[1].size() < (size_t)MAX_COUNT ) {
+                    vector<Point2f> tmp;
+                    tmp.push_back(point);
+                    cornerSubPix( gray, tmp, winSize, Size(-1,-1), termcrit);
+                    points[1].push_back(tmp[0]);
+                    addRemovePt = false;
+                    }*/
+
+
+}
+
 void show_fps(Mat *rgbMat, int fps) {
     string text = string(std::to_string(fps) +" FPS");
     int fontFace = FONT_HERSHEY_DUPLEX;
