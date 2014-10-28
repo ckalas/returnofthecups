@@ -1,6 +1,6 @@
 #returnofthecups
 
-![Cup](cup.jpg =150x)
+![Cup](https://github.com/ckalas/returnofthecups/blob/master/cup.jpg =150x)
 
 This repository contains code to ultimately detect, locate and track coffee cups in such a manner that a RRR manipulator can pick up the cups in turn and move them to various dispensing locations. It contains standalone code for the vision and the manipulator as well as the main program which combiens them.
 
