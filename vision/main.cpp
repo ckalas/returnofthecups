@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
         cvtColor(rgbMat, gray, COLOR_BGR2GRAY);
 
         newCups = find_cups(&gray, rectCup, &points[1]);
-
+        cout << "0: " << points[0] << endl << "1: " << points[1] << endl;
         if (!points[0].empty()) {
             // Detect and locate cup/s
             //detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
