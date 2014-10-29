@@ -88,7 +88,7 @@ Point2f find_cups2(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *point
 
     // Locate all the cups in the scene
     cascade.detectMultiScale(*gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
-
+    cout << "check points: " << (*points) << endl;
     // Add only unique cup locations
     for (size_t i = 0; i < matches.size(); i++) {
         // Take point at centre of cup region
@@ -102,7 +102,7 @@ Point2f find_cups2(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *point
 
             // Check if the cup point exists already in list - set flag.
             for (size_t j = 0; j < points->size(); j++) {
-                if (norm (centre-(*points)[j]) <= 10) {
+                if (norm (centre-(*points)[j]) <= 50) {
                     continue;
                 }
                 else {
