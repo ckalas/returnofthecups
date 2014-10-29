@@ -16,7 +16,7 @@ else
 endif
 
 
-main: fiducial.o device.o cups.o main.o 
+main: fiducial.o device.o cups.o main.o trackTest.o
 	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS)  -g
 
 %.o: %.cpp
