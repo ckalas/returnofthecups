@@ -40,7 +40,7 @@ int main( int argc, char *argv[] )
     
     
     /**
-     * From you view:
+     * From your view:
      *      left vs right is the x direction
      *      closer vs further is the y direction
      *      up vs down is the z direction
@@ -55,11 +55,15 @@ int main( int argc, char *argv[] )
 
         ikine(coords, &angles);
 
+	cout << angles[0] << endl;	
+
         goal_pos[0] = Motors.mx12w_angle2bits(angles[0]);
         goal_pos[1] = Motors.ax12a_angle2bits(angles[1]);
         goal_pos[2] = Motors.ax12a_angle2bits(angles[2]);
-        Motors.move_to_goal_pos( goal_pos, curr_pos);
-        
+	cout << "base: " << goal_pos[0] << endl
+	     << "elbow: " << goal_pos[1] << endl
+	     << "wrist: " << goal_pos[2] << endl;
+        Motors.move_to_goal_pos( goal_pos, curr_pos);        
     }
 
     //char k;

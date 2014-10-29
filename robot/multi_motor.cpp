@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////
 
 #include "multi_motor.h"
+#include <cmath>
 
 CMulti_DNMX_Motor::CMulti_DNMX_Motor()
 {
@@ -189,12 +190,12 @@ void CMulti_DNMX_Motor::no_torque_generate(){
 }
 
 
-int CMulti_DNMX_Motor::mx12w_angle2bits( double degrees ) {
-    double actual_angle = MX_12W_ANGLE / 2 - degrees;
+int CMulti_DNMX_Motor::mx12w_angle2bits( double radians ) {
+    double actual_angle = MX_12W_ANGLE / 2 - (radians / M_PI * 180);
     return int( actual_angle / MX_12W_ANGLE * MX_12W_BITS);
 }
 
-int CMulti_DNMX_Motor::ax12a_angle2bits( double degrees ) {
-    double actual_angle = AX_12A_ANGLE / 2 - degrees;
+int CMulti_DNMX_Motor::ax12a_angle2bits( double radians ) {
+    double actual_angle = AX_12A_ANGLE / 2 - (radians / M_PI * 180);
     return int( actual_angle / AX_12A_ANGLE * AX_12A_BITS);
 }

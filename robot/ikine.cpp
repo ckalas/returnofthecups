@@ -42,7 +42,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 	// theta B
 	angles->at(1) = atan2( z, y ) - atan2( k2, k1 );
 
-	print_values(angles);
+	//print_values(angles);
 }
 
 void print_values( vector<double>* values) {
