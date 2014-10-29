@@ -70,7 +70,6 @@ int main(int argc, char **argv) {
         cvtColor(rgbMat, gray, COLOR_BGR2GRAY);
 
         newCups = find_cups(&gray, rectCup, &points[1]);
-        cout <<  newCups << endl;
 
         if (!points[0].empty()) {
             // Detect and locate cup/s
@@ -115,10 +114,10 @@ int main(int argc, char **argv) {
 
         switch(c) {
             case 'f':
-                showFrames ^= showFrames;
+                showFrames = showFrames ? false : true;
                 break;
             case 'd':
-                showDepth ^= showDepth;
+                showDepth = showDepth ? false : true;
                 if (!showDepth){
                     destroyWindow("depth");
                 }
