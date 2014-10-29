@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 	cout << "Error loading classifier" << endl;
     }
 	
-    bool die(false), showFrames(false), showDepth(false);
+    bool die(false), showFrames(false), showDepth(false), showFinder(false);
 	
     Mat depthMat(Size(640,480),CV_16UC1);
     Mat depthf (Size(640,480),CV_8UC1);
@@ -48,6 +48,8 @@ int main(int argc, char **argv) {
 
     // Variables for object tracking
     int newCups = 0;
+    bool addRemovePt = false;
+    Point2f point;
     vector<Point2f> points[2];
     Mat gray, prevGray, image;
     TermCriteria termcrit(TermCriteria::COUNT|TermCriteria::EPS,20,0.03);
@@ -66,31 +68,75 @@ int main(int argc, char **argv) {
 
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
+
         
         cvtColor(rgbMat, gray, COLOR_BGR2GRAY);
+        if ((point = find_cups2(&gray, rectCup, &points[1])) != Point2f(0.0,0.0) ) {
+            addRemovePt = true;
+        }
 
-        newCups = find_cups(&gray, rectCup, &points[1]);
-        cout << "0: " << points[0] << endl << "1: " << points[1] << endl;
 
+        if( !points[0].empty() ) {
+            vector<uchar> status;
+            vector<float> err;
+            if(prevGray.empty())
+                gray.copyTo(prevGray);
+            calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize,
+                                 3, termcrit, 0, 0.001);
+            size_t i, k;
+            for( i = k = 0; i < points[1].size(); i++ )
+            {
+                if( addRemovePt )
+                {
+                    if( norm(point - points[1][i]) <= 20 )
+                    {
+                        addRemovePt = false;
+                        continue;
+                    }
+                }
+
+                if( !status[i] )
+                    continue;
+
+                points[1][k++] = points[1][i];
+                circle(rgbMat, points[1][i], 3, Scalar(0,255,0), -1, 8);
+            }
+            points[1].resize(k);
+        }
+
+        if( addRemovePt && points[1].size() < (size_t)10 )
+        {
+            vector<Point2f> tmp;
+            tmp.push_back(point);
+            cornerSubPix( gray, tmp, winSize, Size(-1,-1), termcrit);
+            points[1].push_back(tmp[0]);
+            addRemovePt = false;
+        }
+        /*
         if (!points[0].empty()) {
             // Detect and locate cup/s
             //detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
             vector<uchar> status;
             vector<float> err;
             if(prevGray.empty()) gray.copyTo(prevGray);
-
+            cout << "0: " << points[0] << endl << "1: " << points[1] << endl;
             calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize,3, termcrit, 0, 0.001);
             size_t i, k;
+
+            //cout << status << endl;
+
             for( i = k = 0; i < points[1].size(); i++ ) {
 
                 if( !status[i] ) continue;
-
                 points[1][k++] = points[1][i];
                 circle(rgbMat, points[1][i], 3, Scalar(0,255,255), -1, 8);
                 points[1].resize(k);
             }
-        }
+        }*/
 
+        if (showFinder) {
+            detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
+        }
         if (showFrames) {
             // Calculate the fps and finding the time diff executing the code
             e2 = cv::getTickCount();
@@ -115,10 +161,13 @@ int main(int argc, char **argv) {
 
         switch(c) {
             case 'f':
-                showFrames ^= showFrames;
+                showFrames = showFrames? false: true;
+                break;
+            case 's':
+                showFinder = showFinder? false: true;
                 break;
             case 'd':
-                showDepth ^= showDepth;
+                showDepth = showDepth? false : true;
                 if (!showDepth){
                     destroyWindow("depth");
                 }
