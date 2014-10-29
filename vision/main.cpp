@@ -75,24 +75,38 @@ int main(int argc, char **argv) {
         cvtColor(rgbMat, gray, COLOR_BGR2GRAY);
 
         if (showContours) {
-             cout << "hi" << endl;
-            /// Reduce the noise so we avoid false circle detection
-            GaussianBlur( gray, gray, Size(9, 9), 2, 2 );
+            Mat threshold_output;
+            vector<vector<Point> > contours;
+            vector<Vec4i> hierarchy;
 
-            vector<Vec3f> circles;
+            /// Detect edges using Threshold
+            threshold(gray, threshold_output, 100, 255, THRESH_BINARY );
+            /// Find contours
+            findContours( threshold_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
-            /// Apply the Hough Transform to find the circles
-            HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 1, gray.rows/8, 200, 100, 0, 0 );
+            /// Find the rotated rectangles and ellipses for each contour
+            vector<RotatedRect> minRect( contours.size() );
+            vector<RotatedRect> minEllipse( contours.size() );
 
-            /// Draw the circles detected
-            for( size_t i = 0; i < circles.size(); i++ ) {
-                Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-                int radius = cvRound(circles[i][2]);
-                // circle center
-                circle( rgbMat, center, 3, Scalar(0,255,0), -1, 8, 0 );
-                // circle outline
-                circle( rgbMat, center, radius, Scalar(0,0,255), 3, 8, 0 );
+            for( int i = 0; i < contours.size(); i++ ) { 
+                minRect[i] = minAreaRect( Mat(contours[i]) );
+                if( contours[i].size() > 5 ) minEllipse[i] = fitEllipse( Mat(contours[i]) ); 
             }
+     
+            /// Draw contours + rotated rects + ellipses
+            Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
+            for( int i = 0; i< contours.size(); i++ )
+             {
+               Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+               // contour
+               drawContours(rgbMat, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+               // ellipse
+               ellipse(rgbMat, minEllipse[i], color, 2, 8 );
+               // rotated rectangle
+               Point2f rect_points[4]; minRect[i].points( rect_points );
+               for( int j = 0; j < 4; j++ )
+                  line(rgbMat, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+             }
         }
 
         if (showFinder) {
