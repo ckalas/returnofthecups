@@ -1,4 +1,8 @@
 #include <cv.h>
 
-void detect_cups(cv::Mat *rgbMat, cv::Mat depthMat, cv::CascadeClassifier cascade, cv::Mat inverseCamera);
-void show_fps(cv::Mat *rgbMat, int fps);
+using namespace std;
+using namespace cv;
+
+void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera);
+int find_cups(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points);
+void show_fps(Mat *rgbMat, int fps);

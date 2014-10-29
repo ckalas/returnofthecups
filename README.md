@@ -1,19 +1,38 @@
 #returnofthecups
 
+<img align="right" hspace=15 src="cup.jpg">
+
+<p align="justify">This repository contains code to ultimately detect, locate and track coffee cups in such a manner that a RRR manipulator can pick up the cups in turn and move them to various dispensing locations. It contains standalone code for the vision and the manipulator as well as the main program which combines them.</p>
+
+
 ###INSTALLATION
+
 
 1. opencv
 2. libfreenect
 
-<p>Preferably use a package manager (use homebrew on OSX) - this ensures that dependencies
-are correctly installed.</p>
+Preferably use a package manager (use homebrew on OSX) - this ensures that dependencies
+are correctly installed.
+
+---
 
 ###FILES
 
 #####Vision
+
 * device.cpp / device.h : the abstracted freenect device class
 * cups.cpp / cups.h : functions to help identify and located cups
 * main.cpp : the main program
 
+
 ####Robot
-<p> On OSX the serial device will appear as <b>/dev/cu.xxxxx</b> and <b>/dev/tty.xxxxx</b>. <b>cu</b> is the "callout" device, it's what you use when you establish a connection to the serial device and start talking to it. `tty` is the "dialin" device, used for monitoring a port for incoming calls for e.g. a fax listener. To that end, the connection must be established to <b>cu</b>.</p>
+
+```
+Andy add stuff here about things
+```
+
+---
+
+###Notes
+
+Currently the dynamixel code runs only on __Linux__. The vision code compiles and runs on both __Linux__ and __OSX__.
