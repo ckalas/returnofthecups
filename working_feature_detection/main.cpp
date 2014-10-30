@@ -9,6 +9,9 @@
 using namespace std;
 using namespace cv;
 
+string dispenser = "sift/auto_dispenser.png";
+string fiducial = "sift/id7.png";
+
 int main (int argc, char **argv) {
     // Setting up the interfacing with Kinect
     Freenect::Freenect freenect;
@@ -79,6 +82,8 @@ int main (int argc, char **argv) {
     framePoints.push_back( Point3f( 0.0, 3.0, 0.0 ) );
     framePoints.push_back( Point3f( 0.0, 0.0, -3.0 ) );
 
+    //waitKey(1000);
+
     while (1) {
 	e1 = getTickCount();
 
@@ -129,7 +134,9 @@ int main (int argc, char **argv) {
 		 << tvec.at<double>(2,0) << "]" << endl;        // depth
 	}
 	*/
-	checkSIFT(undistortMat);
+	
+
+	//checkSIFT(undistortMat, fiducial, intrinsics, distortion);
 
 	if(k == 'q'){
 	    break;
@@ -140,6 +147,9 @@ int main (int argc, char **argv) {
 	    result = sstm.str();
 	    imwrite(result, grayMat);
 	    counter++;
+	}
+	else if (k == 'm') {
+	    checkSIFT(undistortMat, fiducial, intrinsics, distortion);
 	}
 	
 	// display the video and depth in window

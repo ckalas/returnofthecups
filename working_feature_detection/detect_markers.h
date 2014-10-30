@@ -5,6 +5,7 @@
 
 using namespace cv;
 
-void checkSIFT(Mat src);
+void cameraPostFromHomography(const Mat& H, Mat& pose);
+void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion);
 
 #endif

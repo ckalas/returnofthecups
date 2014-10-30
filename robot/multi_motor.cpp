@@ -92,6 +92,9 @@ int CMulti_DNMX_Motor::check_com_status(void) {
 
 void CMulti_DNMX_Motor::set_speed(int speed) {
     for (int i=0; i<NUM_OF_MOTORS; i++) {
+	if (i == 0) 
+	    dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, int(speed / 7.9661));
+
         dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, speed);
 
         if (check_com_status() != 0)

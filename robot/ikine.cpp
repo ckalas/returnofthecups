@@ -9,6 +9,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 	double z = coords[2] - L1;
 
 	// checks if the given xyz coords is out of range
+	
 	if ( sqrt(pow(y,2) + pow(z,2)) > (L2 + L3) ||
 		 sqrt(pow(y,2) + pow(x,2)) > (L2 + L3) ||
 		 sqrt(pow(x,2) + pow(z,2)) > (L2 + L3) ) { 
@@ -21,6 +22,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 
 		return;
 	}
+	
 	
 	// (horizontal, vertical) theta A
 	angles->at(0) = atan2(x,y); 
@@ -42,7 +44,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 	// theta B
 	angles->at(1) = atan2( z, y ) - atan2( k2, k1 );
 
-	//print_values(angles);
+	print_values(angles);
 }
 
 void print_values( vector<double>* values) {
