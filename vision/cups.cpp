@@ -33,7 +33,7 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
 vector<Point2f> average_cups(vector<Point2f> points) {
     vector<Point2f> cups;
     cout << points << endl;
-    for (size_t i = 0 ; i < points.size(); i++) {
+    /*for (size_t i = 0 ; i < points.size(); i++) {
         int matches = 0;
         for(size_t j = i+1; j < points.size(); j++) {
             if(norm(points[i]-points[j]) <= 20 ) {
@@ -48,8 +48,29 @@ vector<Point2f> average_cups(vector<Point2f> points) {
             cups.push_back(points[i]);
         }
          points.erase(points.begin()+i);
+    }*/
+    for (auto it = points.begin(); it != points.end(); ++it) {
+        int matches = 0;
+        for (auto jt = std::next(it); jt != points.end(); ) {
+            cout << *it <<" - " << *jt << endl;
+            if (norm(*it-*jt) <= 20)  {
+                points.erase(jt++);
+            }
+            else {
+                ++jt;
+            }
+        } 
+
+        if (matches >= 10) {
+            // Add certified cup to new vector, 'remove' current cup
+            cups.push_back(*it);
+        }
+        else {
+            points.erase(it);
+        }
     }
-    cout << cups << endl;
+    cout << "original: " << points << endl;
+    cout << "new: " << cups << endl;
     return cups;
 }
 

@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
     }
     // Decide which cups are valid
     device.getVideo(rgbMat);
+    cout << "hi " << endl;
     points = average_cups(points);
     draw_cups(&rgbMat, points);
     imshow("rgb", rgbMat);
