@@ -6,23 +6,40 @@
 #include <string>
 #include <cv.h>
 
+#define WIDTH 640
+#define HEIGHT 480
+
 using namespace std;
 using namespace cv;
 
 string dispenser = "sift/auto_dispenser.png";
 string fiducial = "sift/id7.png";
+string sift_mark = "sift/sift_marker.png";
+string surf_mark = "sift/surf_marker.png";
+
+void on_trackbar( int, void*) { }
 
 int main (int argc, char **argv) {
     // Setting up the interfacing with Kinect
     Freenect::Freenect freenect;
     MyFreenectDevice &device = freenect.createDevice<MyFreenectDevice>(0);
+    //device.setVideoFormat(FREENECT_VIDEO_RGB, FREENECT_RESOLUTION_HIGH);
 
     // Variable to storage video and depth
+    /*
     Mat depthMat(Size(640,480),CV_16UC1);
     Mat depthf(Size(640,480),CV_8UC1);
     Mat rgbMat(Size(640,480),CV_8UC3,Scalar(0));
     Mat undistortMat(Size(640,480),CV_8UC3,Scalar(0));
     Mat grayMat(Size(640,480),CV_8UC1);
+    */
+    Mat depthMat(Size(640,480),CV_16UC1);
+    Mat depthf(Size(640,480),CV_8UC1);
+    Mat rgbMat(Size(WIDTH, HEIGHT),CV_8UC3,Scalar(0));
+    Mat undistortMat(Size(WIDTH, HEIGHT),CV_8UC3,Scalar(0));
+    Mat grayMat(Size(WIDTH,HEIGHT),CV_8UC1);
+
+
     Mat map1, map2;
     char k;
 
@@ -44,8 +61,8 @@ int main (int argc, char **argv) {
     moveWindow("rgb", 0, 0);
     namedWindow("depth", CV_WINDOW_AUTOSIZE);
     moveWindow("depth", 650, 0);
-    namedWindow("undistort", CV_WINDOW_AUTOSIZE);
-    moveWindow("undistort", 0, 490);
+    //namedWindow("undistort", CV_WINDOW_AUTOSIZE);
+    //moveWindow("undistort", 0, 490);
     device.startVideo();
     device.startDepth();
 
@@ -60,30 +77,16 @@ int main (int argc, char **argv) {
     // close the input file
     fs.release();
 
-    cout << "intrinsics: " << intrinsics << endl;
-    cout << "distortion: " << distortion << endl;
+    // create trackbar for prototype
+    string s1 = "min feature", s2 = "min distance", s3 = "multiplier";
+    const int feat_slider_max = 10000, dist_slider_max = 10000, multi_slider_max = 100;
+    int feat_slider = 500, dist_slider = 750, multi_slider = 5;
 
-    Mat rvec = Mat(Size(3,1), CV_64F);
-    Mat tvec = Mat(Size(3,1), CV_64F);
+    createTrackbar(s1, "rgb", &feat_slider, feat_slider_max, on_trackbar);
+    createTrackbar(s2, "rgb", &dist_slider, dist_slider_max, on_trackbar);
+    createTrackbar(s3, "rgb", &multi_slider, multi_slider_max, on_trackbar);
 
-    vector<Point2d> imageFramePoints, imageOrigin;
-    vector<Point3f> boardPoints, framePoints;
-    vector<Point2f> imagePoints;
-
-    // BEWARE, MUST BE CORRECT OTHERWISE EXCEPTION IS THROWN
-    for(int i=0; i<8; i++) {
-	for(int j=0; j<6; j++) {
-	    boardPoints.push_back( Point3f( float(i), float(j), 0.0) );
-	}
-    }
-
-    // generate points in the reference frame
-    framePoints.push_back( Point3f( -3.0, 3.0, 0.0 ) );
-    framePoints.push_back( Point3f( 0.0, 3.0, 0.0 ) );
-    framePoints.push_back( Point3f( 0.0, 0.0, -3.0 ) );
-
-    //waitKey(1000);
-
+    
     while (1) {
 	e1 = getTickCount();
 
@@ -101,40 +104,10 @@ int main (int argc, char **argv) {
 	initUndistortRectifyMap( intrinsics, distortion, Mat_<double>::eye(3,3), newMat,
 				 rgbMat.size(), map1.type(), map1, map2);
         remap( rgbMat, undistortMat, map1, map2, INTER_LINEAR, BORDER_CONSTANT );
-	//undistort(rgbMat, undistortMat, intrinsics, distortion);
+	undistort(rgbMat, undistortMat, intrinsics, distortion);
 
-	// Read keyboard inpu
+	// Read keyboard input
 	k = waitKey(1);
-
-	// 3d checkboard pose
-	//bool found = findChessboardCorners(grayMat, boardSize, imagePoints);
-	/*
-	if (found) {
-	    Mat temp = undistortMat.clone();
-	    drawChessboardCorners( temp, boardSize, imagePoints, found);
-	    imshow("checker", temp);
-	    solvePnP( Mat(boardPoints), Mat(imagePoints), intrinsics, distortion, rvec, tvec, false);
-
-	    projectPoints(framePoints, rvec, tvec, intrinsics, distortion, 
-			  imagePoints );
-
-	    circle( undistortMat, imagePoints[0], 4, CV_RGB(255,0,0) );
-	    //cout << imagePoints[0] << "|" << imagePoints[1] << endl;
-	    line(undistortMat, imagePoints[0], imagePoints[1], CV_RGB(255,0,0), 2);
-	    line(undistortMat, imagePoints[0], imagePoints[2], CV_RGB(0,255,0), 2);
-	    line(undistortMat, imagePoints[0], imagePoints[3], CV_RGB(0,0,255), 2);
-	    //imshow("rgb", rgbMat);
-
-	    cout << fixed << setprecision(2) << "rvec = ["
-		 << rvec.at<double>(0,0) << ", "
-		 << rvec.at<double>(1,0) << ", "
-		 << rvec.at<double>(2,0) << "] \t tvec = ["     
-		 << tvec.at<double>(0,0) << ", "                // horizontal
-		 << tvec.at<double>(1,0) << ", "                
-		 << tvec.at<double>(2,0) << "]" << endl;        // depth
-	}
-	*/
-	
 
 	//checkSIFT(undistortMat, fiducial, intrinsics, distortion);
 
@@ -148,12 +121,19 @@ int main (int argc, char **argv) {
 	    imwrite(result, grayMat);
 	    counter++;
 	}
-	else if (k == 'm') {
-	    checkSIFT(undistortMat, fiducial, intrinsics, distortion);
+	else if (k == 'f') {
+	    checkSIFT(undistortMat, fiducial, intrinsics, distortion,
+		      500, 750, 3);
+	    // note 4.863 seems like a good multiplier
+	    //feat_slider, dist_slider, multi_slider);
+	}
+	else if (k == 'd') {
+	    checkSIFT(rgbMat, sift_mark, intrinsics, distortion,
+		      feat_slider, dist_slider, multi_slider);
 	}
 	
 	// display the video and depth in window
-	imshow("undistort", undistortMat);
+	//imshow("undistort", undistortMat);
 	imshow("rgb", rgbMat);
 
 	e2 = getTickCount();

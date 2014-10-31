@@ -8,6 +8,9 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
+#define WIDTH 640
+#define HEIGHT 480
+
 using namespace cv;
 using namespace std;
 
@@ -32,7 +35,7 @@ class MyFreenectDevice : public Freenect::FreenectDevice {
 		MyFreenectDevice(freenect_context *_ctx, int _index)
 	 		: Freenect::FreenectDevice(_ctx, _index), m_buffer_depth(FREENECT_DEPTH_11BIT),
 			m_buffer_rgb(FREENECT_VIDEO_RGB),m_gamma(2048),depthMat(Size(640,480),CV_16UC1),
-			rgbMat(Size(640,480), CV_8UC3, Scalar(0)),ownMat(Size(640,480),CV_8UC3,Scalar(0)), 
+			rgbMat(Size(WIDTH,HEIGHT), CV_8UC3, Scalar(0)),ownMat(Size(WIDTH,HEIGHT),CV_8UC3,Scalar(0)), 
 			m_new_rgb_frame(false),m_new_depth_frame(false) {
 
 			setDepthFormat(FREENECT_DEPTH_REGISTERED);
