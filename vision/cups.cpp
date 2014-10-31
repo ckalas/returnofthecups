@@ -37,6 +37,7 @@ vector<Point2f> average_cups(vector<Point2f> points) {
         int matches = 0;
         for(size_t j = i+1; j < points.size(); j++) {
             if(norm(points[i]-points[j]) <= 20 ) {
+                j--;
                 points.erase(points.begin()+j);
                 matches++;
             }
