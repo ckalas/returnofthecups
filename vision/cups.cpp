@@ -7,12 +7,15 @@
 using namespace cv;
 using namespace std;
 
+Rect roi = Rect(Point(180,250), Point(500,450));
+
 void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *points) {
+    Mat slice = (*rgbMat)(roi).clone();
     std::vector<cv::Rect> matches;
     Mat gray;
     Point2f centre;
 
-    cvtColor(*rgbMat, gray, CV_BGR2GRAY);
+    cvtColor(slice, gray, CV_BGR2GRAY);
     equalizeHist(gray,gray);
 
     // Locate all the cups in the scene
@@ -21,39 +24,37 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
     // Add all the cups found across 10 frames
     for (size_t i = 0; i < matches.size(); i++) {
         // Take point at centre of cup region
-        centre = Point2f((float)matches[i].x+matches[i].width/2, (float)matches[i].y + matches[i].height/2);
+        centre = Point2f((float)matches[i].x+matches[i].width/2 + 180, (float)matches[i].y + matches[i].height/2+250);
         points->push_back(centre);
-        circle(*rgbMat, centre, 3, Scalar(0,255,255), 5);
     }
+
 }
 
 vector<Point2f> average_cups(vector<Point2f> points) {
     vector<Point2f> cups;
+    cout << points << endl;
     for (size_t i = 0 ; i < points.size(); i++) {
-
         int matches = 0;
-
         for(size_t j = i+1; j < points.size(); j++) {
-
-            if(norm(points[i]-points[j]) <= 10 ) {
+            if(norm(points[i]-points[j]) <= 20 ) {
+                points.erase(points.begin()+j);
                 matches++;
             }
         }
-
-        if (matches >= 5) {
+        if (matches >= 10) {
             cout << "Cup" << endl;
             // Add certified cup to new vector, 'remove' current cup
             cups.push_back(points[i]);
-            points[i] = Point2f(0.0,0.0);
         }
+         points.erase(points.begin()+i);
     }
-
+    cout << cups << endl;
     return cups;
 }
 
 void draw_cups(Mat *rgbMat, vector<Point2f> points) {
     for (size_t i = 0; i < points.size(); i++) {
-        circle(*rgbMat, points[i], 3, Scalar(0,255,255), 5);
+        circle(*rgbMat, points[i], 3, Scalar(0,0,255), 2);
     }
 }
 

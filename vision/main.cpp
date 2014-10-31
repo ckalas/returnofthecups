@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 	cout << "Error loading classifier" << endl;
     }
 	
-    bool die(false), showFrames(false), showDepth(false), showFinder(false);
+    bool die(false), showFrames(false), showDepth(false), showFinder(false), showTarget(true);
 	
     Mat depthMat(Size(640,480),CV_16UC1);
     Mat depthf (Size(640,480),CV_8UC1);
@@ -38,9 +38,6 @@ int main(int argc, char **argv) {
     Freenect::Freenect freenect;
     MyFreenectDevice &device = freenect.createDevice<MyFreenectDevice>(0);
 	
-    namedWindow("rgb",CV_WINDOW_AUTOSIZE);
-    moveWindow("rgb", 0, 0);
-    
     device.startVideo();
     device.startDepth();
 
@@ -48,14 +45,13 @@ int main(int argc, char **argv) {
 
     vector<Point2f> points;
 
-    // Find the cups across 10 frames
-    for(int i = 0; i < 10; i++) {
+    // Find the cups across 50 frames
+    for(int i = 0; i < 50; i++) {
         device.getVideo(rgbMat);
         accumlate_cups(&rgbMat, rectCup, &points);
-        imshow("rgb", rgbMat);
-        waitKey(1);
     }
     // Decide which cups are valid
+    device.getVideo(rgbMat);
     points = average_cups(points);
     draw_cups(&rgbMat, points);
     imshow("rgb", rgbMat);
@@ -91,6 +87,9 @@ int main(int argc, char **argv) {
             imshow("depth", depthf);
         }
 
+        if (showTarget) {
+            rectangle(rgbMat, Point(180,250), Point(500,450), Scalar(255,0,0));
+        }
 
         imshow("rgb", rgbMat);
 
@@ -117,6 +116,8 @@ int main(int argc, char **argv) {
                     moveWindow("depth", 650, 0);
                 }
                 break;
+            case 'r':
+                showTarget = showTarget ? false : true;
             }
 
     }
