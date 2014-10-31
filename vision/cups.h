@@ -4,7 +4,7 @@ using namespace std;
 using namespace cv;
 
 void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *points);
-vector<Point2f> average_cups(vector<Point2f> points) ;
+void average_cups(vector<Point2f> *points) ;
 void draw_cups(Mat *rgbMat, vector<Point2f> points) ;
 void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera);
 int find_cups(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points);
