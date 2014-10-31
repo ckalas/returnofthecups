@@ -44,16 +44,15 @@ int main(int argc, char **argv) {
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
 
     vector<Point2f> points;
-
     // Find the cups across 50 frames
-    for(int i = 0; i < 50; i++) {
+    for(int i = 0; i < 100; i++) {
         device.getVideo(rgbMat);
         accumlate_cups(&rgbMat, rectCup, &points);
+        waitKey(5);
     }
     // Decide which cups are valid
     device.getVideo(rgbMat);
-    cout << "hi " << endl;
-    points = average_cups(points);
+    average_cups(&points);
     draw_cups(&rgbMat, points);
     imshow("rgb", rgbMat);
     waitKey(0);
