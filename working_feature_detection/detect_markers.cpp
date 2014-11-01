@@ -14,17 +14,10 @@ Mat img_scene;
 
 // input the video and the string location of the image trying to complete with
 void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
-	       int minFeat, int minDist, int multi  )
-{
+    int minFeat, int minDist, int multi  ) {
     Mat img_object = imread(objectString, 0);
     Mat img_scene = src;
-    //cvtColor(src, img_scene, CV_BGR2GRAY);
 
-    /*
-    cout << minFeat << endl
-	 << minDist << endl
-	 << multi << endl << endl;
-    */
 
     // -- Step 1: Detect the keypoints using SURF Detector
     int minFeatures = minFeat; //500; //500;
@@ -82,7 +75,7 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
     vector<Point2f> obj;
     vector<Point2f> scene;
 
-    for (int i = 0; i< good_matches.size(); i++) {
+    for (size_t i = 0; i< good_matches.size(); i++) {
 	// -- Get the keypoints from the good matches
 	obj.push_back(keypoints_object[good_matches[i].queryIdx].pt);
 	scene.push_back(keypoints_scene[good_matches[i].trainIdx].pt);
