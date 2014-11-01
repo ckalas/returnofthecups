@@ -8,6 +8,9 @@ using namespace std;
 int main (void) {
     char buffer[100];
     cin >> buffer;
+    if (!error) {
+	fprintf(stderr, "failed to read in\n");
+    }
     cout << 5 << endl;
 }
 
