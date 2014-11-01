@@ -8,29 +8,28 @@ using namespace std;
 
 int main() {
     int x;
-    int to[2], from[2];
-    pipe(to);
-    pipe(from);
+    int toParent[2], fromParent[2];
+    pipe(toParent);
+    pipe(fromParent);
 
-    // childs perspective to/from
     if (fork()) { // parent
-        close(to[0]);
-        close(from[1]);
-        dup2(to[1], 1);
-        dup2(from[0], 0);
+        close(toParent[1]);
+        close(fromParent[0]);
     }
     else {
-        close(to[1]);
-        close(from[0]);
-        dup2(to[0], 0);
-        dup2(from[1], 1);
-        close(to[0]);
-        close(from[1]);
-        execvp("two", NULL);
+        close(toParent[0]);
+        close(fromParent[1]);
+        dup2(toParent[1], 1);
+        dup2(fromParent[0], 0);
+        close(toParent[1]);
+        close(fromParent[0]);
+        execl("two", "two", (char *) NULL);
     }
-    cout << 32 << endl << 54 << endl << 100 << endl << 1<< endl;
-    cout.flush();
-    cin >>  x; 
-    cerr <<  "received " << x << endl;
 
+    FILE * output = fdopen(fromParent[1], "w");
+    FILE * input = fdopen(toParent[0], "r");
+    fprintf(output, "%d\n%d\n%d\n%d\n", 32,54,100,1);
+    fflush(output);
+    fscanf(input,"%d", &x);
+    cout << "rx " << x << endl; 
 }

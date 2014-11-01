@@ -14,8 +14,8 @@ int main () {
     cin >> coords.at(1);
     cin >> coords.at(2);
     cin >> coords.at(3);
-    
-    cerr << coords.at(0) << coords.at(1) << coords.at(2) << coords.at(3)<< endl;
+
+    cerr << "rx child : " << coords.at(0) << coords.at(1) << coords.at(2) << coords.at(3)<< endl;
     cout << "99" << endl;
 }
 
