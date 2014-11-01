@@ -26,27 +26,28 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
         // Take point at centre of cup region
         centre = Point2f((float)matches[i].x+matches[i].width/2 + 180, (float)matches[i].y + matches[i].height/2+250);
         points->push_back(centre);
+        circle(*rgbMat, centre, 3, Scalar(0,0,255), 2);
     }
+
+    cout << "---------------------" <<  endl << *points << endl << "----------------------" << endl;
+    imshow("rgb", *rgbMat);
+    waitKey(100);
 
 }
 
 void average_cups(vector<Point2f> *points) {
-    cout << *points << endl;
-    for (size_t i = 0 ; i < points->size(); i++) {
-        int matches = 0;
-        for(size_t j = i+1; j < points->size(); j++ ) {
-            if(norm((*points)[i]-(*points)[j]) <= 40 ) {
-                points->erase(points->begin()+j--);
-                matches++;
+
+    for (auto it = points->begin(); it != points->end(); ++it) {
+        for (auto jt = std::next(it); jt != points->end(); ) {
+            if (norm(*it-*jt) <= 20) {
+                jt = points->erase(jt);
+            }
+            else {
+                ++jt;
             }
         }
-        cout << matches << endl;
-        if (matches < 4) {
-            points->erase(points->begin()+i--);
-        }
     }
-
-    cout << "cups " << *points << endl;
+    cout << *points << endl;
 }
 
 void draw_cups(Mat *rgbMat, vector<Point2f> points) {
@@ -124,41 +125,6 @@ int find_cups(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points) {
     }
 
     return newCups;
-
-}
-
-
-Point2f find_cups2(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points) {
-    
-    std::vector<cv::Rect> matches;
-
-    // Locate all the cups in the scene
-    cascade.detectMultiScale(*gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
-    cout << "check points: " << (*points) << endl;
-    // Add only unique cup locations
-    for (size_t i = 0; i < matches.size(); i++) {
-        // Take point at centre of cup region
-        Point2f centre = Point2f((float)matches[i].x+matches[i].width/2,
-                                (float)matches[i].y + matches[i].height/2);
-
-        if (points->size() == 0) {
-            return centre;
-        }
-        else {
-
-            // Check if the cup point exists already in list - set flag.
-            for (size_t j = 0; j < points->size(); j++) {
-                if (norm (centre-(*points)[j]) <= 50) {
-                    continue;
-                }
-                else {
-                    return centre;
-                }
-            }
-        }
-    }
-
-    return Point2f(0.0,0.0);
 
 }
 

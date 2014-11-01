@@ -8,5 +8,4 @@ void average_cups(vector<Point2f> *points) ;
 void draw_cups(Mat *rgbMat, vector<Point2f> points) ;
 void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera);
 int find_cups(Mat *gray, CascadeClassifier cascade, vector<Point2f>  *points);
-Point2f find_cups2(Mat *gray, CascadeClassifier cascade,vector<Point2f>  *points);
 void show_fps(Mat *rgbMat, int fps);
