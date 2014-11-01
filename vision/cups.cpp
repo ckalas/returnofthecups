@@ -26,12 +26,7 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
         // Take point at centre of cup region
         centre = Point2f((float)matches[i].x+matches[i].width/2 + 180, (float)matches[i].y + matches[i].height/2+250);
         points->push_back(centre);
-        circle(*rgbMat, centre, 3, Scalar(0,0,255), 2);
     }
-
-    cout << "---------------------" <<  endl << *points << endl << "----------------------" << endl;
-    imshow("rgb", *rgbMat);
-    waitKey(100);
 
 }
 

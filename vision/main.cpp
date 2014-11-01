@@ -25,7 +25,8 @@ int main(int argc, char **argv) {
 	cout << "Error loading classifier" << endl;
     }
 	
-    bool die(false), showFrames(false), showDepth(false), showFinder(false), showTarget(true);
+    bool die(false), showFrames(false), showDepth(false), showFinder(false), showTarget(true),
+             showPath(false);
 	
     Mat depthMat(Size(640,480),CV_16UC1);
     Mat depthf (Size(640,480),CV_8UC1);
@@ -43,11 +44,12 @@ int main(int argc, char **argv) {
 
     device.getCameraParams(&cameraMatrix,&dist,&cameraInv);
 
-    vector<Point2f> points;
+    vector<Point2f> points, path;
     // Find the cups across 50 frames
     for(int i = 0; i < 100; i++) {
         device.getVideo(rgbMat);
         accumlate_cups(&rgbMat, rectCup, &points);
+        waitKey(100);
     }
     imshow("rgb", rgbMat);
     waitKey(0);
@@ -92,6 +94,10 @@ int main(int argc, char **argv) {
             rectangle(rgbMat, Point(180,250), Point(500,450), Scalar(255,0,0));
         }
 
+        if (showPath) {
+            accumlate_cups(&rgbMat, rectCup, &path);
+        }
+        draw_cups(&rgbMat, path);
         imshow("rgb", rgbMat);
 
         char c = (char)waitKey(10);
@@ -103,9 +109,18 @@ int main(int argc, char **argv) {
         switch(c) {
             case 'f':
                 showFrames = showFrames? false: true;
+                cout << "Frames : " << showFrames << endl;
                 break;
             case 's':
                 showFinder = showFinder? false: true;
+                cout << "Finder : " << showFinder << endl;
+                break;
+            case 't':
+                showPath = showPath ? false : true;
+                if (!showPath) {
+                    path.clear();
+                }
+                cout << "Tracking : " << showPath << endl;
                 break;
             case 'd':
                 showDepth = showDepth? false : true;
@@ -116,6 +131,7 @@ int main(int argc, char **argv) {
                     namedWindow("depth", CV_WINDOW_AUTOSIZE);
                     moveWindow("depth", 650, 0);
                 }
+                cout << "Depth : " << showDepth << endl;
                 break;
             case 'r':
                 showTarget = showTarget ? false : true;
