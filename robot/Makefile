@@ -1,6 +1,8 @@
 CFLAGS = $(shell pkg-config --cflags opencv) -g
 
 all: main
+
+run:
 	sudo ./main
 
 main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o

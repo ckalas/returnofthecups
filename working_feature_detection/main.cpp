@@ -127,10 +127,21 @@ int main (int argc, char **argv) {
 	    // note 4.863 seems like a good multiplier
 	    //feat_slider, dist_slider, multi_slider);
 	}
-	else if (k == 'd') {
+	else if (k == 'n') {
 	    checkSIFT(rgbMat, sift_mark, intrinsics, distortion,
+		      100, 10000, 2);
+		      //feat_slider, dist_slider, multi_slider);
+
+	}
+	else if (k == 'm') {
+	    checkSIFT(rgbMat, surf_mark, intrinsics, distortion,
 		      feat_slider, dist_slider, multi_slider);
 	}
+	else if(k == 'c') {
+	    checkSIFT(rgbMat, dispenser, intrinsics, distortion,
+		      feat_slider, dist_slider, multi_slider);
+	}
+	
 	
 	// display the video and depth in window
 	//imshow("undistort", undistortMat);

@@ -8,5 +8,6 @@ using namespace cv;
 void cameraPostFromHomography(const Mat& H, Mat& pose);
 void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
 	       int minFeat, int minDist, int mutli);
-
+void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
+	       int minFeat, int minDist, int multi);
 #endif
