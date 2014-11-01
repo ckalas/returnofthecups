@@ -16,11 +16,14 @@ else
 endif
 
 
-main: main.o device.o detect_markers.o
+main: fiducial.o device.o cups.o main.o
 	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS)  -g
 
 %.o: %.cpp
 	$(CXX) -c $(CFLAGS) $< -o $@
+
+test: trackTest.cpp
+	$(CXX) $(INCLUDE) $(CFLAGS) -o trackTest.cpp  $(LIBS) $(FREE_LIBS)  -g
 
 clean:
 	rm -rf *.o main

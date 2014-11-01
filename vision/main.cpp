@@ -48,8 +48,9 @@ int main(int argc, char **argv) {
     for(int i = 0; i < 100; i++) {
         device.getVideo(rgbMat);
         accumlate_cups(&rgbMat, rectCup, &points);
-        waitKey(5);
     }
+    imshow("rgb", rgbMat);
+    waitKey(0);
     // Decide which cups are valid
     device.getVideo(rgbMat);
     average_cups(&points);
