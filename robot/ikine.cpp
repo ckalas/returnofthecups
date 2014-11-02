@@ -23,7 +23,6 @@ void ikine(vector<double> coords, vector<double>* angles) {
 		return;
 	}
 	
-	
 	// (horizontal, vertical) theta A
 	angles->at(0) = atan2(x,y); 
 
@@ -48,6 +47,8 @@ void ikine(vector<double> coords, vector<double>* angles) {
 }
 
 void print_values( vector<double>* values) {
+	cout << "Print value: " << endl;
+
 	for( int i = 0; i < values->size(); i++ ) {
 		cout << values->at(i) / M_PI * 180 << ", ";
 	}

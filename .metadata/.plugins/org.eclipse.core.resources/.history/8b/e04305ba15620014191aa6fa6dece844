@@ -1,0 +1,10 @@
+#ifndef FKINE_H
+#define FKINE_H
+
+#include <iostream>
+
+void fkine();
+
+
+
+#endif

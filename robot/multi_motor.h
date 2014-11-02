@@ -12,6 +12,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include "dynamixel.h"
+#include <vector>
 
 /**
  * Note, only the lower byte might by need to 
@@ -50,6 +51,7 @@
 #define AX_12A_BITS             1024
 #define AX_12A_ANGLE            300
 
+using namespace std;
 
 void PrintCommStatus(int CommStatus);
 void PrintErrorCode(void);
@@ -75,6 +77,7 @@ public:
     bool initialization(int baudnum);
     int check_com_status(void);
     void move_to_goal_pos (int GoalPos[], int PresentPos[]);
+    void read_motor_angles(vector<int> *PresentPos);
     void set_torque(int torque);
     void set_speed(int speed);
     void read_speed(void);
