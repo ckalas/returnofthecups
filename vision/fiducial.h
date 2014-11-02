@@ -23,6 +23,7 @@ using namespace cv;
 
 bool find_fid(Mat *rgbMat, Mat *depthMat, Mat *inverseCamera, Mat *HT);
 bool sift_feature(Mat *rgbMat, Mat *cameraMat, Mat *distCoeffs, Mat *HT);
+bool check_sift(Mat src, string objectString, Mat intrinsics, Mat distortion, int minFeat, int minDist, int multi);
 void reconfigure_reference(Mat *rvec, Mat *tvec, Mat *HT);
 
 
