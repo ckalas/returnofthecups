@@ -97,8 +97,7 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     markerPoints.push_back( Point3f( 1.0, 1.0, 0.0 ) );
     markerPoints.push_back( Point3f( 0.0, 1.0, 0.0 ) );
  
-    solvePnP(Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,
-          rvec, tvec, false);
+    solvePnP(Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,rvec, tvec, false);
     // Use depth map to get accurate depth depth(y,x)
     double depth = depthMat.at<unsigned short>(scene_corners[0].y+FID_PIX, 
                    scene_corners[0].x+FID_PIX)/10.0;
@@ -106,7 +105,7 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     //double checkDepth = tvec.at<double>(2)*-SCALE;
     double rotx= abs(rvec.at<double>(0)*(180/M_PI));
     double rotz = abs(rvec.at<double>(2)*(180/M_PI));
-    if  (depth > 100 || depth <= 50 || rotx > 50 || rotz > 50) {
+    if  (isnan(depth) || depth > 100 || depth <= 50 || rotx > 50 || rotz > 50) {
         return false;
     }
 
@@ -124,18 +123,18 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     return true;
 }
 
+/*
+    - x, y and z are in units of cm
+    - z is read from depth mat so no need to scale it
+    - roty is negated to match convention of HT
+*/
 
 Mat reconfigure_reference(Mat rvec, Mat tvec) {
-    //NOTE: x,y & z are in units of cm
-    // z is read from depth mat so no need to scale it
-    float x = tvec.at<double>(0)*-SCALE, y = tvec.at<double>(1)*-SCALE, z = tvec.at<double>(2);
-    float rotx = rvec.at<double>(0), roty = rvec.at<double>(1), rotz = rvec.at<double>(2);
 
+    float x = tvec.at<double>(0)*SCALE, y = tvec.at<double>(1)*SCALE, z = tvec.at<double>(2);
+    float rotx = rvec.at<double>(0), roty = -rvec.at<double>(1), rotz = rvec.at<double>(2);
     Mat HT;
-    // x = (x - FID_WIDTH);
-    // y = (y-FID_WIDTH);
-    //offset rotation on x copied from fiducial.py -> validity of this may 
-    //rotx = (rotx - 0.27);
+
 /*
     HT = (Mat_<float>(4, 4) << 
 	    cos(rotz) * cos(roty), 
@@ -157,7 +156,7 @@ Mat reconfigure_reference(Mat rvec, Mat tvec) {
 */
     HT = (Mat_<float>(4,4) <<
         cos(roty) * cos(rotx),
-        cos(roty) * sin(roty) * sin(rotz) - sin(roty) * cos(rotz),
+        cos(roty) * sin(rotx) * sin(rotz) - sin(roty) * cos(rotz),
         cos(roty) * sin(rotx) * cos(rotz) + sin(roty) * sin(rotz),
         x,
 

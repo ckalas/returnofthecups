@@ -32,7 +32,7 @@ Dist_Coeff: !!opencv-matrix
    #data: [ 2.54245396e-01, -1.01704633e+00, -6.74375784e-04, -1.17022929e-04, 1.80537097e+00 ]
    # tum 1
    #data : [0.2624, -0.9531, -0.0054, 0.0026, 1.1633]
-   # default
+   # default no distortion
    data : [0., 0., 0., 0., 0.]
 Avg_Reprojection_Error: 1.5282800223984891e-001
 Per_View_Reprojection_Errors: !!opencv-matrix

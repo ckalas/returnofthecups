@@ -2,7 +2,7 @@
 #include <highgui.h>
 #include "cups.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430));
 
