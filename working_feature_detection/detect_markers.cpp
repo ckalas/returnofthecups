@@ -18,13 +18,10 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
     Mat img_object = imread(objectString, 0);
     Mat img_scene = src;
 
-
     // -- Step 1: Detect the keypoints using SURF Detector
     int minFeatures = minFeat; //500; //500;
     
     SiftFeatureDetector detector( minFeatures );
-    //OrbFeatureDetector detector( minFeatures );
-    //SurfFeatureDetector detector( minFeatures);
 
     vector<KeyPoint> keypoints_object, keypoints_scene;
 
@@ -32,8 +29,7 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
     detector.detect(img_scene, keypoints_scene);
 
     // -- Step 2: Calculate descriptors (feature vectors)
-    //SurfDescriptorExtractor extractor;
-    //OrbDescriptorExtractor extractor;
+
     SiftDescriptorExtractor extractor;
 
     Mat descriptors_object, descriptors_scene;
@@ -43,7 +39,6 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
 
     // -- Step 3: Matching descriptor vector using FLANN matcher
     FlannBasedMatcher matcher;
-    //BFMatcher matcher;
     vector<DMatch> matches;
     matcher.match( descriptors_object, descriptors_scene, matches);
 
@@ -55,10 +50,7 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
 	if(dist < min_dist) min_dist = dist;
 	if(dist > max_dist) max_dist = dist;
     }
-    /*
-    cout << "-- Max dist : " << max_dist << endl;
-    cout << "-- Min dist : " << min_dist << endl;
-    */
+
     // -- Draw only "good" matches (i.e. whose distance is less than 3*min_dist
     vector<DMatch> good_matches;
 
@@ -81,15 +73,8 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
 	scene.push_back(keypoints_scene[good_matches[i].trainIdx].pt);
     }
 
-    /*
-    cout << "obj: " << obj.size() << endl;
-    cout << "scene: " << scene.size() << endl << endl;
-    */
-
-    //cout << "obj: " << obj.size() << endl;
 
     if (obj.size() <= 3 || scene.size() <= 3) {
-	//cout << "This when it is suppose to crash" << endl;
 	return;
     }
 
@@ -113,7 +98,7 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
     line( img_matches, scene_corners[2] + Point2f( img_object.cols, 0), scene_corners[3] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
     line( img_matches, scene_corners[3] + Point2f( img_object.cols, 0), scene_corners[0] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
 
-    //cout << "Just before imshow" << endl;
+
     imshow("Matches", img_matches);
 
 
@@ -130,8 +115,8 @@ void checkSIFT(Mat src, string objectString, Mat intrinsics, Mat distortion,
 
     solvePnP( Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,
 	      rvec, tvec, false);
-    //    cameraPoseFromHomography(H, pose);
-    //cout << "Pose: " << endl << pose << endl;
+
+    // CHECK VALUES HERE FOR Z * 4.8623 
     cout << "rvec: " << rvec << endl;
     cout << "tvec: " << tvec << endl << endl;
 }
@@ -142,13 +127,7 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
 {
     Mat img_object = imread(objectString, 0);
     Mat img_scene = src;
-    //cvtColor(src, img_scene, CV_BGR2GRAY);
 
-    /*
-    cout << minFeat << endl
-	 << minDist << endl
-	 << multi << endl << endl;
-    */
 
     // -- Step 1: Detect the keypoints using SURF Detector
     int minFeatures = minFeat; //500; //500;
@@ -163,8 +142,6 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
 
     // -- Step 2: Calculate descriptors (feature vectors)
     SurfDescriptorExtractor extractor;
-    //OrbDescriptorExtractor extractor;
-    
 
     Mat descriptors_object, descriptors_scene;
 
@@ -173,7 +150,6 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
 
     // -- Step 3: Matching descriptor vector using FLANN matcher
     FlannBasedMatcher matcher;
-    //BFMatcher matcher;
     vector<DMatch> matches;
     matcher.match( descriptors_object, descriptors_scene, matches);
 
@@ -185,10 +161,7 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
 	if(dist < min_dist) min_dist = dist;
 	if(dist > max_dist) max_dist = dist;
     }
-    /*
-    cout << "-- Max dist : " << max_dist << endl;
-    cout << "-- Min dist : " << min_dist << endl;
-    */
+
     // -- Draw only "good" matches (i.e. whose distance is less than 3*min_dist
     vector<DMatch> good_matches;
 
@@ -211,13 +184,6 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
 	scene.push_back(keypoints_scene[good_matches[i].trainIdx].pt);
     }
 
-    /*
-    cout << "obj: " << obj.size() << endl;
-    cout << "scene: " << scene.size() << endl << endl;
-    */
-
-    //cout << "obj: " << obj.size() << endl;
-
     if (obj.size() <= 3 || scene.size() <= 3) {
 	//cout << "This when it is suppose to crash" << endl;
 	return;
@@ -226,7 +192,7 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
     
     Mat H = findHomography( obj, scene, CV_RANSAC );
 
-    // -- Get the corners from the iamge-1 ( the object to be "detected" )
+    // -- Get the corners from the image-1 ( the object to be "detected" )
     vector<Point2f> obj_corners(4);
     obj_corners[0] = Point(0,0); obj_corners[1] = Point(img_object.cols, 0);
     obj_corners[2] = Point(img_object.cols, img_object.rows);
@@ -243,7 +209,6 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
     line( img_matches, scene_corners[2] + Point2f( img_object.cols, 0), scene_corners[3] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
     line( img_matches, scene_corners[3] + Point2f( img_object.cols, 0), scene_corners[0] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
 
-    //cout << "Just before imshow" << endl;
     imshow("Matches", img_matches);
 
 
@@ -260,8 +225,6 @@ void checkSURF(Mat src, string objectString, Mat intrinsics, Mat distortion,
 
     solvePnP( Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,
 	      rvec, tvec, false);
-    //    cameraPoseFromHomography(H, pose);
-    //cout << "Pose: " << endl << pose << endl;
     cout << "rvec: " << rvec << endl;
     cout << "tvec: " << tvec << endl << endl;
 }
