@@ -1,0 +1,17 @@
+#ifndef CONTROL_AND_INPUT_H
+#define CONTROL_AND_INPUT_H
+
+#include <unistd.h>
+#include <termios.h>
+
+using namespace std;
+
+#define DIST_MOVE 2
+
+
+int getch(void);
+void game_control(vector<double> *coords)
+void input_coords(vector<double> *coords);
+
+
+#endif

@@ -1,0 +1,9 @@
+#include "fkine.h"
+
+void fkine() {
+    cout << "Hello from fkine" << endl;
+}
+
+void print_angle_bits(vector<int> *fkine_vector) {
+
+}

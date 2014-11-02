@@ -76,6 +76,15 @@ void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
     }
 }
 
+void CMulti_DNMX_Motor::read_motor_angles(vector<int> *PresentPos) {
+	for(int i=0; i<NUM_OF_MOTORS; i++) {
+		PresentPos->at(i) = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );
+
+		if (check_com_status() != 0)
+			break;
+	}
+}
+
 int CMulti_DNMX_Motor::check_com_status(void) {
     CommStatus = dxl_get_result();
 
@@ -173,12 +182,12 @@ void CMulti_DNMX_Motor::PrintErrorCode()
 void CMulti_DNMX_Motor::set_torque(int torque){
     for (int i=0; i<NUM_OF_MOTORS; i++) {
         int ret = dxl_read_word( Motor_ID[i], P_TORQUE_ENABLE);
-        printf("Motor No. %d, Torque enabled: %d\n", i, ret);
+        //printf("Motor No. %d, Torque enabled: %d\n", i, ret);
 
         dxl_write_word( Motor_ID[i], P_TORQUE_LIMIT_L, torque);
 
         ret = dxl_read_word( Motor_ID[i], P_TORQUE_LIMIT_L);
-        printf("Motor No. %d, Torque applied: %d\n", i, ret);
+        //printf("Motor No. %d, Torque applied: %d\n", i, ret);
 
         if (check_com_status() != 0)
             break;

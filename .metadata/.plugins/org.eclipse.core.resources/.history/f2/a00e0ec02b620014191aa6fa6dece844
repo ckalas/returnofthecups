@@ -1,0 +1,17 @@
+#include "fkine.h"
+
+void fkine() {
+    cout << "Hello from fkine" << endl;
+}
+
+void print_angle_bits(vector<int> *fkine_vector) {
+	cout << fkine_vector->at(0) << ", "
+			<< fkine_vector->at(1) << ", "
+			<< fkine_vector->at(2) << ", "
+			<< fkine_vector->at(3) << endl;
+}
+
+void bits_to_degree(vector<double> *degrees, vector<int> *bits) {
+	degrees->at(0) = (bits->at(0) - 2096)  /  2096 * 180;
+
+}
