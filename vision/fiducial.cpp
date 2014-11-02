@@ -154,6 +154,7 @@ Mat reconfigure_reference(Mat rvec, Mat tvec) {
 	    
 	    0, 0, 0, 1);
 */
+
     HT = (Mat_<float>(4,4) <<
         cos(roty) * cos(rotx),
         cos(roty) * sin(rotx) * sin(rotz) - sin(roty) * cos(rotz),
@@ -163,7 +164,7 @@ Mat reconfigure_reference(Mat rvec, Mat tvec) {
         sin(roty) * cos(rotx),
         sin(roty) * sin(rotx) * sin(rotz) + cos(roty) * cos(rotz),
         sin(roty) * sin(rotx) * cos(rotz) - cos(roty) * sin(rotz),
-        y,
+        -y,
 
         -sin(rotx),
         cos(rotx) * sin(rotz),

@@ -17,7 +17,7 @@
 #include <cv.h>
 
 #define MIN_MATCH_COUNT 10
-#define SCALE 4.89
+#define SCALE 7.8
 #define FID_PIX 20
 
 using namespace std;
