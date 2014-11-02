@@ -18,11 +18,12 @@
 
 #define MIN_MATCH_COUNT 10
 #define SCALE -4.89
+#define FID_PIX 20
 
 using namespace std;
 using namespace cv;
 
-bool check_sift(Mat src, string objectString, Mat intrinsics, Mat distortion, int minFeat, int minDist, int multi,  Mat &HT);
+bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion, int minFeat, int minDist, int multi,  Mat &HT);
 Mat reconfigure_reference(Mat rvec, Mat tvec);
 
 

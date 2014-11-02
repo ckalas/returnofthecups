@@ -1,13 +1,10 @@
 #include <iostream>
-#include <stdio.h>
-
 #include <highgui.h>
 #include "cups.h"
 
-using namespace cv;
-using namespace std;
+#define DEBUG 1
 
-Rect roi = Rect(Point(180,220), Point(500,430));
+Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430));
 
 void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *points) {
     Mat slice = (*rgbMat)(roi).clone();
@@ -24,7 +21,7 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
     // Add all the cups found across 10 frames
     for (size_t i = 0; i < matches.size(); i++) {
         // Take point at centre of cup region
-        centre = Point2f((float)matches[i].x+matches[i].width/2 + 180, (float)matches[i].y + matches[i].height/2+220);
+        centre = Point2f((float)matches[i].x+matches[i].width/2 + OFF_X, (float)matches[i].y + matches[i].height/2+OFF_Y);
         points->push_back(centre);
     }
 
@@ -52,10 +49,10 @@ void draw_cups(Mat *rgbMat, vector<Point2f> points) {
 }
 
 void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera, Mat HT) {
-
+    Mat slice = (*rgbMat)(roi).clone();
     std::vector<cv::Rect> matches;
     Mat gray, cameraCoords, fidCoords, cameraCoordsHomogeneous; // make this a vector of them ultimately pointer
-    cvtColor(*rgbMat, gray, CV_BGR2GRAY);
+    cvtColor(slice, gray, CV_BGR2GRAY);
     equalizeHist(gray,gray);
 
     cascade.detectMultiScale(gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
@@ -63,25 +60,33 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
     for (size_t i = 0; i < matches.size(); i++) {
 
         // Draw rectangle
-        Point tl (matches[i].x, matches[i].y);
-        Point br (matches[i].x+matches[i].width, matches[i].y+matches[i].height);
+        Point tl (matches[i].x+OFF_X, matches[i].y+OFF_Y);
+        Point br (matches[i].x+matches[i].width+OFF_X, matches[i].y+matches[i].height+OFF_Y);
         rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
         // Get depth of cup  -- depth(Y,X)
-        double depth = depthMat.at<unsigned short>(matches[i].y + matches[i].height/2, 
-                                                   matches[i].x+matches[i].width/2 )/10.0;
-
+        double depth = depthMat.at<unsigned short>(matches[i].y + matches[i].height/2+OFF_Y, 
+                                                   matches[i].x+matches[i].width/2+OFF_X )/10.0;
         if (depth > 40 and depth < 150) {
+
             // Calculate distance from camera
-            Mat imageCoords = (Mat_<double>(3,1) << matches[i].x*depth, matches[i].y*depth, depth);
+            Mat imageCoords =(Mat_<double>(3,1)<<(OFF_X+matches[i].x+matches[i].width/2)*depth,
+                                                 (OFF_Y+matches[i].y+matches[i].height/2)*depth,
+                                                 depth);
             cameraCoords = inverseCamera * imageCoords;
+            #if DEBUG
+            cout << "Depth at cup " << i << " : " << depth << endl;
+            cout << "Coords of cup " << i << " : " << OFF_X+matches[i].x+matches[i].width/2 <<
+                                          "," <<OFF_Y+matches[i].y + matches[i].height/2<< endl;
+            cout << "img" << endl << imageCoords << endl << "inv" << endl << inverseCamera << endl;
+            #endif
+            print_mat3(cameraCoords, "Camera Coords");
             Mat add = Mat::ones(1,1, CV_64F);
-            cout << cameraCoords << endl;
             cameraCoords.push_back(add);
             fidCoords = HT*cameraCoords;
-            print_point3(cameraCoords, "Camera Coords");
-            fidCoords.at<double>(0) = fidCoords.at<double>(0) - 20;
-            //fidCoords.at<double>(1) = fidCoords.at<double>(1) +10;
-            print_point3(fidCoords, "FiducialCoords");
+            // Subtract offset for fiducial size AND an x offset (25)
+            fidCoords.at<double>(0) = fidCoords.at<double>(0) - FID_DIM -25;
+            fidCoords.at<double>(1) = fidCoords.at<double>(1) - FID_DIM;
+            print_mat3(fidCoords, "FiducialCoords");
         }
 
     }
@@ -95,6 +100,6 @@ void show_fps(Mat *rgbMat, int fps) {
     putText(*rgbMat, text, Point(10,40), fontFace, fontScale, Scalar::all(255), thickness, 5);
 }
 
-void print_point3(Mat points, string label) {
+void print_mat3(Mat points, string label) {
     cout << label << endl << points.at<double>(0)<< ", " << points.at<double>(1)<< ", " << points.at<double>(2)<< endl;
 }

@@ -1,9 +1,7 @@
-
 #include "fiducial.h"
-#include <algorithm>
+#define DEBUG 1
 
-
-bool check_sift(Mat src, string objectString, Mat intrinsics, Mat distortion,
+bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion,
     int minFeat, int minDist, int multi,   Mat &HT ) {
     Mat img_object = imread(objectString, 0);
     Mat img_scene = src;
@@ -71,7 +69,7 @@ bool check_sift(Mat src, string objectString, Mat intrinsics, Mat distortion,
 
     Mat H = findHomography( obj, scene, CV_RANSAC );
 
-    // Get the corners from the iamge-1 ( the object to be "detected" )
+    // Get the corners from the image ( the object to be "detected" )
     vector<Point2f> obj_corners(4);
     obj_corners[0] = Point(0,0); obj_corners[1] = Point(img_object.cols, 0);
     obj_corners[2] = Point(img_object.cols, img_object.rows);
@@ -99,38 +97,46 @@ bool check_sift(Mat src, string objectString, Mat intrinsics, Mat distortion,
     markerPoints.push_back( Point3f( 1.0, 1.0, 0.0 ) );
     markerPoints.push_back( Point3f( 0.0, 1.0, 0.0 ) );
  
-    Mat pose;   
-
-    solvePnP( Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,
+    solvePnP(Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,
           rvec, tvec, false);
-
-    cout << "rvec: " << rvec << endl;
-    cout << rvec.at<double>(0)*(180/(22/7)) << ":" << rvec.at<double>(1)*(180/(22/7)) <<":" << rvec.at<double>(2)*(180/(22/7)) << endl;
-    cout << "tvec: " << tvec << endl;
-
+    // Use depth map to get accurate depth depth(y,x)
+    double depth = depthMat.at<unsigned short>(scene_corners[0].y+FID_PIX, 
+                   scene_corners[0].x+FID_PIX)/10.0;
     // check if the solve PnP is valid
-    double checkDepth = tvec.at<double>(2)*-SCALE;
-    if  (checkDepth > 100 || checkDepth <= 50 || isnan(checkDepth)) {
+    //double checkDepth = tvec.at<double>(2)*-SCALE;
+    double rotx= abs(rvec.at<double>(0)*(180/M_PI));
+    double rotz = abs(rvec.at<double>(2)*(180/M_PI));
+    if  (depth > 100 || depth <= 50 || rotx > 50 || rotz > 50) {
         return false;
     }
 
+    #if DEBUG
+    destroyWindow("depth fid");
+    cout << "Fiducial Depth: " << depth << endl;
+    cout << "Fiducial Rotation: " << rvec.at<double>(0)*(180/M_PI) << ":" 
+         << rvec.at<double>(1)*(180/M_PI) <<":" << rvec.at<double>(2)*(180/M_PI)<< endl;
+    cout << "tvec: " << tvec << endl;
+    cout << "rvec: " << rvec << endl;
+    #endif
+
+    tvec.at<double>(2) = -depth;
     HT = reconfigure_reference(rvec,tvec);
     return true;
 }
 
 
 Mat reconfigure_reference(Mat rvec, Mat tvec) {
-    //NOTE: x,y & z are in units of cm  
-    float x = tvec.at<double>(0), y = tvec.at<double>(1), z = tvec.at<double>(2)*SCALE;
+    //NOTE: x,y & z are in units of cm
+    // z is read from depth mat so no need to scale it
+    float x = tvec.at<double>(0)*-SCALE, y = tvec.at<double>(1)*-SCALE, z = tvec.at<double>(2);
     float rotx = rvec.at<double>(0), roty = rvec.at<double>(1), rotz = rvec.at<double>(2);
 
     Mat HT;
-    //  x = (x - FID_WIDTH);
-   // y = (y-FID_WIDTH);
+    // x = (x - FID_WIDTH);
+    // y = (y-FID_WIDTH);
     //offset rotation on x copied from fiducial.py -> validity of this may 
-    //need checking
     //rotx = (rotx - 0.27);
-
+/*
     HT = (Mat_<float>(4, 4) << 
 	    cos(rotz) * cos(roty), 
 	    cos(rotz) * sin(roty) * sin(rotx) - sin(rotz) * cos(rotx), 
@@ -148,6 +154,24 @@ Mat reconfigure_reference(Mat rvec, Mat tvec) {
 	    z,
 	    
 	    0, 0, 0, 1);
+*/
+    HT = (Mat_<float>(4,4) <<
+        cos(roty) * cos(rotx),
+        cos(roty) * sin(roty) * sin(rotz) - sin(roty) * cos(rotz),
+        cos(roty) * sin(rotx) * cos(rotz) + sin(roty) * sin(rotz),
+        x,
+
+        sin(roty) * cos(rotx),
+        sin(roty) * sin(rotx) * sin(rotz) + cos(roty) * cos(rotz),
+        sin(roty) * sin(rotx) * cos(rotz) - cos(roty) * sin(rotz),
+        y,
+
+        -sin(rotx),
+        cos(rotx) * sin(rotz),
+        cos(rotx) * cos(rotz),
+        z,
+        
+        0, 0, 0, 1);
 
     return HT;
 }

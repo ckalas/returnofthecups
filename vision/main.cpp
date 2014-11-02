@@ -8,6 +8,7 @@
 #include <cxcore.h>
 #include <highgui.h>
 
+#define DEBUG 1
 
 using namespace cv;
 using namespace std;
@@ -54,9 +55,12 @@ int main(int argc, char **argv) {
     // Fiducial locating origin of arm
     do {
         device.getVideo(rgbMat);
+        device.getDepth(depthMat);
     }
-    while(! check_sift(rgbMat, robot, cameraMatrix, dist, 500, 750, 3, HT)); 
-    cout << "Homogenous Transform to fiducial "<< endl << HT << endl;
+    while(! check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT));
+    #if DEBUG 
+    cout << "Homogenous Transform to Fiducial "<< endl << HT << endl;
+    #endif
     HT.convertTo(HT, CV_64F);
     // Find the cups across 50 frames
     for(int i = 0; i < 100; i++) {
@@ -65,11 +69,13 @@ int main(int argc, char **argv) {
         waitKey(100);
     }
     // Decide which cups are valid
-    device.getVideo(rgbMat);
     average_cups(&points);
+    #if DEBUG
+    device.getVideo(rgbMat);
     draw_cups(&rgbMat, points);
     imshow("rgb", rgbMat);
     waitKey(0);
+    #endif
     // Main loop
     while (!die) {
        // Check the clock tick
