@@ -6,9 +6,9 @@
 #include <vector>
 
 // The following are in mm units:
-#define L1			235 //156
-#define L2			95  //80
-#define L3			115 //80
+#define L1			234 //156
+#define L2			94  //80
+#define L3			165//130 //80
 //#define L4			10
 
 #define THETA_A_OFFSET	0

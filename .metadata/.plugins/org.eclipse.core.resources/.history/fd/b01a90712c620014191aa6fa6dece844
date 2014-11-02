@@ -1,0 +1,14 @@
+#ifndef FKINE_H
+#define FKINE_H
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void fkine();
+void print_angle(vector<int> *fkine_vector);
+void bits_to_degree(vector<double> *degrees, vector<int> *bits);
+
+
+#endif
