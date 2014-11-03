@@ -46,7 +46,6 @@ class MyFreenectDevice : public Freenect::FreenectDevice {
 		void DepthCallback(void* _depth, uint32_t timestamp);
 		bool getVideo(Mat& output);
 		bool getDepth(Mat& output);
-		void getCameraParams(Mat &mtx, Mat &dist, Mat &mtxInv) ;
 
 	private:
 		std::vector<uint8_t> m_buffer_depth;

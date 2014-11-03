@@ -1,13 +1,8 @@
 #include "cups.h"
 #include "device.h"
 #include "fiducial.h"
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <cv.h>
-#include <cxcore.h>
-#include <highgui.h>
 
+#define DEBUG 1
 
 using namespace cv;
 using namespace std;
@@ -16,57 +11,66 @@ string robot = "id7.png";
 
 int main(int argc, char **argv) {
 
+    // Load Haar classifier
+    CascadeClassifier rectCup;
+    if(!rectCup.load("rectCup.xml")) {
+        cout << "Error loading classifier" << endl;
+        return 1;
+    }
     // Variables to determine FPS
     long int e1, e2;
     double t;
     int fps;
-
-    // Load classifier
-    CascadeClassifier rectCup;
-    if (!rectCup.load("rectCup.xml")) {
-	cout << "Error loading classifier" << endl;
-    }
-	
+    // Flags for output options	
     bool die(false), showFrames(false), showDepth(false), showFinder(false), showTarget(true),
              showPath(false);
-	
+    // Storage for RGB and DEPTH frames
     Mat depthMat(Size(640,480),CV_16UC1);
     Mat depthf (Size(640,480),CV_8UC1);
     Mat rgbMat(Size(640,480),CV_8UC3,Scalar(0));
     Mat ownMat(Size(640,480),CV_8UC3,Scalar(0));
-   
-    Mat cameraMatrix, dist, cameraInv;
+    // Import camera data from yml file
+    Mat cameraMatrix, dist, cameraInv, HT;
+    string filename = "data.yml";
+    FileStorage fs;
+    fs.open(filename, FileStorage::READ);
+    fs["Camera_Matrix"] >> cameraMatrix;
+    fs["Dist_Coeff"] >> dist;
+    cameraInv = cameraMatrix.inv();
+    fs.release();
+    // Storage for cup locations (aggregate and tracking)
     vector<Point2f> points, path;
-
+    // Setup the kinect device
     Freenect::Freenect freenect;
     MyFreenectDevice &device = freenect.createDevice<MyFreenectDevice>(0);
-	
+    // Start streaming frames
     device.startVideo();
     device.startDepth();
-
-    device.getCameraParams(cameraMatrix,dist,cameraInv);
-    cout << cameraMatrix << endl << dist  << endl << "---------------" << endl;
-    // Fiducial locating origin of arm
+    // Locate fiducial at robot base
     do {
         device.getVideo(rgbMat);
+        device.getDepth(depthMat);
     }
-    while(! check_sift(rgbMat, robot, cameraMatrix, dist, 500, 750, 3)); 
-
+    while(! check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT));
+    #if DEBUG 
+    cout << "Homogenous Transform to Fiducial "<< endl << HT << endl;
+    #endif
+    HT.convertTo(HT, CV_64F);
     // Find the cups across 50 frames
     for(int i = 0; i < 100; i++) {
         device.getVideo(rgbMat);
         accumlate_cups(&rgbMat, rectCup, &points);
         waitKey(100);
     }
-
     // Decide which cups are valid
-    device.getVideo(rgbMat);
     average_cups(&points);
+    #if DEBUG
+    device.getVideo(rgbMat);
     draw_cups(&rgbMat, points);
     imshow("rgb", rgbMat);
     waitKey(0);
-
-    // main loop
+    #endif
+    // Main loop
     while (!die) {
        // Check the clock tick
         e1 = cv::getTickCount();
@@ -74,7 +78,7 @@ int main(int argc, char **argv) {
         device.getDepth(depthMat);
 
         if (showFinder) {
-            detect_cups(&rgbMat, depthMat, rectCup, cameraInv);
+            detect_cups(&rgbMat, depthMat, rectCup, cameraInv, HT);
         }
         if (showFrames) {
             // Calculate the fps and finding the time diff executing the code
@@ -90,7 +94,7 @@ int main(int argc, char **argv) {
         }
 
         if (showTarget) {
-            rectangle(rgbMat, Point(180,250), Point(500,450), Scalar(255,0,0));
+            rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
         }
 
         if (showPath) {
@@ -108,11 +112,11 @@ int main(int argc, char **argv) {
         switch(c) {
             case 'f':
                 showFrames = showFrames? false: true;
-                cout << "Frames : " << showFrames << endl;
+                cout << "Display ROI: " << showFrames << endl;
                 break;
             case 's':
                 showFinder = showFinder? false: true;
-                cout << "Finder : " << showFinder << endl;
+                cout << "Cup detection : " << showFinder << endl;
                 break;
             case 't':
                 showPath = showPath ? false : true;
