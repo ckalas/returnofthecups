@@ -50,8 +50,8 @@ int main()
 {
     // Open the Maestro's virtual COM port.
     //const char * device = "\\\\.\\USBSER000";  // Windows, "\\\\.\\COM6" also works
-    //const char * device = "/dev/ttyACM0";  // Linux
-    const char * device = "/dev/cu.usbmodem00034567"; // Mac OS X
+     const char * device = "/dev/ttyACM0";  // Linux
+    //const char * device = "/dev/cu.usbmodem00034567"; // Mac OS X
     int fd = open(device, O_RDWR | O_NOCTTY);
     if (fd == -1)
 	{

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void fkine(vector<double> *angles);
+void fkine(vector<double> *angles, vector<double> *coords);
 void print_angle(vector<int> *fkine_vector);
 void print_angle(vector<double> *fkine_vector);
 

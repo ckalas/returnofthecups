@@ -7,10 +7,10 @@
 					<resource project-relative-path="control_and_input.cpp">
 						<entry kind="includePath" name="/usr/include/opencv"/>
 					</resource>
-					<resource project-relative-path="main.cpp">
+					<resource project-relative-path="fkine.cpp">
 						<entry kind="includePath" name="/usr/include/opencv"/>
 					</resource>
-					<resource project-relative-path="fkine.cpp">
+					<resource project-relative-path="main.cpp">
 						<entry kind="includePath" name="/usr/include/opencv"/>
 					</resource>
 				</language>

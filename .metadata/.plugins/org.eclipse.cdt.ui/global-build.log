@@ -1294,3 +1294,748 @@ g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input
 make all 
 g++ -c ikine.cpp
 g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+12:48:47 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ -c multi_motor.cpp
+g++ -c dynamixel.c
+g++ -c dxl_hal.c
+g++ -c ikine.cpp
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ -I/usr/include/opencv  -g -c control_and_input.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+12:48:59 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ -c multi_motor.cpp
+g++ -c dynamixel.c
+g++ -c dxl_hal.c
+g++ -c ikine.cpp
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ -I/usr/include/opencv  -g -c control_and_input.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+12:51:15 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+12:55:58 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:02:35 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:04:07 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:09:11 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:16:22 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:17:50 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:18:11 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:18:43 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:19:10 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:20:06 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:20:40 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:24:45 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:25:16 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+main.cpp: In function ‘int main(int, char**)’:
+main.cpp:94:25: error: cannot convert ‘int (*)[4]’ to ‘std::vector<double>*’ for argument ‘1’ to ‘void print_values(std::vector<double>*)’
+   print_values(&goal_pos);
+                         ^
+Makefile:12: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+13:26:17 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+main.cpp: In function ‘int main(int, char**)’:
+main.cpp:93:23: error: ‘print_angles’ was not declared in this scope
+   print_angles(&angles);
+                       ^
+Makefile:12: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+13:26:43 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+main.cpp: In function ‘int main(int, char**)’:
+main.cpp:94:24: error: no matching function for call to ‘print_angle(int (*)[4])’
+   print_angle(&goal_pos);
+                        ^
+main.cpp:94:24: note: candidates are:
+In file included from main.cpp:7:0:
+fkine.h:15:6: note: void print_angle(std::vector<int>*)
+ void print_angle(vector<int> *fkine_vector);
+      ^
+fkine.h:15:6: note:   no known conversion for argument 1 from ‘int (*)[4]’ to ‘std::vector<int>*’
+fkine.h:16:6: note: void print_angle(std::vector<double>*)
+ void print_angle(vector<double> *fkine_vector);
+      ^
+fkine.h:16:6: note:   no known conversion for argument 1 from ‘int (*)[4]’ to ‘std::vector<double>*’
+make: *** [main.o] Error 1
+Makefile:12: recipe for target 'main.o' failed
+13:28:11 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+main.cpp: In function ‘int main(int, char**)’:
+main.cpp:55:47: error: no matching function for call to ‘CMulti_DNMX_Motor::move_to_goal_pos(int [4], int [4])’
+     Motors.move_to_goal_pos(goal_pos, curr_pos);
+                                               ^
+main.cpp:55:47: note: candidate is:
+In file included from main.cpp:5:0:
+multi_motor.h:79:10: note: void CMulti_DNMX_Motor::move_to_goal_pos(std::vector<int>*, int*)
+     void move_to_goal_pos (vector<int> *GoalPos, int PresentPos[]);
+          ^
+multi_motor.h:79:10: note:   no known conversion for argument 1 from ‘int [4]’ to ‘std::vector<int>*’
+main.cpp:94:24: error: no matching function for call to ‘print_angle(int (*)[4])’
+   print_angle(&goal_pos);
+                        ^
+main.cpp:94:24: note: candidates are:
+In file included from main.cpp:7:0:
+fkine.h:15:6: note: void print_angle(std::vector<int>*)
+ void print_angle(vector<int> *fkine_vector);
+      ^
+fkine.h:15:6: note:   no known conversion for argument 1 from ‘int (*)[4]’ to ‘std::vector<int>*’
+fkine.h:16:6: note: void print_angle(std::vector<double>*)
+ void print_angle(vector<double> *fkine_vector);
+      ^
+fkine.h:16:6: note:   no known conversion for argument 1 from ‘int (*)[4]’ to ‘std::vector<double>*’
+main.cpp:96:47: error: no matching function for call to ‘CMulti_DNMX_Motor::move_to_goal_pos(int (*)[4], int [4])’
+   Motors.move_to_goal_pos( &goal_pos, curr_pos);
+                                               ^
+main.cpp:96:47: note: candidate is:
+In file included from main.cpp:5:0:
+multi_motor.h:79:10: note: void CMulti_DNMX_Motor::move_to_goal_pos(std::vector<int>*, int*)
+     void move_to_goal_pos (vector<int> *GoalPos, int PresentPos[]);
+          ^
+multi_motor.h:79:10: note:   no known conversion for argument 1 from ‘int (*)[4]’ to ‘std::vector<int>*’
+Makefile:12: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+13:30:23 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+main.cpp: In function ‘int main(int, char**)’:
+main.cpp:43:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(0)= 2096;
+             ^
+main.cpp:44:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(1) = 205;
+             ^
+main.cpp:45:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(2)= 650;
+             ^
+main.cpp:46:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(3) = a;
+             ^
+main.cpp:50:10: error: no match for ‘operator<<’ (operand types are ‘std::ostream {aka std::basic_ostream<char>}’ and ‘std::vector<int>’)
+     cout << goal_pos << endl;
+          ^
+main.cpp:50:10: note: candidates are:
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:108:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ostream_type& (*)(std::basic_ostream<_CharT, _Traits>::__ostream_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(__ostream_type& (*__pf)(__ostream_type&))
+       ^
+/usr/include/c++/4.9.1/ostream:108:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘std::basic_ostream<char>::__ostream_type& (*)(std::basic_ostream<char>::__ostream_type&) {aka std::basic_ostream<char>& (*)(std::basic_ostream<char>&)}’
+/usr/include/c++/4.9.1/ostream:117:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ios_type& (*)(std::basic_ostream<_CharT, _Traits>::__ios_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>; std::basic_ostream<_CharT, _Traits>::__ios_type = std::basic_ios<char>]
+       operator<<(__ios_type& (*__pf)(__ios_type&))
+       ^
+/usr/include/c++/4.9.1/ostream:117:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘std::basic_ostream<char>::__ios_type& (*)(std::basic_ostream<char>::__ios_type&) {aka std::basic_ios<char>& (*)(std::basic_ios<char>&)}’
+/usr/include/c++/4.9.1/ostream:127:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::ios_base& (*)(std::ios_base&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(ios_base& (*__pf) (ios_base&))
+       ^
+/usr/include/c++/4.9.1/ostream:127:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘std::ios_base& (*)(std::ios_base&)’
+/usr/include/c++/4.9.1/ostream:166:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long __n)
+       ^
+/usr/include/c++/4.9.1/ostream:166:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘long int’
+/usr/include/c++/4.9.1/ostream:170:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long __n)
+       ^
+/usr/include/c++/4.9.1/ostream:170:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘long unsigned int’
+/usr/include/c++/4.9.1/ostream:174:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(bool) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(bool __n)
+       ^
+/usr/include/c++/4.9.1/ostream:174:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘bool’
+In file included from /usr/include/c++/4.9.1/ostream:609:0,
+                 from /usr/include/c++/4.9.1/iostream:39,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/bits/ostream.tcc:91:5: note: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(short int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^
+/usr/include/c++/4.9.1/bits/ostream.tcc:91:5: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘short int’
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:181:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(short unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned short __n)
+       ^
+/usr/include/c++/4.9.1/ostream:181:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘short unsigned int’
+In file included from /usr/include/c++/4.9.1/ostream:609:0,
+                 from /usr/include/c++/4.9.1/iostream:39,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/bits/ostream.tcc:105:5: note: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^
+/usr/include/c++/4.9.1/bits/ostream.tcc:105:5: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘int’
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:192:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned int __n)
+       ^
+/usr/include/c++/4.9.1/ostream:192:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘unsigned int’
+/usr/include/c++/4.9.1/ostream:201:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long long __n)
+       ^
+/usr/include/c++/4.9.1/ostream:201:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘long long int’
+/usr/include/c++/4.9.1/ostream:205:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long long __n)
+       ^
+/usr/include/c++/4.9.1/ostream:205:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘long long unsigned int’
+/usr/include/c++/4.9.1/ostream:220:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(double __f)
+       ^
+/usr/include/c++/4.9.1/ostream:220:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘double’
+/usr/include/c++/4.9.1/ostream:224:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(float) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(float __f)
+       ^
+/usr/include/c++/4.9.1/ostream:224:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘float’
+/usr/include/c++/4.9.1/ostream:232:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long double __f)
+       ^
+/usr/include/c++/4.9.1/ostream:232:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘long double’
+/usr/include/c++/4.9.1/ostream:245:7: note: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(const void*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(const void* __p)
+       ^
+/usr/include/c++/4.9.1/ostream:245:7: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘const void*’
+In file included from /usr/include/c++/4.9.1/ostream:609:0,
+                 from /usr/include/c++/4.9.1/iostream:39,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/bits/ostream.tcc:119:5: note: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__streambuf_type*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__streambuf_type = std::basic_streambuf<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^
+/usr/include/c++/4.9.1/bits/ostream.tcc:119:5: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘std::basic_ostream<char>::__streambuf_type* {aka std::basic_streambuf<char>*}’
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:1109:33: note: template<class _Tp, class _T2, int m, int n> cv::MatxCommaInitializer<_Tp, m, n> cv::operator<<(const cv::Matx<_Tp, n, nm>&, _T2)
+ MatxCommaInitializer<_Tp, m, n> operator << (const Matx<_Tp, m, n>& mtx, _T2 val)
+                                 ^
+/usr/include/opencv2/core/operations.hpp:1109:33: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::ostream {aka std::basic_ostream<char>}’ is not derived from ‘const cv::Matx<_Tp, n, nm>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:1477:30: note: template<class _Tp, class _T2, int cn> cv::VecCommaInitializer<_Tp, cn> cv::operator<<(const cv::Vec<_Tp, n>&, _T2)
+ VecCommaInitializer<_Tp, cn> operator << (const Vec<_Tp, cn>& vec, _T2 val)
+                              ^
+/usr/include/opencv2/core/operations.hpp:1477:30: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::ostream {aka std::basic_ostream<char>}’ is not derived from ‘const cv::Vec<_Tp, n>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:2905:51: note: template<class _Tp> cv::FileStorage& cv::operator<<(cv::FileStorage&, const _Tp&)
+ template<typename _Tp> static inline FileStorage& operator << (FileStorage& fs, const _Tp& value)
+                                                   ^
+/usr/include/opencv2/core/operations.hpp:2905:51: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘std::cout’ (type ‘std::ostream {aka std::basic_ostream<char>}’) to type ‘cv::FileStorage&’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:2917:25: note: cv::FileStorage& cv::operator<<(cv::FileStorage&, const string&)
+ CV_EXPORTS FileStorage& operator << (FileStorage& fs, const string& str);
+                         ^
+/usr/include/opencv2/core/operations.hpp:2917:25: note:   no known conversion for argument 1 from ‘std::ostream {aka std::basic_ostream<char>}’ to ‘cv::FileStorage&’
+/usr/include/opencv2/core/operations.hpp:2919:28: note: cv::FileStorage& cv::operator<<(cv::FileStorage&, const char*)
+ static inline FileStorage& operator << (FileStorage& fs, const char* str)
+                            ^
+/usr/include/opencv2/core/operations.hpp:2919:28: note:   no known conversion for argument 1 from ‘std::ostream {aka std::basic_ostream<char>}’ to ‘cv::FileStorage&’
+/usr/include/opencv2/core/operations.hpp:2922:28: note: cv::FileStorage& cv::operator<<(cv::FileStorage&, char*)
+ static inline FileStorage& operator << (FileStorage& fs, char* value)
+                            ^
+/usr/include/opencv2/core/operations.hpp:2922:28: note:   no known conversion for argument 1 from ‘std::ostream {aka std::basic_ostream<char>}’ to ‘cv::FileStorage&’
+/usr/include/opencv2/core/operations.hpp:3869:29: note: std::ostream& cv::operator<<(std::ostream&, const cv::Mat&)
+ static inline std::ostream& operator << (std::ostream& out, const Mat& mtx)
+                             ^
+/usr/include/opencv2/core/operations.hpp:3869:29: note:   no known conversion for argument 2 from ‘std::vector<int>’ to ‘const cv::Mat&’
+/usr/include/opencv2/core/operations.hpp:3882:29: note: std::ostream& cv::operator<<(std::ostream&, const cv::Formatted&)
+ static inline std::ostream& operator << (std::ostream& out, const Formatted& fmtd)
+                             ^
+/usr/include/opencv2/core/operations.hpp:3882:29: note:   no known conversion for argument 2 from ‘std::vector<int>’ to ‘const cv::Formatted&’
+/usr/include/opencv2/core/operations.hpp:3889:52: note: template<class _Tp> std::ostream& cv::operator<<(std::ostream&, const std::vector<cv::Point_<_Tp> >&)
+ template<typename _Tp> static inline std::ostream& operator << (std::ostream& out,
+                                                    ^
+/usr/include/opencv2/core/operations.hpp:3889:52: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   mismatched types ‘cv::Point_<_Tp>’ and ‘int’
+     cout << goal_pos << endl;
+             ^
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const std::vector<cv::Point_<_Tp> >’
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:3897:52: note: template<class _Tp> std::ostream& cv::operator<<(std::ostream&, const std::vector<cv::Point3_<_Tp> >&)
+ template<typename _Tp> static inline std::ostream& operator << (std::ostream& out,
+                                                    ^
+/usr/include/opencv2/core/operations.hpp:3897:52: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   mismatched types ‘cv::Point3_<_Tp>’ and ‘int’
+     cout << goal_pos << endl;
+             ^
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const std::vector<cv::Point3_<_Tp> >’
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:3907:59: note: template<class _Tp, int m, int n> std::ostream& cv::operator<<(std::ostream&, const cv::Matx<_Tp, m, n>&)
+ template<typename _Tp, int m, int n> inline std::ostream& operator<<(std::ostream& out, const Matx<_Tp, m, n>& matx)
+                                                           ^
+/usr/include/opencv2/core/operations.hpp:3907:59: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const cv::Matx<_Tp, m, n>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:3915:45: note: template<class _Tp> std::ostream& cv::operator<<(std::ostream&, const cv::Point_<_Tp>&)
+ template<typename _Tp> inline std::ostream& operator<<(std::ostream& out, const Point_<_Tp>& p)
+                                             ^
+/usr/include/opencv2/core/operations.hpp:3915:45: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const cv::Point_<_Tp>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:3923:45: note: template<class _Tp> std::ostream& cv::operator<<(std::ostream&, const cv::Point3_<_Tp>&)
+ template<typename _Tp> inline std::ostream& operator<<(std::ostream& out, const Point3_<_Tp>& p)
+                                             ^
+/usr/include/opencv2/core/operations.hpp:3923:45: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const cv::Point3_<_Tp>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:3931:52: note: template<class _Tp, int n> std::ostream& cv::operator<<(std::ostream&, const cv::Vec<_Tp, m>&)
+ template<typename _Tp, int n> inline std::ostream& operator<<(std::ostream& out, const Vec<_Tp, n>& vec)
+                                                    ^
+/usr/include/opencv2/core/operations.hpp:3931:52: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const cv::Vec<_Tp, m>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:3955:45: note: template<class _Tp> std::ostream& cv::operator<<(std::ostream&, const cv::Size_<_Tp>&)
+ template<typename _Tp> inline std::ostream& operator<<(std::ostream& out, const Size_<_Tp>& size)
+                                             ^
+/usr/include/opencv2/core/operations.hpp:3955:45: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const cv::Size_<_Tp>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4855:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/operations.hpp:3963:45: note: template<class _Tp> std::ostream& cv::operator<<(std::ostream&, const cv::Rect_<_Tp>&)
+ template<typename _Tp> inline std::ostream& operator<<(std::ostream& out, const Rect_<_Tp>& rect)
+                                             ^
+/usr/include/opencv2/core/operations.hpp:3963:45: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const cv::Rect_<_Tp>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:4856:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/opencv2/core/mat.hpp:2075:1: note: template<class _Tp, class T2> cv::MatCommaInitializer_<_Tp> cv::operator<<(const cv::Mat_<_Tp>&, T2)
+ operator << (const Mat_<_Tp>& m, T2 val)
+ ^
+/usr/include/opencv2/core/mat.hpp:2075:1: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::ostream {aka std::basic_ostream<char>}’ is not derived from ‘const cv::Mat_<_Tp>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/flann/lsh_table.h:40:0,
+                 from /usr/include/opencv2/flann/lsh_index.h:49,
+                 from /usr/include/opencv2/flann/all_indices.h:42,
+                 from /usr/include/opencv2/flann/flann_base.hpp:44,
+                 from /usr/include/opencv2/flann/flann.hpp:50,
+                 from /usr/include/opencv/cv.h:69,
+                 from main.cpp:2:
+/usr/include/c++/4.9.1/iomanip:238:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setw)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setw __f)
+     ^
+/usr/include/c++/4.9.1/iomanip:238:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘std::_Setw’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/flann/lsh_table.h:40:0,
+                 from /usr/include/opencv2/flann/lsh_index.h:49,
+                 from /usr/include/opencv2/flann/all_indices.h:42,
+                 from /usr/include/opencv2/flann/flann_base.hpp:44,
+                 from /usr/include/opencv2/flann/flann.hpp:50,
+                 from /usr/include/opencv/cv.h:69,
+                 from main.cpp:2:
+/usr/include/c++/4.9.1/iomanip:208:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setprecision)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setprecision __f)
+     ^
+/usr/include/c++/4.9.1/iomanip:208:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘std::_Setprecision’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/flann/lsh_table.h:40:0,
+                 from /usr/include/opencv2/flann/lsh_index.h:49,
+                 from /usr/include/opencv2/flann/all_indices.h:42,
+                 from /usr/include/opencv2/flann/flann_base.hpp:44,
+                 from /usr/include/opencv2/flann/flann.hpp:50,
+Makefile:12: recipe for target 'main.o' failed
+                 from /usr/include/opencv/cv.h:69,
+                 from main.cpp:2:
+/usr/include/c++/4.9.1/iomanip:178:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setfill<_CharT>)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setfill<_CharT> __f)
+     ^
+/usr/include/c++/4.9.1/iomanip:178:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘std::_Setfill<_CharT>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/flann/lsh_table.h:40:0,
+                 from /usr/include/opencv2/flann/lsh_index.h:49,
+                 from /usr/include/opencv2/flann/all_indices.h:42,
+                 from /usr/include/opencv2/flann/flann_base.hpp:44,
+                 from /usr/include/opencv2/flann/flann.hpp:50,
+                 from /usr/include/opencv/cv.h:69,
+                 from main.cpp:2:
+/usr/include/c++/4.9.1/iomanip:143:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setbase)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setbase __f)
+     ^
+/usr/include/c++/4.9.1/iomanip:143:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘std::_Setbase’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/flann/lsh_table.h:40:0,
+                 from /usr/include/opencv2/flann/lsh_index.h:49,
+                 from /usr/include/opencv2/flann/all_indices.h:42,
+                 from /usr/include/opencv2/flann/flann_base.hpp:44,
+                 from /usr/include/opencv2/flann/flann.hpp:50,
+                 from /usr/include/opencv/cv.h:69,
+                 from main.cpp:2:
+/usr/include/c++/4.9.1/iomanip:109:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setiosflags)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setiosflags __f)
+     ^
+/usr/include/c++/4.9.1/iomanip:109:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘std::_Setiosflags’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/flann/lsh_table.h:40:0,
+                 from /usr/include/opencv2/flann/lsh_index.h:49,
+                 from /usr/include/opencv2/flann/all_indices.h:42,
+                 from /usr/include/opencv2/flann/flann_base.hpp:44,
+                 from /usr/include/opencv2/flann/flann.hpp:50,
+                 from /usr/include/opencv/cv.h:69,
+                 from main.cpp:2:
+/usr/include/c++/4.9.1/iomanip:79:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Resetiosflags)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, _Resetiosflags __f)
+     ^
+/usr/include/c++/4.9.1/iomanip:79:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘std::_Resetiosflags’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/opencv2/core/core.hpp:59:0,
+                 from /usr/include/opencv/cv.h:64,
+                 from main.cpp:2:
+/usr/include/c++/4.9.1/complex:521:5: note: template<class _Tp, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::complex<_Tp>&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, const complex<_Tp>& __x)
+     ^
+/usr/include/c++/4.9.1/complex:521:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const std::complex<_Tp>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:548:5: note: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+     ^
+/usr/include/c++/4.9.1/ostream:548:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘const unsigned char*’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:543:5: note: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+     ^
+/usr/include/c++/4.9.1/ostream:543:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘const signed char*’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:530:5: note: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+     ^
+/usr/include/c++/4.9.1/ostream:530:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘const char*’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/ostream:609:0,
+                 from /usr/include/c++/4.9.1/iostream:39,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/bits/ostream.tcc:321:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+     ^
+/usr/include/c++/4.9.1/bits/ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘const char*’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:513:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+     ^
+/usr/include/c++/4.9.1/ostream:513:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   mismatched types ‘const _CharT*’ and ‘std::vector<int>’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:493:5: note: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)
+     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+     ^
+/usr/include/c++/4.9.1/ostream:493:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘unsigned char’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:488:5: note: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)
+     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+     ^
+/usr/include/c++/4.9.1/ostream:488:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘signed char’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:482:5: note: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)
+     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+     ^
+/usr/include/c++/4.9.1/ostream:482:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘char’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:476:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+     ^
+/usr/include/c++/4.9.1/ostream:476:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   cannot convert ‘goal_pos’ (type ‘std::vector<int>’) to type ‘char’
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/iostream:39:0,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/ostream:471:5: note: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+     ^
+/usr/include/c++/4.9.1/ostream:471:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   deduced conflicting types for parameter ‘_CharT’ (‘char’ and ‘std::vector<int>’)
+     cout << goal_pos << endl;
+             ^
+In file included from /usr/include/c++/4.9.1/string:52:0,
+                 from /usr/include/c++/4.9.1/bits/locale_classes.h:40,
+                 from /usr/include/c++/4.9.1/bits/ios_base.h:41,
+                 from /usr/include/c++/4.9.1/ios:42,
+                 from /usr/include/c++/4.9.1/ostream:38,
+                 from /usr/include/c++/4.9.1/iostream:39,
+                 from main.cpp:1:
+/usr/include/c++/4.9.1/bits/basic_string.h:2772:5: note: template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os,
+     ^
+/usr/include/c++/4.9.1/bits/basic_string.h:2772:5: note:   template argument deduction/substitution failed:
+main.cpp:50:13: note:   ‘std::vector<int>’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
+     cout << goal_pos << endl;
+             ^
+main.cpp:60:47: error: no matching function for call to ‘CMulti_DNMX_Motor::move_to_goal_pos(std::vector<int>&, int [4])’
+     Motors.move_to_goal_pos(goal_pos, curr_pos);
+                                               ^
+main.cpp:60:47: note: candidate is:
+In file included from main.cpp:5:0:
+multi_motor.h:79:10: note: void CMulti_DNMX_Motor::move_to_goal_pos(std::vector<int>*, int*)
+     void move_to_goal_pos (vector<int> *GoalPos, int PresentPos[]);
+          ^
+multi_motor.h:79:10: note:   no known conversion for argument 1 from ‘std::vector<int>’ to ‘std::vector<int>*’
+make: *** [main.o] Error 1
+13:32:20 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+main.cpp: In function ‘int main(int, char**)’:
+main.cpp:43:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(0)= 2096;
+             ^
+main.cpp:44:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(1) = 205;
+             ^
+main.cpp:45:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(2)= 650;
+             ^
+main.cpp:46:13: error: base operand of ‘->’ has non-pointer type ‘std::vector<int>’
+     goal_pos->at(3) = a;
+             ^
+Makefile:12: recipe for target 'main.o' failed
+make: *** [main.o] Error 1
+13:32:48 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:34:36 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:37:48 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:45:09 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:45:25 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:47:07 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:52:52 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:52:54 **** Incremental Build of configuration Default for project robot ****
+make all 
+make: Nothing to be done for 'all'.
+13:52:55 **** Incremental Build of configuration Default for project robot ****
+make all 
+make: Nothing to be done for 'all'.
+13:53:32 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+13:54:56 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:01:35 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:05:13 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:05:42 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:05:58 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c fkine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:07:27 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:07:32 **** Incremental Build of configuration Default for project robot ****
+make all 
+make: Nothing to be done for 'all'.
+14:09:22 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:10:25 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:10:46 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:12:05 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:14:05 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:14:32 **** Incremental Build of configuration Default for project robot ****
+make all 
+make: Nothing to be done for 'all'.
+14:14:38 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:22:30 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:25:03 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:25:54 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:26:45 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -I/usr/include/opencv  -g -c main.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:29:13 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:39:03 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:52:28 **** Incremental Build of configuration Default for project robot ****
+make all 
+g++ -c ikine.cpp
+g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+14:52:29 **** Incremental Build of configuration Default for project robot ****
+make all 
+make: Nothing to be done for 'all'.
