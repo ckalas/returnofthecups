@@ -1,12 +1,6 @@
 #include "cups.h"
 #include "device.h"
 #include "fiducial.h"
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <cv.h>
-#include <cxcore.h>
-#include <highgui.h>
 
 #define DEBUG 1
 
@@ -52,7 +46,7 @@ int main(int argc, char **argv) {
     // Start streaming frames
     device.startVideo();
     device.startDepth();
-    // Fiducial locating origin of arm
+    // Locate fiducial at robot base
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
@@ -118,11 +112,11 @@ int main(int argc, char **argv) {
         switch(c) {
             case 'f':
                 showFrames = showFrames? false: true;
-                cout << "Frames : " << showFrames << endl;
+                cout << "Display ROI: " << showFrames << endl;
                 break;
             case 's':
                 showFinder = showFinder? false: true;
-                cout << "Finder : " << showFinder << endl;
+                cout << "Cup detection : " << showFinder << endl;
                 break;
             case 't':
                 showPath = showPath ? false : true;

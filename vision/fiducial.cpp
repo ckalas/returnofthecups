@@ -1,13 +1,29 @@
 #include "fiducial.h"
+
 #define DEBUG 1
+
+/**
+ * Returns true when a valid fiducial marker has been found.
+ * Note that valid here means 50 < depth < 100 and 0 < rot(x,y,z) < 60.
+ *
+ * @param   src                  the current rgb frame 
+ * @param   depthMat       the current depth frame 
+ * @param   objectString  the relative filename of the fiducial marker
+ * @param   intrinsics        the matrix representing camera intrinsic params
+ * @param   distortion        the matrix representing camera distortion params
+ * @param   minFeat          threshold value for sift detector
+ * @param   minDist           threshold value for sift detector
+ * @param   &HT                a matrix reference to store the homogeneous transform
+ * @returns                          true if a valid marker has been found
+ */
 
 bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion,
     int minFeat, int minDist, int multi,   Mat &HT ) {
     Mat img_object = imread(objectString, 0);
     Mat img_scene = src;
 
-    // Step 1: Detect the keypoints using SURF Detector
-    int minFeatures = minFeat; //500; //500;
+    // Step 1: Detect the keypoints using SIFT Detector
+    int minFeatures = minFeat;
     
     SiftFeatureDetector detector( minFeatures );
 
@@ -102,7 +118,6 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     double depth = depthMat.at<unsigned short>(scene_corners[0].y+FID_PIX, 
                    scene_corners[0].x+FID_PIX)/10.0;
     // check if the solve PnP is valid
-    //double checkDepth = tvec.at<double>(2)*-SCALE;
     double rotx= abs(rvec.at<double>(0)*(180/M_PI));
     double rotz = abs(rvec.at<double>(2)*(180/M_PI));
     if  (isnan(depth) || depth > 100 || depth <= 50 || rotx > 50 || rotz > 50) {
@@ -117,43 +132,33 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     cout << "tvec: " << tvec << endl;
     cout << "rvec: " << rvec << endl;
     #endif
-
+    // Compute the homogeneous transform
     tvec.at<double>(2) = -depth;
     HT = reconfigure_reference(rvec,tvec);
     return true;
 }
 
-/*
-    - x, y and z are in units of cm
-    - z is read from depth mat so no need to scale it
-    - roty is negated to match convention of HT
-*/
+/**
+ * Returns the homogeneous transform given rotationa dn translation vectors
+ * Note: This keeps the same frame as the camera as follows:
+ *          +x = right of camera (camera perspective)
+ *          +y = up
+ *          +z = towards object
+ *
+ * To make the directions of various parameters match, some values have been
+ * negated.
+ *
+ * @param   rvec    the rotation vector (radians) (rotx,roty,rotz)
+ * @param   tvec    the translation vector (pixels) (x,y,z) where z is read from depthMat 
+ * @returns  the 4x4 homoegeneous transform
+ */
 
 Mat reconfigure_reference(Mat rvec, Mat tvec) {
 
     float x = tvec.at<double>(0)*SCALE, y = tvec.at<double>(1)*SCALE, z = tvec.at<double>(2);
     float rotx = rvec.at<double>(0), roty = -rvec.at<double>(1), rotz = rvec.at<double>(2);
+
     Mat HT;
-
-/*
-    HT = (Mat_<float>(4, 4) << 
-	    cos(rotz) * cos(roty), 
-	    cos(rotz) * sin(roty) * sin(rotx) - sin(rotz) * cos(rotx), 
-	    cos(rotz) * sin(roty) * cos(rotx) + sin(rotz) * sin(rotx),
-	    x,
-
-	    sin(rotz) * cos(roty),
-	    sin(rotz) * sin(roty) * sin(rotx) + cos(rotz) * cos(rotx),
-	    sin(rotz) * sin(roty) * cos(rotx) - cos(rotz) * sin(rotx),
-	    y,
-
-	    sin(roty),
-	    cos(roty) * sin(rotx),
-	    cos(roty) * cos(rotx),
-	    z,
-	    
-	    0, 0, 0, 1);
-*/
 
     HT = (Mat_<float>(4,4) <<
         cos(roty) * cos(rotx),

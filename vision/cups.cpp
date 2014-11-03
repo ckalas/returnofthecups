@@ -84,7 +84,7 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
             cameraCoords.push_back(add);
             fidCoords = HT*cameraCoords;
             // Subtract offset for fiducial size AND an x offset (25)
-            fidCoords.at<double>(0) = fidCoords.at<double>(0) - FID_DIM -25;
+            fidCoords.at<double>(0) = fidCoords.at<double>(0) - FID_DIM;
             fidCoords.at<double>(1) = fidCoords.at<double>(1) - FID_DIM;
             print_mat3(fidCoords, "FiducialCoords");
         }

@@ -1,5 +1,3 @@
-//please include id7.png in the directory the program is executed
-
 #ifndef FIDUCIAL_H
 #define FIDUCIAL_H
 
@@ -12,13 +10,12 @@
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/nonfree/features2d.hpp"
 #include "opencv2/nonfree/nonfree.hpp"
-
 #include <highgui.h>
 #include <cv.h>
 
 #define MIN_MATCH_COUNT 10
-#define SCALE 7.8
-#define FID_PIX 20
+#define SCALE 8 // The size of the fiducial marker - VERY important to be right
+#define FID_PIX 20 // An offset to find marker in depthMat, a bit hacky.
 
 using namespace std;
 using namespace cv;

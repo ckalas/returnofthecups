@@ -1,3 +1,5 @@
+#ifndef CUPS_H
+#define CUPS_H
 #include <cv.h>
 
 using namespace std;
@@ -14,3 +16,4 @@ void draw_cups(Mat *rgbMat, vector<Point2f> points) ;
 void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera, Mat HT);
 void show_fps(Mat *rgbMat, int fps);
 void print_mat3(Mat points, string label);
+#endif
