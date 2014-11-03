@@ -5,6 +5,7 @@
 /**
  * Returns true when a valid fiducial marker has been found.
  * Note that valid here means 50 < depth < 100 and 0 < rot(x,y,z) < 60.
+ * It appears to be taking the centre of the marker  as the location of it.
  *
  * @param   src                  the current rgb frame 
  * @param   depthMat       the current depth frame 
