@@ -1,7 +1,6 @@
-12:40:29 **** Incremental Build of configuration Default for project robot ****
+14:52:29 **** Incremental Build of configuration Default for project robot ****
 make all 
-g++ -c ikine.cpp
-g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main 
+make: Nothing to be done for 'all'.
 
-12:40:29 Build Finished (took 207ms)
+14:52:30 Build Finished (took 56ms)
 

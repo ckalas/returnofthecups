@@ -76,7 +76,7 @@ public:
     ~CMulti_DNMX_Motor();
     bool initialization(int baudnum);
     int check_com_status(void);
-    void move_to_goal_pos (int GoalPos[], int PresentPos[]);
+    void move_to_goal_pos (vector<int> *GoalPos, int PresentPos[]);
     void read_motor_angles(vector<int> *PresentPos);
     void set_torque(int torque);
     void set_speed(int speed);

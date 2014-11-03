@@ -56,7 +56,7 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
 }
 
 
-void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
+void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[]){
 
     // add do while loop if it is still moving or has not at least reached it's 
     // goal position (need function to check if +- 5-->10 bit )
@@ -66,7 +66,7 @@ void CMulti_DNMX_Motor::move_to_goal_pos(int GoalPos[], int PresentPos[]){
     for(int i=0;i<NUM_OF_MOTORS ;i++){
 
         // Write goal position
-        dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos[i] );
+        dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
 
         // Read present position
         PresentPos[i] = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );

@@ -1,13 +1,23 @@
 #include "fkine.h"
 #include "ikine.h"
 
-void fkine(vector<double> *angles) {
+void fkine(vector<double> *angles, vector<double> *coords) {
 	double x, y, z;
 
-	y = L2 * cos(angles->at(1)) + L3 * cos(angles->at(1) + angles->at(2));
-	z = L2 * sin(angles->at(1)) + L3 * sin(angles->at(1) + angles->at(2));
+	double theta0, theta1, theta2;
+	theta0 = angles->at(0);
+	theta1 = angles->at(1); // 40 is constant angle offset
+	theta2 = angles->at(2) + 20;
+
+
+	y = L2 * cosd(theta1) + L3 * cosd(theta1 + theta2);
+	z = L2 * sind(theta1) + L3 * sind(theta1 + theta2);
 	// x need to be calculated last, DO NOT CHANGE
 	x = y * tand(angles->at(0));
+
+	coords->at(0) = x;
+	coords->at(1) = y;
+	coords->at(2) = z + L1;
 }
 
 void print_angle(vector<int> *fkine_vector) {

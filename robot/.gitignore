@@ -1,4 +1,17 @@
+####################
+#   Eclipse
+####################
 .cproject
 .project
+.cproject
 .settings/
-../.metadata
+../.metadata/
+*.metadata
+bin/
+tmp/
+
+###################
+# Robot files
+###################
+*.o
+main

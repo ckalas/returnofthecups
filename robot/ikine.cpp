@@ -6,7 +6,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 
 	double x = coords[0];
 	double y = coords[1];
-	double z = coords[2] - L1;
+	double z = coords[2] - L1 - 20;
 
 	// checks if the given xyz coords is out of range
 	
@@ -16,9 +16,9 @@ void ikine(vector<double> coords, vector<double>* angles) {
 
 		cout << "Out of reach" << endl;
 		
-		angles->at(0) = 0;
-		angles->at(1) = 0;
-		angles->at(2) = 0;
+//		angles->at(0) = 0;
+//		angles->at(1) = 0;
+//		angles->at(2) = 0;
 
 		return;
 	}
@@ -43,7 +43,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 	// theta B
 	angles->at(1) = atan2( z, y ) - atan2( k2, k1 );
 
-	print_values(angles);
+	//print_values(angles);
 }
 
 void print_values( vector<double>* values) {
