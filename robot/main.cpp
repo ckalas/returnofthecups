@@ -30,6 +30,7 @@ int main( int argc, char *argv[] )
     vector<int> fkine_vector (4);
     vector<double> angles (4);
     vector<double> coords (4);
+    vector<double> curr_coords (4);
     coords.at(0) = 0;
     coords.at(1) = (L2 + L3)/2;
     coords.at(2) = L1;
@@ -49,14 +50,14 @@ int main( int argc, char *argv[] )
     int curr_pos[4] ={0,0,0,0};
 
     // init with baud 57k, refer to bauds.txt for mapping
-    Motors.initialization(34);
-    Motors.set_torque(1023);    
-    Motors.set_speed(80);
-    Motors.read_speed();
+//    Motors.initialization(34);
+//    Motors.set_torque(1023);
+//    Motors.set_speed(80);
+//    Motors.read_speed();
     
     //ikine(coords, &angles);
 
-    Motors.move_to_goal_pos(&goal_pos, curr_pos);
+//    Motors.move_to_goal_pos(&goal_pos, curr_pos);
         
     /**
      * From your view:
@@ -71,7 +72,6 @@ int main( int argc, char *argv[] )
     	/**
     	 * This section is for the inverse kinematics
     	 */
-
 
 		// uncomment either input_coords or game_control
 		input_coords(&coords);
@@ -89,15 +89,15 @@ int main( int argc, char *argv[] )
 		}
 		angles[2] -= WRIST_OFFSET / 180 * M_PI;
 		angles[1] += ELBOW_OFFSET / 180 * M_PI;
-		goal_pos[0] = Motors.mx12w_angle2bits(angles[0]);
-		goal_pos[1] = Motors.ax12a_angle2bits(angles[1]);
-		goal_pos[2] = Motors.ax12a_angle2bits(angles[2]);
-		goal_pos[3] = Motors.ax12a_angle2bits(angles[3]);
+//		goal_pos[0] = Motors.mx12w_angle2bits(angles[0]);
+//		goal_pos[1] = Motors.ax12a_angle2bits(angles[1]);
+//		goal_pos[2] = Motors.ax12a_angle2bits(angles[2]);
+//		goal_pos[3] = Motors.ax12a_angle2bits(angles[3]);
 
 		print_angle(&angles);
 		print_angle(&goal_pos);
 
-		Motors.move_to_goal_pos( &goal_pos, curr_pos);
+//		Motors.move_to_goal_pos( &goal_pos, curr_pos);
 
     	/**
     	 * This section is for the foward kinematics

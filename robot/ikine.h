@@ -19,7 +19,7 @@ using namespace std;
 
 //void ikine(vector<double> coords);
 //void ikine(void);
-void ikine( vector<double> coords, vector<double> * angles );
+bool ikine( vector<double> coords, vector<double> * angles );
 void print_values( vector<double> *values );
 
 #endif

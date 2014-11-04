@@ -1,33 +1,20 @@
-CFLAGS = $(shell pkg-config --cflags opencv) -g
+CFLAGS = $(shell pkg-config --cflags opencv)
+LIBS = $(shell pkg-config --libs opencv)
 
 all: main
 
 run:
 	sudo ./main
 
-main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o
-	g++ main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o -o main $(LIBS)
+main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o linspace.o
+	g++ $+ -o main $(LIBS)
 
-main.o: main.cpp
-	g++ $(CFLAGS) -c main.cpp
+%.o: %.cpp
+	$(CXX) -std=c++11 $(CFLAGS) -c $<
 
-multi_motor.o: multi_motor.cpp multi_motor.h
-	g++ -c multi_motor.cpp
-
-dynamixel.o: dynamixel.c dynamixel.h
-	g++ -c dynamixel.c
-
-dxl_hal.o: dxl_hal.c dxl_hal.h
-	g++ -c dxl_hal.c
-
-ikine.o: ikine.cpp ikine.h
-	g++ -c ikine.cpp
-
-fkine.o: fkine.cpp fkine.h
-	g++ $(CFLAGS) -c fkine.cpp
-	
-control_and_input.o: control_and_input.cpp control_and_input.h
-	g++ $(CFLAGS) -c control_and_input.cpp
+%.o: %.c
+	$(CXX) $(CFLAGS) -c $<
 
 clean:
-	rm main *.o
+	rm main *.o *~
+	git rm -r --cached ../.metadata/*

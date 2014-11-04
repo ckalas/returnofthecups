@@ -1,18 +1,27 @@
 #include "ikine.h"
+#include "fkine.h"
 
 // Input x, y ,z and the angle vector returns the values to input to the  motors
-void ikine(vector<double> coords, vector<double>* angles) {
+bool ikine(vector<double> coords, vector<double>* angles) {
 	//cout << endl << "Andy Ikine says, hello world" << endl << endl;
 
 	double x = coords[0];
 	double y = coords[1];
-	double z = coords[2] - L1 - 20;
+	double z = coords[2] - L1;
 
 	// checks if the given xyz coords is out of range
 	
-	if ( sqrt(pow(y,2) + pow(z,2)) > (L2 + L3) ||
-		 sqrt(pow(y,2) + pow(x,2)) > (L2 + L3) ||
-		 sqrt(pow(x,2) + pow(z,2)) > (L2 + L3) ) { 
+//	if ( sqrt(pow(y,2) + pow(z,2)) > (L2 + L3) ||
+//		 sqrt(pow(y,2) + pow(x,2)) > (L2 + L3) ||
+//		 sqrt(pow(x,2) + pow(z,2)) > (L2 + L3) ||
+
+	// calculate the closes reach
+	double reach_limit = L1*cosd(90) + L2*cosd(90 + (asin((-L1*sind(90))/L2) * 180 / M_PI) );
+	cout << "Min reach: " << reach_limit << endl;
+
+	// Note that the dynamixel and rotate 150(degree) from origin
+	if ( sqrt( pow(x,2) + pow(y,2) + pow(z,2) ) < (L2 + L3) ||
+		 reach_limit > y || z < 10) {
 
 		cout << "Out of reach" << endl;
 		
@@ -20,7 +29,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 //		angles->at(1) = 0;
 //		angles->at(2) = 0;
 
-		return;
+		return false;
 	}
 	
 	// (horizontal, vertical) theta A
@@ -44,6 +53,7 @@ void ikine(vector<double> coords, vector<double>* angles) {
 	angles->at(1) = atan2( z, y ) - atan2( k2, k1 );
 
 	//print_values(angles);
+	return true;
 }
 
 void print_values( vector<double>* values) {

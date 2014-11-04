@@ -8,6 +8,8 @@
 #include "multi_motor.h"
 #include <cmath>
 
+#define VELOCITY 100 // 100 millimetre per second
+
 CMulti_DNMX_Motor::CMulti_DNMX_Motor()
 {
 }
@@ -69,7 +71,7 @@ void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[])
         dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
 
         // Read present position
-        PresentPos[i] = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );
+//        PresentPos[i] = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );
 
         if (check_com_status() != 0)
             break;
