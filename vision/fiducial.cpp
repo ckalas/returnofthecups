@@ -114,6 +114,8 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
      *
      *   (0)   (1)
      *   (3)   (2)
+     *
+     *   Note that here the real life size of the marker is specified as the 3D point.
      */
 
     markerPoints.push_back( Point3f( 0.0, 0.0, 0.0 ) );
@@ -128,7 +130,8 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     // check if the solve PnP is valid
     double rotx= abs(rvec.at<double>(0)*(180/M_PI));
     double rotz = abs(rvec.at<double>(2)*(180/M_PI));
-    if  (isnan(depth) || depth > 100 || depth <= 50 || rotx > 50 || rotz > 50) {
+    if  (isnan(depth) || depth > 120 || depth <= 50 || rotx > 50 || rotx < 1 ||
+         rotz < 1 || rotz > 50) {
         return false;
     }
 
@@ -139,7 +142,6 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
          << rvec.at<double>(1)*(180/M_PI) <<":" << rvec.at<double>(2)*(180/M_PI)<< endl;
     cout << "tvec: " << tvec << endl;
     cout << "rvec: " << rvec << endl;
-    cout << scene_corners << endl;
     #endif
     // Compute the homogeneous transform
     tvec.at<double>(2) = -depth;
@@ -155,8 +157,8 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
  *          +y = up
  *          +z = towards object
  *
- * To make the directions of various parameters match, some values have been
- * negated.
+ * IMPORTANT: The translation and rotation is from the camera perspective: as such
+ *            all the values have been negated.
  *
  * @param   rvec    the rotation vector (radians) (rotx,roty,rotz)
  * @param   tvec    the translation vector (pixels) (x,y,z) where z is read from depthMat 
@@ -167,6 +169,7 @@ Mat reconfigure_reference(Mat rvec, Mat tvec) {
 
     float x = -tvec.at<double>(0), y = -tvec.at<double>(1), z = tvec.at<double>(2);
     float rotx = -rvec.at<double>(0), roty = -rvec.at<double>(1), rotz = -rvec.at<double>(2);
+    // This seems to make it work
     std::swap(roty,rotx);
     Mat HT;
 
