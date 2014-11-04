@@ -1,6 +1,0 @@
-#include "fkine.h"
-
-void fkine() {
-    cout << "Hello from fkine" << endl;
-}
-
