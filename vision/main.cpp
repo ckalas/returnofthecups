@@ -8,12 +8,13 @@ using namespace cv;
 using namespace std;
 
 string robot = "id7.png";
+string classifier = "rectCup.xml";
 
 int main(int argc, char **argv) {
 
     // Load Haar classifier
     CascadeClassifier rectCup;
-    if(!rectCup.load("rectCup.xml")) {
+    if(!rectCup.load(classifier)) {
         cout << "Error loading classifier" << endl;
         return 1;
     }
@@ -99,8 +100,8 @@ int main(int argc, char **argv) {
 
         if (showPath) {
             accumlate_cups(&rgbMat, rectCup, &path);
+            draw_cups(&rgbMat, path);
         }
-        draw_cups(&rgbMat, path);
         imshow("rgb", rgbMat);
 
         char c = (char)waitKey(10);
@@ -112,7 +113,6 @@ int main(int argc, char **argv) {
         switch(c) {
             case 'f':
                 showFrames = showFrames? false: true;
-                cout << "Display ROI: " << showFrames << endl;
                 break;
             case 's':
                 showFinder = showFinder? false: true;
@@ -138,6 +138,7 @@ int main(int argc, char **argv) {
                 break;
             case 'r':
                 showTarget = showTarget ? false : true;
+                cout << "Display ROI: " << showTarget << endl;
             }
 
     }

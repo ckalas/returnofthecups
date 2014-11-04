@@ -10,9 +10,9 @@ Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430));
  * Stores the pixel locations of all the cups that are present in the frame.
  *
  * @param   rgbMat       the rotation vector (radians) (rotx,roty,rotz)
- * @param   cascade    the translation vector (pixels) (x,y,z) where z is read from depthMat 
- * @param    points        a pointer to a vector containing the location of all cups detected
- * @returns  void
+ * @param   cascade      the translation vector (pixels) (x,y,z) where z is read from depthMat 
+ * @param   points       a pointer to a vector containing the location of all cups detected
+ * @returns void
  */
 
 // TODO: Take out the unnecessary pointer and pass the reference instead 
@@ -31,7 +31,8 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
     // Add all the cups found across 10 frames
     for (size_t i = 0; i < matches.size(); i++) {
         // Take point at centre of cup region
-        centre = Point2f((float)matches[i].x+matches[i].width/2 + OFF_X, (float)matches[i].y + matches[i].height/2+OFF_Y);
+        centre = Point2f((float)matches[i].x+matches[i].width/2 + OFF_X,
+                         (float)matches[i].y + matches[i].height/2+OFF_Y);
         points->push_back(centre);
     }
 
@@ -41,7 +42,7 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
  * Reduces the vector containing cup points based on euclidean distance between points.
  *
  * @param   points  a pointer to a vector containing the location of all cups detected
- * @returns  void
+ * @returns void
  */
 
 void average_cups(vector<Point2f> *points) {
@@ -63,7 +64,7 @@ void average_cups(vector<Point2f> *points) {
  * Draws circles at the location of cup points
  *
  * @param rgbMat    the RGB frame to draw on
- * @param points      the locations of the cups
+ * @param points    the locations of the cups
  * @returns  void
  */
 
@@ -76,12 +77,12 @@ void draw_cups(Mat *rgbMat, vector<Point2f> points) {
 /**
  * Detect and LOCATE the cup in camera space and fiducial space
  *
- * @param   rgbMat                  the current RGB frame
- * @param   depthMat              the current depth frame
- * @param   cascade               the cascade classifier of the cup
+ * @param   rgbMat          the current RGB frame
+ * @param   depthMat        the current depth frame
+ * @param   cascade         the cascade classifier of the cup
  * @param   inverseCamera   the inverted intrinsics matrix
- * @param   HT                         the homogeneous transform matrix
- * @returns  void
+ * @param   HT              the homogeneous transform matrix
+ * @returns void
  */
 
 void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera, Mat HT) {
@@ -119,9 +120,8 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
             Mat add = Mat::ones(1,1, CV_64F);
             cameraCoords.push_back(add);
             fidCoords = HT*cameraCoords;
-            // Subtract offset for fiducial size AND an x offset (25)
-            fidCoords.at<double>(0) = fidCoords.at<double>(0) - FID_DIM;
-            fidCoords.at<double>(1) = fidCoords.at<double>(1) - FID_DIM;
+            fidCoords.at<double>(0) = fidCoords.at<double>(0);
+            fidCoords.at<double>(1) = fidCoords.at<double>(1);
             print_mat3(fidCoords, "FiducialCoords");
         }
 
@@ -132,8 +132,8 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
  * Prints the FPS calculation on RGB frame
  *
  * @param   rgbMat  the current RGB frame
- * @param   fps         the current depth frame
- * @returns  void
+ * @param   fps     the current depth frame
+ * @returns void
  */
 
 void show_fps(Mat *rgbMat, int fps) {
@@ -149,8 +149,8 @@ void show_fps(Mat *rgbMat, int fps) {
  * Prints the first three entries in a Mat
  *
  * @param   points  vector of points
- * @param   label    the label for print
- * @returns  void
+ * @param   label   the label for print
+ * @returns void
  */
 void print_mat3(Mat points, string label) {
     cout << label << endl << points.at<double>(0)<< ", " << points.at<double>(1)<< ", " << points.at<double>(2)<< endl;

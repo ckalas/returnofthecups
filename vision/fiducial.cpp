@@ -109,12 +109,19 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     Mat tvec = Mat(Size(3,1), CV_64F);
     vector<Point3f> markerPoints;
 
+    /*
+     *   Corner locations
+     *
+     *   (0)   (1)
+     *   (3)   (2)
+     */
+
     markerPoints.push_back( Point3f( 0.0, 0.0, 0.0 ) );
-    markerPoints.push_back( Point3f( 1.0, 0.0, 0.0 ) );
-    markerPoints.push_back( Point3f( 1.0, 1.0, 0.0 ) );
-    markerPoints.push_back( Point3f( 0.0, 1.0, 0.0 ) );
+    markerPoints.push_back( Point3f( FID_SIZE, 0.0, 0.0 ) );
+    markerPoints.push_back( Point3f( FID_SIZE, FID_SIZE, 0.0 ) );
+    markerPoints.push_back( Point3f( 0.0, FID_SIZE, 0.0 ) );
  
-    solvePnP(Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,rvec, tvec, false);
+    solvePnP(Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,rvec, tvec, false, CV_P3P);
     // Use depth map to get accurate depth depth(y,x)
     double depth = depthMat.at<unsigned short>(scene_corners[0].y+FID_PIX, 
                    scene_corners[0].x+FID_PIX)/10.0;
@@ -132,15 +139,17 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
          << rvec.at<double>(1)*(180/M_PI) <<":" << rvec.at<double>(2)*(180/M_PI)<< endl;
     cout << "tvec: " << tvec << endl;
     cout << "rvec: " << rvec << endl;
+    cout << scene_corners << endl;
     #endif
     // Compute the homogeneous transform
     tvec.at<double>(2) = -depth;
+
     HT = reconfigure_reference(rvec,tvec);
     return true;
 }
 
 /**
- * Returns the homogeneous transform given rotationa dn translation vectors
+ * Returns the homogeneous transform given rotation and translation vectors
  * Note: This keeps the same frame as the camera as follows:
  *          +x = right of camera (camera perspective)
  *          +y = up
@@ -151,14 +160,14 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
  *
  * @param   rvec    the rotation vector (radians) (rotx,roty,rotz)
  * @param   tvec    the translation vector (pixels) (x,y,z) where z is read from depthMat 
- * @returns  the 4x4 homoegeneous transform
+ * @returns the 4x4 homogeneous transform
  */
 
 Mat reconfigure_reference(Mat rvec, Mat tvec) {
 
-    float x = tvec.at<double>(0)*SCALE, y = tvec.at<double>(1)*SCALE, z = tvec.at<double>(2);
-    float rotx = rvec.at<double>(0), roty = -rvec.at<double>(1), rotz = rvec.at<double>(2);
-
+    float x = -tvec.at<double>(0), y = -tvec.at<double>(1), z = tvec.at<double>(2);
+    float rotx = -rvec.at<double>(0), roty = -rvec.at<double>(1), rotz = -rvec.at<double>(2);
+    std::swap(roty,rotx);
     Mat HT;
 
     HT = (Mat_<float>(4,4) <<
@@ -170,7 +179,7 @@ Mat reconfigure_reference(Mat rvec, Mat tvec) {
         sin(roty) * cos(rotx),
         sin(roty) * sin(rotx) * sin(rotz) + cos(roty) * cos(rotz),
         sin(roty) * sin(rotx) * cos(rotz) - cos(roty) * sin(rotz),
-        -y,
+        y,
 
         -sin(rotx),
         cos(rotx) * sin(rotz),

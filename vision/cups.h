@@ -8,7 +8,7 @@ using namespace cv;
 #define OFF_X 180
 #define OFF_Y 220
 
-#define FID_DIM 5.8
+#define FID_DIM 8
 
 void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *points);
 void average_cups(vector<Point2f> *points) ;
