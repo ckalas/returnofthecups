@@ -7,6 +7,8 @@
 .settings/
 ../.metadata/*
 *.metadata
+.log
+.history/
 bin/
 tmp/
 
