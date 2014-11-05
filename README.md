@@ -20,8 +20,9 @@ are correctly installed.
 
 #####Vision
 
-* device.cpp / device.h : the abstracted freenect device class
-* cups.cpp / cups.h : functions to help identify and located cups
+* device.cpp : the abstracted freenect device class
+* cups.cpp : functions to help identify and located cups
+* fiducial.cpp : functions to detect and locate fiducial markers
 * main.cpp : the main program
 
 
