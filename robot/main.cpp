@@ -1,20 +1,17 @@
 #include <iostream>
-#include <cv.h>
-#include <highgui.h>
 #include <math.h>
 #include "multi_motor.h"
 #include "ikine.h"
 #include "fkine.h"
 #include "control_and_input.h"
 #include "interpolate.h"
-#include <stdio.h>
+
 
 #define GRIP_ANGLE 65
 #define WRIST_OFFSET 30.0
 #define ELBOW_OFFSET 0 //2.0
 
 using namespace std;
-using namespace cv;
 
 void print_coords(vector<double> *coords) {
     cout << "x: " << coords->at(0) << ", y: "
@@ -24,9 +21,7 @@ void print_coords(vector<double> *coords) {
 
 int main( int argc, char *argv[] ) 
 {
-    cout << "hello world" << endl;
 
-    //cout << "sqrt: " << sqrt(9) << endl;
     vector<int> fkine_vector (4);
     vector<double> angles (4);
     vector<double> coords (4);
@@ -40,30 +35,24 @@ int main( int argc, char *argv[] )
     // path generation variables
     vector< vector<int> > pathGen; // used to storage interpolated values of bits
 
-	
     CMulti_DNMX_Motor Motors;
 
-    int a = 512;
     vector<int> goal_pos(4);
     goal_pos.at(0)= 2096;
-    goal_pos.at(1) = a; //205;
-    goal_pos.at(2)= a; //650;
+    goal_pos.at(1) = 512; //205;
+    goal_pos.at(2)= 512; //650;
     goal_pos.at(3) = 800;
 
     int curr_pos[4] ={0,0,0,0};
 
-    // init with baud 1Mbps57k, refer to bauds.txt for mapping
+    // init with baud 1Mbps, refer to bauds.txt for mapping
 
     Motors.initialization(1);
     Motors.set_torque(1023);
-    Motors.set_speed(100);
-    Motors.read_speed();
+    Motors.set_speed(50);
+    //Motors.read_speed();
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
-
-
-
-
 
     /**
      * From your view:
@@ -93,17 +82,18 @@ int main( int argc, char *argv[] )
 	} 
 	*/
 
+	// Enter x coord -1 to exit
 
-    	/**
-    	 * This section is for the inverse kinematics
-    	 */
-	// uncomment either input_coords or game_control
+	if (!input_coords(&coords)) {
+		break;
+	}
 
-	input_coords(&coords);
 	//game_control(&coords);
 
-	if ( !(ikine(&coords, &angles)) ) 
+	if (!(ikine(&coords, &angles))) {
+		cout << "Ikine not happy" << endl;
 	    continue;
+	}
 
 	goal_pos[0] = mx12w_angle2bits(angles[0]);
 	goal_pos[1] = ax12a_angle2bits(angles[1]);
@@ -136,8 +126,8 @@ int main( int argc, char *argv[] )
 	
     }
 
-    Motors.no_torque_generate();
-    Motors.set_torque(0);
+    //Motors.no_torque_generate();
+    //Motors.set_torque(0);
 
     dxl_terminate();
     cout << "dxl_terminate" << endl;

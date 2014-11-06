@@ -19,9 +19,8 @@ bool ikine(vector<double> *coords, vector<double> *angles) {
     cout << "Resultant Vector: " << magnitude << endl;
 
     if ( magnitude  > (L2 + L3) ) {
-	 //reach_limit > y || z < 10) {
-	cout << "Out of reach" << endl;
-	return false;
+		cout << "Out of reach" << endl;
+		return false;
     }
 
     // (horizontal, vertical) theta A

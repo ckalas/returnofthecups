@@ -63,13 +63,21 @@ void game_control(vector<double> *coords) {
 }
 
 
-void input_coords(vector<double> *coords) {
+bool input_coords(vector<double> *coords) {
+	// Check validity of coords here?
     cout << "x: ";
     cin >> coords->at(0);
+
+    if(coords->at(0) == -1) {
+    	return false;
+    }
+    
     cout << "y: ";
     cin >> coords->at(1);
     cout << "z: ";
     cin >> coords->at(2);
     cout << "grip: (1 on, 0 off) ";
     cin >> coords->at(3);
+
+    return true;
 }

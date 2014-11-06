@@ -48,7 +48,7 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     if( dxl_initialize(deviceIndex, baudnum) == 0 )
 	{
             printf( "Failed to open USB2Dynamixel!\n" );
-            printf( "Press Enter key to terminate...\n" );
+            printf( "Press key to terminate...\n" );
             getchar();
             return 0;
 	}
@@ -64,17 +64,23 @@ void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[])
     // goal position (need function to check if +- 5-->10 bit )
 
     // add acceleration depending on diff of goal and curr pos
+    bool finished = false;
+    int i;
+    while (!finished) {
+        for(i=0;i<NUM_OF_MOTORS ;i++){
 
-    for(int i=0;i<NUM_OF_MOTORS ;i++){
+            // Write goal position
+            dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
 
-        // Write goal position
-        dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
+            // If error, try again
+            if (check_com_status() != 0) {
+                break;
+            }
+        }
 
-        // Read present position
-//        PresentPos[i] = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );
-
-        if (check_com_status() != 0)
-            break;
+        if (i == NUM_OF_MOTORS) {
+            finished = true;
+        }
     }
 }
 
@@ -91,7 +97,6 @@ int CMulti_DNMX_Motor::check_com_status(void) {
     CommStatus = dxl_get_result();
 
     if( CommStatus == COMM_RXSUCCESS ) {
-        // printf( "%d   %d\n",GoalPos[i], PresentPos[i] );
         PrintErrorCode();
     } else {
 	    PrintCommStatus(CommStatus);

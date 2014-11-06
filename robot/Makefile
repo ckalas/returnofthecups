@@ -7,14 +7,14 @@ run:
 	sudo ./main
 
 main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o interpolate.o
-	g++ $+ -o main $(LIBS)
+	g++ $+ -o main
 
 %.o: %.cpp
-	$(CXX) -std=c++11 $(CFLAGS) -c $<
+	$(CXX) -std=c++11 -c $<
 
 %.o: %.c
-	$(CXX) $(CFLAGS) -c $<
+	$(CXX) -c $<
 
 clean:
-	rm main *.o *~
+	rm main *.o ~*
 	git rm -r --cached ../.metadata/*

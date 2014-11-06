@@ -13,7 +13,7 @@ using namespace std;
 
 int getch(void);
 void game_control(vector<double> *coords);
-void input_coords(vector<double> *coords);
+bool input_coords(vector<double> *coords);
 
 
 #endif
