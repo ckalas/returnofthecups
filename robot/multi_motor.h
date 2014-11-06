@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include "dynamixel.h"
 #include <vector>
+#include <iostream>
 
 /**
  * Note, only the lower byte might by need to 
@@ -48,8 +49,8 @@
 #define MX_12W_BITS             4096          
 #define MX_12W_ANGLE            360
 
-#define AX_12A_BITS             1024
-#define AX_12A_ANGLE            300
+#define AX_12A_BITS             1024.0
+#define AX_12A_ANGLE            300.0
 
 using namespace std;
 
@@ -79,14 +80,20 @@ public:
     void move_to_goal_pos (vector<int> *GoalPos, int PresentPos[]);
     void read_motor_angles(vector<int> *PresentPos);
     void set_torque(int torque);
+
     void set_speed(int speed);
     void read_speed(void);
     void no_torque_generate();
 
 
-    // converts the angle in degrees to bits (refer to the motor datasheet)
-    int mx12w_angle2bits( double degress );
-    int ax12a_angle2bits( double degrees );
 };
+
+
+// globally accessable
+// converts the angle in degrees to bits (refer to the motor datasheet)
+int mx12w_angle2bits( double degress );
+int ax12a_angle2bits( double degrees );
+int ax12a_angle2bits_elbow( double degrees );
+
 
 #endif // MULTI_DNMX_MOTOR_H

@@ -204,12 +204,22 @@ void CMulti_DNMX_Motor::no_torque_generate(){
 }
 
 
-int CMulti_DNMX_Motor::mx12w_angle2bits( double radians ) {
+int mx12w_angle2bits( double radians ) {
     double actual_angle = MX_12W_ANGLE / 2 - (radians / M_PI * 180);
     return int( actual_angle / MX_12W_ANGLE * MX_12W_BITS);
 }
 
-int CMulti_DNMX_Motor::ax12a_angle2bits( double radians ) {
-    double actual_angle = AX_12A_ANGLE / 2 - (radians / M_PI * 180);
+int ax12a_angle2bits( double radians ) {
+    double actual_angle = AX_12A_ANGLE / 2.0 - (radians / M_PI * 180);
+    //cout << "in angle2bits ax12a: " << actual_angle << ", " << radians << " PI: " << M_PI << endl;
     return int( actual_angle / AX_12A_ANGLE * AX_12A_BITS);
 }
+
+int ax12a_angle2bits_elbow( double radians) {
+    double actual_angle = AX_12A_ANGLE / 2.0 - (radians / M_PI * 180);
+    actual_angle -= M_PI / 4;
+    //cout << "in angle2bits ax12a: " << actual_angle << ", " << radians << " PI: " << M_PI << endl;
+    return int( actual_angle / AX_12A_ANGLE * AX_12A_BITS);
+}
+
+    

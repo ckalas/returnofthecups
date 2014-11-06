@@ -6,7 +6,7 @@ all: main
 run:
 	sudo ./main
 
-main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o linspace.o
+main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o interpolate.o
 	g++ $+ -o main $(LIBS)
 
 %.o: %.cpp

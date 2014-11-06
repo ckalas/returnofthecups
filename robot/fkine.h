@@ -15,7 +15,6 @@ void fkine(vector<double> *angles, vector<double> *coords);
 void print_angle(vector<int> *fkine_vector);
 void print_angle(vector<double> *fkine_vector);
 
-void bits_to_degree(vector<double> *degrees, vector<int> *bits);
-
+void bits_to_degree(vector<double> *bits, vector<double> *degrees);
 
 #endif
