@@ -83,6 +83,8 @@ bool input_coords(vector<double> *coords) {
     return true;
 }
 
+
+
 void set_goals(vector<int> *goal_pos, vector<double> angles) {
 	goal_pos->at(0) = mx12w_angle2bits(angles[0]);
 	goal_pos->at(1) = ax12a_angle2bits(angles[1]);

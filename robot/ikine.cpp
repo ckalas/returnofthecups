@@ -1,7 +1,7 @@
 #include "ikine.h"
 #include "fkine.h"
 
-// Input x, y ,z and the angle vector returns the values to input to the  motors
+// Input x, y ,z and the angle vector
 bool ikine(vector<double> *coords, vector<double> *angles, int grip) {
     //cout << endl << "Andy Ikine says, hello world" << endl << endl;
 

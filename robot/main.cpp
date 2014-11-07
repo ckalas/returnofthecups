@@ -12,7 +12,7 @@
 
 using namespace std;
 
-enum state_t {GET, GRIP, MOVE_AWAY, DROP};
+enum state_t {GO_TO_CUP, GRIP, MOVE_AWAY, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
@@ -57,7 +57,7 @@ int main( int argc, char *argv[] )
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 
-    state_t state = GET;
+    state_t state = GO_TO_CUP;
     bool finished = false;
 
     usleep(1000000);
@@ -65,11 +65,13 @@ int main( int argc, char *argv[] )
 
     // Main program loop
 
+    // NOTES TO THE READER: curr_pos is not used at all, probably get rid of it.
+
     while (!finished) {
 
 		switch (state) {
-			// Go to the cup with an open gripper
-			case GET:
+			// Wait for input and move to cup with open gripper
+			case GO_TO_CUP:
 				validRead = false;
 				if(input_coords(&coords)){
 					// Ensure the current motor position is a valid result
@@ -86,14 +88,51 @@ int main( int argc, char *argv[] )
 					state = GRIP;
 				}
 				else {
-					cout << "Inputs sucked" << endl;
 					finished = true;
 				}
 				break;
 			// Actuate the gripper to hold the cup
 			case GRIP:
+				ikine(&coords, &angles, CLOSED);
+				set_goals(&goal_pos, angles);
+				Motors.move_to_goal_pos(&goal_pos, curr_pos);
+				state = MOVE_AWAY;
+				break;
+			// Wait for input and move the cup there
+			case MOVE_AWAY:
+				validRead = false;
+				if(input_coords(&coords)){
+					// Ensure the current motor position is a valid result
+					while(!get_motor_angles(&motor_bit_angle, &Motors));
+					if(!point_to_point(&pathGen, &coords, &motor_bit_angle, CLOSED)) {
+						break;
+					}
+					// Perform the interpolation
+					for (size_t i = 0; i<pathGen.size(); i++) {
+					    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
+					    usleep(UPDATE_INTERVAL);
+					}
+					// Go to next state
+					state = DROP;
+				}
+				else {
+					finished = true;
+				}
+				break;
+			// Release cup
+			case DROP:
+				ikine(&coords, &angles, OPEN);
+				set_goals(&goal_pos, angles);
+				Motors.move_to_goal_pos(&goal_pos, curr_pos);
+				state = RESET;
+				break;
+
+			case RESET:
+				usleep(2000000);
 				finished = true;
 				break;
+
+
 		}
 	
     }
