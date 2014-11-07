@@ -74,7 +74,7 @@ void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[])
             dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
             // If error, try again
             if (check_com_status() != 0) {
-                cout << "Retrying command" << endl;
+                //cout << "Retrying command" << endl;
                 break;
             }
         }

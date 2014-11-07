@@ -69,6 +69,8 @@ int main( int argc, char *argv[] )
 
     while (!finished) {
 
+    	cout << "Current state: " << state << endl;
+
 		switch (state) {
 			// Wait for input and move to cup with open gripper
 			case GO_TO_CUP:
@@ -124,12 +126,19 @@ int main( int argc, char *argv[] )
 				ikine(&coords, &angles, OPEN);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
+				usleep(1000000);
 				state = RESET;
 				break;
 
 			case RESET:
-				usleep(2000000);
-				finished = true;
+				coords.at(0) = 0.0;
+				coords.at(1) = 150.0;
+				coords.at(2) = 300.0;
+				ikine(&coords, &angles, CLOSED);
+				set_goals(&goal_pos, angles);
+				Motors.move_to_goal_pos(&goal_pos, curr_pos);
+				state = GO_TO_CUP;
+				get_motor_angles(&motor_bit_angle, &Motors);
 				break;
 
 

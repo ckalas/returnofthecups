@@ -94,7 +94,7 @@ void set_goals(vector<int> *goal_pos, vector<double> angles) {
 
 bool get_motor_angles(vector<int> *motor_bit_angle, CMulti_DNMX_Motor *Motors) {
 	Motors->read_motor_angles(motor_bit_angle);
-	if((*motor_bit_angle)[0] == 0 || (*motor_bit_angle)[1] == 0 || (*motor_bit_angle)[2] == 0) {
+	if((*motor_bit_angle)[0] == 768 || (*motor_bit_angle)[1] == 0 || (*motor_bit_angle)[2] == 0) {
 		return false;
 	}
 	return true;

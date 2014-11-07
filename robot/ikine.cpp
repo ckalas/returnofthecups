@@ -1,6 +1,8 @@
 #include "ikine.h"
 #include "fkine.h"
 
+#define DEBUG 0
+
 // Input x, y ,z and the angle vector
 bool ikine(vector<double> *coords, vector<double> *angles, int grip) {
     //cout << endl << "Andy Ikine says, hello world" << endl << endl;
@@ -16,7 +18,9 @@ bool ikine(vector<double> *coords, vector<double> *angles, int grip) {
     // Note that the dynamixel and rotate 150(degree) from origin
     double magnitude = sqrt( pow(x,2) + pow(y,2) + pow(z,2) );
     
+    #if DEBUG
     cout << "Resultant Vector: " << magnitude << endl;
+    #endif
 
     if ( magnitude  > (L2 + L3) ) {
 		cout << "Out of reach" << endl;
