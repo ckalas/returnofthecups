@@ -16,6 +16,13 @@ are correctly installed.
 
 ---
 
+##Operation
+The main program creates an instance of the vision program, which directs the location of cups and other markers to another process that handles the dynamixel movement. Both programs block at certain stages waiting for input from the other.
+
+To locate the cups a Haar-cascade classifier is used, whereas to find the various dropoff locations standard feature matching techniques are used.
+
+The dynamixels used are 3 AX-12A models and one __MX something__. 
+
 ###FILES
 
 #####Vision
@@ -28,9 +35,14 @@ are correctly installed.
 
 ####Robot
 
-```
-Andy add stuff here about things
-```
+* control_and_input.cpp
+* fkine.cpp
+* ikine.cpp
+* interpolate.cpp
+* multi_motor.cpp
+* dxl_hal.c
+* dynamixel.c
+* main.cpp
 
 ---
 
