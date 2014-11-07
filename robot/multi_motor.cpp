@@ -36,6 +36,7 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
      * Motor 1 is the base
      * Motor 2 is the elbow joint
      * Motor 3 is the wrist joint
+     * Motor 4 is the gripper
      */
     Motor_ID[0] = MOTOR_ID_1;
     Motor_ID[1] = MOTOR_ID_2;
@@ -71,9 +72,9 @@ void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[])
 
             // Write goal position
             dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
-
             // If error, try again
             if (check_com_status() != 0) {
+                cout << "Retrying command" << endl;
                 break;
             }
         }
@@ -107,14 +108,25 @@ int CMulti_DNMX_Motor::check_com_status(void) {
 }
 
 void CMulti_DNMX_Motor::set_speed(int speed) {
+    int setSpeed;
     for (int i=0; i<NUM_OF_MOTORS; i++) {
-	if (i == 0) 
-	    dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, int(speed / 7.9661));
+        switch (i) {
+            case 0:
+                setSpeed = (int)speed/7.9661;
+                break;
+            case 1:
+                setSpeed = speed;
+                break;
+            case 2:
+                setSpeed = speed;
+                break;
+            case 3:
+                setSpeed = speed;
+                break;
+        }
 
-        dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, speed);
-
-        if (check_com_status() != 0)
-            break;
+        dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, setSpeed);
+        cout << "motor " << i << " speed: " << setSpeed << endl;
     }
 }
 

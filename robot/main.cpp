@@ -1,6 +1,5 @@
 #include <iostream>
 #include <math.h>
-#include "multi_motor.h"
 #include "ikine.h"
 #include "fkine.h"
 #include "control_and_input.h"
@@ -12,6 +11,9 @@
 #define ELBOW_OFFSET 0 //2.0
 
 using namespace std;
+
+enum state_t {GET, GRIP, MOVE_AWAY, DROP};
+
 
 void print_coords(vector<double> *coords) {
     cout << "x: " << coords->at(0) << ", y: "
@@ -31,9 +33,11 @@ int main( int argc, char *argv[] )
     coords.at(1) = (L2 + L3)/2;
     coords.at(2) = L1;
     coords.at(3) = 0;
+    bool validRead;
 
     // path generation variables
-    vector< vector<int> > pathGen; // used to storage interpolated values of bits
+    vector< vector<int> > pathGen;
+    vector< vector<double> > generalPath; // used to storage interpolated values of bits
 
     CMulti_DNMX_Motor Motors;
 
@@ -49,88 +53,55 @@ int main( int argc, char *argv[] )
 
     Motors.initialization(1);
     Motors.set_torque(1023);
-    Motors.set_speed(50);
-    //Motors.read_speed();
+    Motors.set_speed(100);
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 
-    /**
-     * From your view:
-     *      left vs right is the x direction
-     *      closer vs further is the y direction
-     *      up vs down is the z direction
-     */
-    while (1) {
+    state_t state = GET;
+    bool finished = false;
 
-	/** 
-	 * Must note that the first generated path will slightly vary
-	 * due to it going above the cup
-	 */  
+    usleep(1000000);
 
-	/* INCOMPLETE
-	input_coords(&coords);
-	motor_bit_angle = goal_pos;
-	//Motors.read_motor_angles(&motor_bit_angle);
-	pick_up_cup( &pathGen, &coords, &motor_bit_angle);
-	//print_vector( &pathGen );
-	cout << pathGen.size() << endl;
-	
-	for (int i = 0; i<pathGen.size(); i++) {
-	    //cout << "moving loop " << endl;
-	    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
-	    usleep(UPDATE_INTERVAL*1000); // micro second updating
-	} 
-	*/
 
-	// Enter x coord -1 to exit
+    // Main program loop
 
-	if (!input_coords(&coords)) {
-		break;
-	}
+    while (!finished) {
 
-	//game_control(&coords);
-
-	if (!(ikine(&coords, &angles))) {
-		cout << "Ikine not happy" << endl;
-	    continue;
-	}
-
-	goal_pos[0] = mx12w_angle2bits(angles[0]);
-	goal_pos[1] = ax12a_angle2bits(angles[1]);
-	goal_pos[2] = ax12a_angle2bits(angles[2]);
-	goal_pos[3] = ax12a_angle2bits(angles[3]);
-	
-	print_angle(&angles);
-	print_angle(&coords);
-	print_angle(&goal_pos);
-	Motors.move_to_goal_pos( &goal_pos, curr_pos);
-
-    	/**
-    	 * This section is for the foward kinematics
-    	 */
-	//Motors.no_torque_generate();
-
-	/*
-	if ( 1 ) {
-	    cout << "Reading fkine" << endl;
-	    //Motors.read_motor_angles(&fkine_vector);
-
-	    //bits_to_degree(&fkine_vector, &coords);
-
-	    //print_angle(&angles);
-	    fkine(&angles, &coords);
-	    print_coords(&coords);
-	    cout << endl;
-	}
-	*/
+		switch (state) {
+			// Go to the cup with an open gripper
+			case GET:
+				validRead = false;
+				if(input_coords(&coords)){
+					// Ensure the current motor position is a valid result
+					while(!get_motor_angles(&motor_bit_angle, &Motors));
+					if(!point_to_point(&pathGen, &coords, &motor_bit_angle, OPEN)) {
+						break;
+					}
+					// Perform the interpolation
+					for (size_t i = 0; i<pathGen.size(); i++) {
+					    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
+					    usleep(UPDATE_INTERVAL);
+					}
+					// Go to next state
+					state = GRIP;
+				}
+				else {
+					cout << "Inputs sucked" << endl;
+					finished = true;
+				}
+				break;
+			// Actuate the gripper to hold the cup
+			case GRIP:
+				finished = true;
+				break;
+		}
 	
     }
 
-    //Motors.no_torque_generate();
-    //Motors.set_torque(0);
-
+    Motors.no_torque_generate();
+    Motors.set_torque(0);
     dxl_terminate();
-    cout << "dxl_terminate" << endl;
+    cout << "Successfully exited program" << endl;
 
     return 0;
 }

@@ -17,11 +17,15 @@
 
 #define GRIP_ANGLE 65
 
+#define OPEN 1
+#define CLOSED 0
+
 using namespace std;
 
 //void ikine(vector<double> coords);
 //void ikine(void);
-bool ikine( vector<double> *coords, vector<double> * angles );
-void print_values( vector<double> *values );
+bool ikine(vector<double> *coords, vector<double> * angles, int grip);
+void print_values(vector<double> *values);
+bool check_angle_range(vector<double> *angles);
 
 #endif

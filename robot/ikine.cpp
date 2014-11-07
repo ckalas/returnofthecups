@@ -2,7 +2,7 @@
 #include "fkine.h"
 
 // Input x, y ,z and the angle vector returns the values to input to the  motors
-bool ikine(vector<double> *coords, vector<double> *angles) {
+bool ikine(vector<double> *coords, vector<double> *angles, int grip) {
     //cout << endl << "Andy Ikine says, hello world" << endl << endl;
 
     double x = coords->at(0);
@@ -45,13 +45,10 @@ bool ikine(vector<double> *coords, vector<double> *angles) {
     angles->at(2) += M_PI / 2 - M_PI / 6;
     angles->at(1) -= M_PI / 2;
 
-    if ( coords->at(3) == 1 ) 
-	angles->at(3) = - GRIP_ANGLE / 180.0 * M_PI;
-    else
-	angles->at(3) = 0;
+    angles->at(3) = grip ? 0 : (-GRIP_ANGLE / 180.0 * M_PI);
 
-    //print_values(angles);
-    return true;
+    return check_angle_range(angles);
+
 }
 
 void print_values( vector<double>* values) {
@@ -61,4 +58,14 @@ void print_values( vector<double>* values) {
 	cout << values->at(i) / M_PI * 180 << ", ";
     }
     cout << endl << endl;
+}
+
+bool check_angle_range(vector<double> *angles) {
+	for(int i = 0; i < angles->size(); i++) {
+		double angle = angles->at(i);
+		if (angle < -150 || angle > 150 || isnan(angle)) {
+			return false;
+		}
+	}
+	return true;
 }

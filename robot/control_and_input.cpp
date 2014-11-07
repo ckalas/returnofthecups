@@ -76,8 +76,24 @@ bool input_coords(vector<double> *coords) {
     cin >> coords->at(1);
     cout << "z: ";
     cin >> coords->at(2);
+    /*
     cout << "grip: (1 on, 0 off) ";
     cin >> coords->at(3);
-
+    */
     return true;
+}
+
+void set_goals(vector<int> *goal_pos, vector<double> angles) {
+	goal_pos->at(0) = mx12w_angle2bits(angles[0]);
+	goal_pos->at(1) = ax12a_angle2bits(angles[1]);
+	goal_pos->at(2) = ax12a_angle2bits(angles[2]);
+	goal_pos->at(3) = ax12a_angle2bits(angles[3]);
+}
+
+bool get_motor_angles(vector<int> *motor_bit_angle, CMulti_DNMX_Motor *Motors) {
+	Motors->read_motor_angles(motor_bit_angle);
+	if((*motor_bit_angle)[0] == 0 || (*motor_bit_angle)[1] == 0 || (*motor_bit_angle)[2] == 0) {
+		return false;
+	}
+	return true;
 }
