@@ -12,7 +12,7 @@
 
 using namespace std;
 
-enum state_t {GO_TO_CUP, GRIP, MOVE_AWAY, DROP, RESET};
+enum state_t {INIT, GO_TO_CUP, GRIP, MOVE_AWAY, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
@@ -21,8 +21,7 @@ void print_coords(vector<double> *coords) {
 	 << ", grip: " << coords->at(3) << endl;    
 }
 
-int main( int argc, char *argv[] ) 
-{
+int main(int argc, char **argv) {
 
     vector<int> fkine_vector (4);
     vector<double> angles (4);
@@ -35,9 +34,9 @@ int main( int argc, char *argv[] )
     coords.at(3) = 0;
     bool validRead;
 
-    // path generation variables
-    vector< vector<int> > pathGen;
-    vector< vector<double> > generalPath; // used to storage interpolated values of bits
+    // Path generation variables
+    vector<vector<int>> pathGen;
+    vector<vector<double>> generalPath; // used to storage interpolated values of bits
 
     CMulti_DNMX_Motor Motors;
 
@@ -49,7 +48,7 @@ int main( int argc, char *argv[] )
 
     int curr_pos[4] ={0,0,0,0};
 
-    // init with baud 1Mbps, refer to bauds.txt for mapping
+    // Init with baud 1Mbps, refer to bauds.txt for mapping
 
     Motors.initialization(1);
     Motors.set_torque(1023);
@@ -65,20 +64,28 @@ int main( int argc, char *argv[] )
 
     // Main program loop
 
-    // NOTES TO THE READER: curr_pos is not used at all, probably get rid of it.
+    // NOTES : curr_pos is not used at all, probably get rid of it.
 
     while (!finished) {
 
     	cout << "Current state: " << state << endl;
 
 		switch (state) {
+			// Init state - get location of various markers
+			case INIT:
+				/*
+				 * Read in x y z of autofill and drop-off
+				 * marker
+				 */
+				 break;
 			// Wait for input and move to cup with open gripper
 			case GO_TO_CUP:
 				validRead = false;
+				// Blocks here for input from human or other program
 				if(input_coords(&coords)){
 					// Ensure the current motor position is a valid result
 					while(!get_motor_angles(&motor_bit_angle, &Motors));
-					if(!point_to_point(&pathGen, &coords, &motor_bit_angle, OPEN)) {
+					if(!generate_path(&pathGen, &coords, &motor_bit_angle, OPEN)) {
 						break;
 					}
 					// Perform the interpolation
@@ -106,7 +113,7 @@ int main( int argc, char *argv[] )
 				if(input_coords(&coords)){
 					// Ensure the current motor position is a valid result
 					while(!get_motor_angles(&motor_bit_angle, &Motors));
-					if(!point_to_point(&pathGen, &coords, &motor_bit_angle, CLOSED)) {
+					if(!generate_path(&pathGen, &coords, &motor_bit_angle, CLOSED)) {
 						break;
 					}
 					// Perform the interpolation
@@ -129,7 +136,7 @@ int main( int argc, char *argv[] )
 				usleep(1000000);
 				state = RESET;
 				break;
-
+			// Go back to starting position
 			case RESET:
 				coords.at(0) = 0.0;
 				coords.at(1) = 150.0;
@@ -139,6 +146,8 @@ int main( int argc, char *argv[] )
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
 				state = GO_TO_CUP;
 				get_motor_angles(&motor_bit_angle, &Motors);
+				// Signal to parent for new cup location
+				cout << "1" << endl;
 				break;
 
 

@@ -64,7 +64,7 @@ void game_control(vector<double> *coords) {
 
 
 bool input_coords(vector<double> *coords) {
-	// Check validity of coords here?
+    
     cout << "x: ";
     cin >> coords->at(0);
 

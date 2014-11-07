@@ -21,7 +21,7 @@ void print_vector(vector<vector<double>> *print);
 void print_vector(vector<vector<int>> *print);
 
 void interpolate( vector< vector<int> > *pathGen, vector< vector<double> > *mainPos);
-bool point_to_point(vector<vector<int>> *interpolatedPath, vector<double> *coords, vector<int> *curr_coords, int grip);
+bool generate_path(vector<vector<int>> *interpolatedPath, vector<double> *coords, vector<int> *curr_coords, int grip);
 
 void rad2bits(vector<double> *radian, vector<double> *bits);
 

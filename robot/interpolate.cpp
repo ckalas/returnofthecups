@@ -62,7 +62,7 @@ void interpolate(vector<vector<int>> *pathGen, vector< vector<double>> *mainPos)
     }
 }
 
-bool point_to_point( vector<vector<int>> *interpolatedPath, vector<double> *coords,vector<int> *curr_coords, int grip) {
+bool generate_path( vector<vector<int>> *interpolatedPath, vector<double> *coords,vector<int> *curr_coords, int grip) {
     vector< vector<double> > generalPath;
     vector<double> temp (4);
     vector<double> angles (4);
