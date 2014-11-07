@@ -2,7 +2,7 @@
 #include <highgui.h>
 #include "cups.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430));
 
@@ -57,7 +57,9 @@ void average_cups(vector<Point2f> *points) {
             }
         }
     }
+    #if DEBUG
     cout << *points << endl;
+    #endif
 }
 
 /**

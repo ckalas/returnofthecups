@@ -7,8 +7,6 @@ ifeq ($(OS), Darwin)
 	INCLUDE = -I /usr/local/include/libfreenect
 	FREE_LIBS = -L/usr/local/lib -lfreenect
 else
-	CFLAGS= -std=c++11 -fPIC -g -Wall  $(shell pkg-config --cflags opencv libusb-1.0)  -I /usr/local/include/libusb-1.0/ 
-
 	CFLAGS= -std=c++11 -fPIC -g -Wall  $(shell pkg-config --cflags opencv libusb-1.0)  -I/usr/local/include/libusb-1.0/ 
 	LIBS = $(shell pkg-config --libs opencv)
 	INCLUDE = $(shell pkg-config --cflags libfreenect )
@@ -17,10 +15,10 @@ endif
 
 
 main: fiducial.o device.o cups.o main.o
-	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS)  -g
+	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS)
 
 test: trackTest.o
-	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS)  -g
+	$(CXX) $(INCLUDE) $(CFLAGS) $+ -o $@ $(LIBS) $(FREE_LIBS)
 
 %.o: %.cpp
 	$(CXX) -c $(CFLAGS) $< -o $@

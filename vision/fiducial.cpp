@@ -7,26 +7,29 @@
  * Note that valid here means 50 < depth < 100 and 0 < rot(x,y,z) < 60.
  * It appears to be taking the centre of the marker  as the location of it.
  *
- * @param   src                  the current rgb frame 
- * @param   depthMat       the current depth frame 
- * @param   objectString  the relative filename of the fiducial marker
- * @param   intrinsics        the matrix representing camera intrinsic params
- * @param   distortion        the matrix representing camera distortion params
- * @param   minFeat          threshold value for sift detector
- * @param   minDist           threshold value for sift detector
- * @param   &HT                a matrix reference to store the homogeneous transform
- * @returns                          true if a valid marker has been found
+ * @param   src         the current rgb frame 
+ * @param   depthMat    the current depth frame 
+ * @param   filename    the relative filename of the fiducial marker
+ * @param   intrinsics  the matrix representing camera intrinsic params
+ * @param   distortion  the matrix representing camera distortion params
+ * @param   minFeat     threshold value for sift detector
+ * @param   minDist     threshold value for sift detector
+ * @param   &HT         a matrix reference to store the homogeneous transform
+ * @returns             true if a valid marker has been found
  */
 
-bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion,
-    int minFeat, int minDist, int multi,   Mat &HT ) {
-    Mat img_object = imread(objectString, 0);
+bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat distortion,
+    int minFeat, int minDist, int multi, Mat &HT ) {
+    Mat img_object = imread(filename, 0);
     Mat img_scene = src;
+
+    // id7.png is always perpendicular to ground so expect low rotation
+    int max_angle = filename == "id7.png" ? 50 : 180;
 
     // Step 1: Detect the keypoints using SIFT Detector
     int minFeatures = minFeat;
     
-    SiftFeatureDetector detector( minFeatures );
+    SiftFeatureDetector detector(minFeatures);
 
     vector<KeyPoint> keypoints_object, keypoints_scene;
 
@@ -74,9 +77,9 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     vector<Point2f> scene;
 
     for (size_t i = 0; i< good_matches.size(); i++) {
-    // Get the keypoints from the good matches
-    obj.push_back(keypoints_object[good_matches[i].queryIdx].pt);
-    scene.push_back(keypoints_scene[good_matches[i].trainIdx].pt);
+        // Get the keypoints from the good matches
+        obj.push_back(keypoints_object[good_matches[i].queryIdx].pt);
+        scene.push_back(keypoints_scene[good_matches[i].trainIdx].pt);
     }
 
 
@@ -96,10 +99,10 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     perspectiveTransform(obj_corners, scene_corners, H);
     
     // Draw lines between the corners (the mapped object in the scene)
-    line( img_matches, scene_corners[0] + Point2f( img_object.cols, 0), scene_corners[1] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
-    line( img_matches, scene_corners[1] + Point2f( img_object.cols, 0), scene_corners[2] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
-    line( img_matches, scene_corners[2] + Point2f( img_object.cols, 0), scene_corners[3] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
-    line( img_matches, scene_corners[3] + Point2f( img_object.cols, 0), scene_corners[0] + Point2f( img_object.cols, 0), Scalar(0,255,0), 4);
+    line(img_matches, scene_corners[0] + Point2f(img_object.cols, 0), scene_corners[1] + Point2f(img_object.cols, 0), Scalar(0,255,0), 4);
+    line(img_matches, scene_corners[1] + Point2f(img_object.cols, 0), scene_corners[2] + Point2f(img_object.cols, 0), Scalar(0,255,0), 4);
+    line(img_matches, scene_corners[2] + Point2f(img_object.cols, 0), scene_corners[3] + Point2f(img_object.cols, 0), Scalar(0,255,0), 4);
+    line(img_matches, scene_corners[3] + Point2f(img_object.cols, 0), scene_corners[0] + Point2f(img_object.cols, 0), Scalar(0,255,0), 4);
 
     imshow("matches", img_matches);
     waitKey(0);
@@ -118,10 +121,10 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
      *   Note that here the real life size of the marker is specified as the 3D point.
      */
 
-    markerPoints.push_back( Point3f( 0.0, 0.0, 0.0 ) );
-    markerPoints.push_back( Point3f( FID_SIZE, 0.0, 0.0 ) );
-    markerPoints.push_back( Point3f( FID_SIZE, FID_SIZE, 0.0 ) );
-    markerPoints.push_back( Point3f( 0.0, FID_SIZE, 0.0 ) );
+    markerPoints.push_back(Point3f(0.0, 0.0, 0.0));
+    markerPoints.push_back(Point3f(FID_SIZE, 0.0, 0.0));
+    markerPoints.push_back(Point3f(FID_SIZE, FID_SIZE, 0.0));
+    markerPoints.push_back(Point3f(0.0, FID_SIZE, 0.0));
  
     solvePnP(Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,rvec, tvec, false, CV_P3P);
     // Use depth map to get accurate depth depth(y,x)
@@ -130,10 +133,6 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     // check if the solve PnP is valid
     double rotx= abs(rvec.at<double>(0)*(180/M_PI));
     double rotz = abs(rvec.at<double>(2)*(180/M_PI));
-    if  (isnan(depth) || depth > 120 || depth <= 50 || rotx > 50 || rotx < 1 ||
-         rotz < 1 || rotz > 50) {
-        return false;
-    }
 
     #if DEBUG
     destroyWindow("depth fid");
@@ -143,6 +142,11 @@ bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat 
     cout << "tvec: " << tvec << endl;
     cout << "rvec: " << rvec << endl;
     #endif
+
+    if  (isnan(depth) || depth > 120 || depth <= 50 || rotx > max_angle || rotx < 1 ||
+         rotz < 1 || rotz > max_angle) {
+        return false;
+    }
     // Compute the homogeneous transform
     tvec.at<double>(2) = -depth;
 
