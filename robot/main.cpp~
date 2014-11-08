@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     goal_pos.at(0)= 2096;
     goal_pos.at(1) = 512; //205;
     goal_pos.at(2)= 512; //650;
-    goal_pos.at(3) = 280;
+    goal_pos.at(3) = 500;
 
     int curr_pos[4] ={0,0,0,0};
 
