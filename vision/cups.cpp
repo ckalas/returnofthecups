@@ -1,5 +1,6 @@
 #include <iostream>
 #include <highgui.h>
+#include <ctime>
 #include "cups.h"
 
 #define DEBUG 1
@@ -16,9 +17,11 @@ Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430));
  */
 
 // TODO: Take out the unnecessary pointer and pass the reference instead 
-void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *points) {
+void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vector<Cup> *cups,
+                                        Mat inverseCamera, Mat HT) {
     // Only consider a smaller region of the picture - increase speed and reduce false positives
     Mat slice = (*rgbMat)(roi).clone();
+    Mat cameraCoords, fidCoords;
     std::vector<cv::Rect> matches;
     Mat gray;
     Point2f centre;
@@ -30,10 +33,35 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
 
     // Add all the cups found across 10 frames
     for (size_t i = 0; i < matches.size(); i++) {
+        // Create new cup with time stamp and pixel location
+        Cup newCup;
+        newCup.timestamp = get_time();
         // Take point at centre of cup region
-        centre = Point2f((float)matches[i].x+matches[i].width/2 + OFF_X,
+        newCup.pixelLocation = Point2f((float)matches[i].x+matches[i].width/2 + OFF_X,
                          (float)matches[i].y + matches[i].height/2+OFF_Y);
-        points->push_back(centre);
+        // Get depth
+        newCup.depth = depthMat.at<unsigned short>(matches[i].y + matches[i].height/2+OFF_Y, 
+                                                   matches[i].x+matches[i].width/2+OFF_X )/10.0;
+        if (newCup.depth < 40 || newCup.depth > 150) {
+            continue;
+        }
+
+        // Calculate distance from camera
+        Mat imageCoords =(Mat_<double>(3,1)<<(OFF_X+matches[i].x+matches[i].width/2)*newCup.depth,
+                                                 (OFF_Y+matches[i].y+matches[i].height/2)*newCup.depth,
+                                                 newCup.depth);
+        cameraCoords = inverseCamera * imageCoords;
+        // Homogeneous transform to base fiducial
+        Mat add = Mat::ones(1,1, CV_64F);
+        cameraCoords.push_back(add);
+        fidCoords = HT*cameraCoords;
+        newCup.worldLocation.x = fidCoords.at<double>(0);
+        newCup.worldLocation.y = fidCoords.at<double>(1);
+        newCup.worldLocation.z = fidCoords.at<double>(2);
+
+        newCup.sorted = false;
+
+        cups->push_back(newCup);
     }
 
 }
@@ -45,21 +73,18 @@ void accumlate_cups(Mat *rgbMat, CascadeClassifier cascade, vector<Point2f> *poi
  * @returns void
  */
 
-void average_cups(vector<Point2f> *points) {
+void average_cups(vector<Cup> *cups) {
 
-    for (auto it = points->begin(); it != points->end(); ++it) {
-        for (auto jt = std::next(it); jt != points->end(); ) {
-            if (norm(*it-*jt) <= 25) {
-                jt = points->erase(jt);
+    for (auto it = cups->begin(); it != cups->end(); ++it) {
+        for (auto jt = std::next(it); jt != cups->end(); ) {
+            if (norm((*it).pixelLocation-(*jt).pixelLocation) <= 25) {
+                jt = cups->erase(jt);
             }
             else {
                 ++jt;
             }
         }
     }
-    #if DEBUG
-    cout << *points << endl;
-    #endif
 }
 
 /**
@@ -70,9 +95,9 @@ void average_cups(vector<Point2f> *points) {
  * @returns  void
  */
 
-void draw_cups(Mat *rgbMat, vector<Point2f> points) {
-    for (size_t i = 0; i < points.size(); i++) {
-        circle(*rgbMat, points[i], 3, Scalar(0,0,255), 2);
+void draw_cups(Mat *rgbMat, vector<Cup> cups) {
+    for (size_t i = 0; i < cups.size(); i++) {
+        circle(*rgbMat, cups[i].pixelLocation, 3, Scalar(0,0,255), 2);
     }
 }
 
@@ -90,7 +115,7 @@ void draw_cups(Mat *rgbMat, vector<Point2f> points) {
 void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera, Mat HT) {
     Mat slice = (*rgbMat)(roi).clone();
     std::vector<cv::Rect> matches;
-    Mat gray, cameraCoords, fidCoords, cameraCoordsHomogeneous; // make this a vector of them ultimately pointer
+    Mat gray, cameraCoords, fidCoords; // make this a vector of them ultimately pointer
     cvtColor(slice, gray, CV_BGR2GRAY);
     equalizeHist(gray,gray);
 
@@ -122,13 +147,24 @@ void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inver
             Mat add = Mat::ones(1,1, CV_64F);
             cameraCoords.push_back(add);
             fidCoords = HT*cameraCoords;
-            fidCoords.at<double>(0) = fidCoords.at<double>(0);
-            fidCoords.at<double>(1) = fidCoords.at<double>(1);
             print_mat3(fidCoords, "FiducialCoords");
         }
 
     }
 }
+
+double get_time(void) {
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+    return now->tm_sec;
+}
+
+double elapsed_time(double previous) {
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+    return now->tm_sec-previous;
+}
+
 
 /**
  * Prints the FPS calculation on RGB frame
