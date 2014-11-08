@@ -2,17 +2,16 @@
 #include "device.h"
 #include "fiducial.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 using namespace cv;
 using namespace std;
 
-string robot = "id7.png";
-string autoFill = "id11.png";
-string classifier = "rectCup.xml";
-
 int main(int argc, char **argv) {
 
+    string robot = "id7.png";
+    string autoFill = "id11.png";
+    string classifier = "rectCup.xml";
     // Load Haar classifier
     CascadeClassifier rectCup;
     if(!rectCup.load(classifier)) {
@@ -25,7 +24,7 @@ int main(int argc, char **argv) {
     int fps;
 
     // Flags for output options	
-    bool finished(false), showFrames(false), showDepth(false), showFinder(false), showTarget(true),
+    bool finished(false), showFrames(false), showDepth(false), showLocation(false), showTarget(true),
              showTracker(false);
 
     // Storage for RGB and DEPTH frames
@@ -55,31 +54,31 @@ int main(int argc, char **argv) {
     device.startVideo();
     device.startDepth();
 
-    #if DEBUG
     cout << "Locating robot" << endl;
-    #endif
     // Locate fiducial at robot base
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
     }
     while(!check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT));
-    #if DEBUG
+    HT.convertTo(HT, CV_64F);
+    cout << "Located robot" << endl;
+
     cout << "Locating auto fill" << endl;
-    #endif
+
     // Locate fiducial at auto fill
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
     }
     while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT));
+    cout << "Located auto fill" << endl;
 
     #if DEBUG 
     cout << "Homogenous Transform to Fiducial "<< endl << HT << endl;
     #endif
-    HT.convertTo(HT, CV_64F);
-
-    // Find the cups across 50 frames
+    cout << "Sampling initial scene" << endl;
+    // Find the cups across 100 frames
     for(int i = 0; i < 100; i++) {
         device.getVideo(rgbMat);
         accumlate_cups(&rgbMat, depthMat, rectCup, &cups,cameraInv, HT);
@@ -87,8 +86,6 @@ int main(int argc, char **argv) {
     }
     // Decide which cups are valid
     average_cups(&cups);
-    cout << "GOTO" << endl;
-    cout << -(cups[0].worldLocation.x-25) << " "<< -(cups[0].worldLocation.z) << " "<< cups[0].worldLocation.y << endl;
 
     #if DEBUG
     device.getVideo(rgbMat);
@@ -103,9 +100,6 @@ int main(int argc, char **argv) {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
 
-        if (showFinder) {
-            detect_cups(&rgbMat, depthMat, rectCup, cameraInv, HT);
-        }
         if (showFrames) {
             // Calculate the fps and finding the time diff executing the code
             e2 = cv::getTickCount();
@@ -129,6 +123,11 @@ int main(int argc, char **argv) {
         if (showTarget) {
             rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
         }
+
+        if (showLocation && cups.size() > 0) {
+            transpose_cup(cups[0]);
+        }
+
         imshow("rgb", rgbMat);
 
         char c = (char)waitKey(10);
@@ -139,10 +138,6 @@ int main(int argc, char **argv) {
                 break;
             case 'f':
                 showFrames = showFrames? false: true;
-                break;
-            case 's':
-                showFinder = showFinder? false: true;
-                cout << "Cup detection : " << showFinder << endl;
                 break;
             case 't':
                 showTracker = showTracker ? false : true;
@@ -158,6 +153,9 @@ int main(int argc, char **argv) {
                     moveWindow("depth", 650, 0);
                 }
                 cout << "Depth : " << showDepth << endl;
+                break;
+            case 'l':
+                showLocation = showLocation ? false : true;
                 break;
             case 'n':
                 cups.clear();

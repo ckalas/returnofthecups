@@ -55,9 +55,8 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
         Mat add = Mat::ones(1,1, CV_64F);
         cameraCoords.push_back(add);
         fidCoords = HT*cameraCoords;
-        newCup.worldLocation.x = fidCoords.at<double>(0);
-        newCup.worldLocation.y = fidCoords.at<double>(1);
-        newCup.worldLocation.z = fidCoords.at<double>(2);
+        newCup.worldLocation = Point3f(fidCoords.at<double>(0),fidCoords.at<double>(1),
+                                       fidCoords.at<double>(2));
 
         newCup.sorted = false;
 
@@ -87,6 +86,20 @@ void average_cups(vector<Cup> *cups) {
     }
 }
 
+void transpose_cup(Cup cup) {
+    double x,xt,y,yt,z,zt;
+    x = cup.worldLocation.x;
+    y = cup.worldLocation.y;
+    z = cup.worldLocation.z;
+    cout << "Fiducial Coords" << endl;
+    cout << "x: " << x << ", y: " << y << ", z: " << z << endl;
+    xt = -(x-18);
+    yt = -z;
+    zt = y;
+    cout << "Transposed Coords" << endl;
+    cout << "x: " << xt << ", y: " << yt << ", z: " << zt << endl;
+}
+
 /**
  * Draws circles at the location of cup points
  *
@@ -98,58 +111,6 @@ void average_cups(vector<Cup> *cups) {
 void draw_cups(Mat *rgbMat, vector<Cup> cups) {
     for (size_t i = 0; i < cups.size(); i++) {
         circle(*rgbMat, cups[i].pixelLocation, 3, Scalar(0,0,255), 2);
-    }
-}
-
-/**
- * Detect and LOCATE the cup in camera space and fiducial space
- *
- * @param   rgbMat          the current RGB frame
- * @param   depthMat        the current depth frame
- * @param   cascade         the cascade classifier of the cup
- * @param   inverseCamera   the inverted intrinsics matrix
- * @param   HT              the homogeneous transform matrix
- * @returns void
- */
-
-void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera, Mat HT) {
-    Mat slice = (*rgbMat)(roi).clone();
-    std::vector<cv::Rect> matches;
-    Mat gray, cameraCoords, fidCoords; // make this a vector of them ultimately pointer
-    cvtColor(slice, gray, CV_BGR2GRAY);
-    equalizeHist(gray,gray);
-
-    cascade.detectMultiScale(gray, matches, 1.3, 3,0|CV_HAAR_SCALE_IMAGE, Size(20, 30));
-
-    for (size_t i = 0; i < matches.size(); i++) {
-
-        // Draw rectangle
-        Point tl (matches[i].x+OFF_X, matches[i].y+OFF_Y);
-        Point br (matches[i].x+matches[i].width+OFF_X, matches[i].y+matches[i].height+OFF_Y);
-        rectangle(*rgbMat, tl ,br, Scalar( 0, 255, 255 ), +2, 4);
-        // Get depth of cup  -- depth(Y,X)
-        double depth = depthMat.at<unsigned short>(matches[i].y + matches[i].height/2+OFF_Y, 
-                                                   matches[i].x+matches[i].width/2+OFF_X )/10.0;
-        if (depth > 40 and depth < 150) {
-
-            // Calculate distance from camera
-            Mat imageCoords =(Mat_<double>(3,1)<<(OFF_X+matches[i].x+matches[i].width/2)*depth,
-                                                 (OFF_Y+matches[i].y+matches[i].height/2)*depth,
-                                                 depth);
-            cameraCoords = inverseCamera * imageCoords;
-            #if DEBUG
-            cout << "Depth at cup " << i << " : " << depth << endl;
-            cout << "Coords of cup " << i << " : " << OFF_X+matches[i].x+matches[i].width/2 <<
-                                          "," <<OFF_Y+matches[i].y + matches[i].height/2<< endl;
-            cout << "img" << endl << imageCoords << endl << "inv" << endl << inverseCamera << endl;
-            #endif
-            print_mat3(cameraCoords, "Camera Coords");
-            Mat add = Mat::ones(1,1, CV_64F);
-            cameraCoords.push_back(add);
-            fidCoords = HT*cameraCoords;
-            print_mat3(fidCoords, "FiducialCoords");
-        }
-
     }
 }
 

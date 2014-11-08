@@ -1,6 +1,6 @@
 #include "fiducial.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 /**
  * Returns true when a valid fiducial marker has been found.
@@ -98,6 +98,7 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
 
     perspectiveTransform(obj_corners, scene_corners, H);
     
+    #if DEBUG
     // Draw lines between the corners (the mapped object in the scene)
     line(img_matches, scene_corners[0] + Point2f(img_object.cols, 0), scene_corners[1] + Point2f(img_object.cols, 0), Scalar(0,255,0), 4);
     line(img_matches, scene_corners[1] + Point2f(img_object.cols, 0), scene_corners[2] + Point2f(img_object.cols, 0), Scalar(0,255,0), 4);
@@ -107,6 +108,7 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
     imshow("matches", img_matches);
     waitKey(0);
     destroyWindow("matches");
+    #endif
 
     Mat rvec = Mat(Size(3,1), CV_64F);
     Mat tvec = Mat(Size(3,1), CV_64F);

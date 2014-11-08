@@ -21,11 +21,11 @@ typedef struct cup_t {
 
 void accumlate_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, vector<Cup> *cups,Mat inverseCamera, Mat HT);
 void average_cups(vector<Cup> *cups);
-void draw_cups(Mat *rgbMat, vector<Cup> cup) ;
+void draw_cups(Mat *rgbMat, vector<Cup> cup);
+void transpose_cup(Cup cup);
 
 double get_time(void) ;
 double elapsed_time(double previous);
-void detect_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, Mat inverseCamera, Mat HT);
 void show_fps(Mat *rgbMat, int fps);
 void print_mat3(Mat points, string label);
 #endif
