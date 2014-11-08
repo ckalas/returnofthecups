@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     fs.release();
 
     // Storage for cup locations (aggregate)
-    vector<Point2f> points;
+    vector<Cup> cups;
 
     // Setup the kinect device
     Freenect::Freenect freenect;
@@ -82,14 +82,17 @@ int main(int argc, char **argv) {
     // Find the cups across 50 frames
     for(int i = 0; i < 100; i++) {
         device.getVideo(rgbMat);
-        accumlate_cups(&rgbMat, rectCup, &points);
+        accumlate_cups(&rgbMat, depthMat, rectCup, &cups,cameraInv, HT);
         waitKey(100);
     }
     // Decide which cups are valid
-    average_cups(&points);
+    average_cups(&cups);
+    cout << "GOTO" << endl;
+    cout << -(cups[0].worldLocation.x-25) << " "<< -(cups[0].worldLocation.z) << " "<< cups[0].worldLocation.y << endl;
+
     #if DEBUG
     device.getVideo(rgbMat);
-    draw_cups(&rgbMat, points);
+    draw_cups(&rgbMat, cups);
     imshow("rgb", rgbMat);
     waitKey(0);
     #endif
@@ -117,9 +120,9 @@ int main(int argc, char **argv) {
         }
 
         if (showTracker) {
-            accumlate_cups(&rgbMat, rectCup, &points);
-            average_cups(&points);
-            draw_cups(&rgbMat, points);
+            accumlate_cups(&rgbMat, depthMat, rectCup, &cups, cameraInv, HT);
+            average_cups(&cups);
+            draw_cups(&rgbMat, cups);
         }
 
 
@@ -157,7 +160,7 @@ int main(int argc, char **argv) {
                 cout << "Depth : " << showDepth << endl;
                 break;
             case 'n':
-                points.clear();
+                cups.clear();
                 break;
             case 'r':
                 showTarget = showTarget ? false : true;

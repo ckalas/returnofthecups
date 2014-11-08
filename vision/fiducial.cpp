@@ -143,14 +143,15 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
     cout << "rvec: " << rvec << endl;
     #endif
 
-    if  (isnan(depth) || depth > 120 || depth <= 50 || rotx > max_angle || rotx < 1 ||
-         rotz < 1 || rotz > max_angle) {
+    if  (isnan(depth) || depth > 120 || depth <= 50 || rotx > max_angle || rotx < 1 
+         || rotz > max_angle) {
         return false;
     }
     // Compute the homogeneous transform
     tvec.at<double>(2) = -depth;
-
-    HT = reconfigure_reference(rvec,tvec);
+    if (filename == "id7.png") {
+        HT = reconfigure_reference(rvec,tvec);
+    }
     return true;
 }
 
