@@ -11,11 +11,11 @@
 
 using namespace std;
 
-enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_AUTO, DROP, RESET};
+enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_AUTO, MOVE_DOWN, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
-    cout << "x: " << coords->at(0) << ", y: "
+    cerr<< "x: " << coords->at(0) << ", y: "
 	 << coords->at(1) << ", z: " << coords->at(2)
 	 << ", grip: " << coords->at(3) << endl;    
 }
@@ -26,6 +26,7 @@ int main(int argc, char **argv) {
     vector<double> angles (4);
     vector<double> coords (4);
     vector<double> autofill(4);
+    vector<double> tmp(4);
     vector<double> coaster(4);
     vector<double> curr_coords (4);
     vector<int> motor_bit_angle (4);
@@ -53,7 +54,7 @@ int main(int argc, char **argv) {
 
     Motors.initialization(1);
     Motors.set_torque(1023);
-    Motors.set_speed(100);
+    Motors.set_speed(1024);
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 
@@ -62,7 +63,7 @@ int main(int argc, char **argv) {
     state_t state = INIT;
     bool finished = false;
 
-    usleep(1000000);
+    sleep(1);
 
 
     // Main program loop
@@ -71,7 +72,7 @@ int main(int argc, char **argv) {
 
     while (!finished) {
 
-    	cout << "Current state: " << state << endl;
+    	cerr << "Current state: " << state << endl;
 
 		switch (state) {
 			// Init state - get location of various markers
@@ -81,10 +82,12 @@ int main(int argc, char **argv) {
 				cin >> autofill.at(1); //y
 				autofill.at(1) = autofill.at(1) * 10; //scaling main is cm
 				cin >> autofill.at(2); //z
-				autofill.at(2) = 90; //hardcord autofill height
+				autofill.at(2) = 110; //hardcord autofill height
+                                                    cerr << "Autofill location at: " << endl;
 				cerr << "x: "<< autofill.at(0) << endl; 
 				cerr << "y: " << autofill.at(1) << endl;
 				cerr << "z: "<< autofill.at(2) << endl;
+				fflush(stdin);
 				state = GO_TO_CUP;
 				break;
 			// Wait for input and move to cup with open gripper
@@ -104,14 +107,6 @@ int main(int argc, char **argv) {
 					    usleep(UPDATE_INTERVAL);
 					}
 
-					/*
-					ikine(&coords, &angles, OPEN);
-					set_goals(&goal_pos, angles);
-					Motors.move_to_goal_pos(&goal_pos, curr_pos);
-					usleep(1000000);
-					*/
-
-					//sleep(2);
 					// Go to next state
 					state = GRIP;
 				}
@@ -124,12 +119,11 @@ int main(int argc, char **argv) {
 				ikine(&coords, &angles, CLOSED);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
-				sleep(2);
+				Motors.stillMoving();
 				state = UP;
 				break;
 			// Wait for input and move the cup there
 			case UP:
-			    cout << "UP" << endl;
 			    validRead = false;
 			    coords.at(2) += 180; //move the cup directly up 120
 			    // Ensure the current motor position is a valid result
@@ -143,19 +137,35 @@ int main(int argc, char **argv) {
 				Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 				usleep(UPDATE_INTERVAL);
 			    }
-			    sleep(4);
+			    Motors.stillMoving();
 
-			    /*
-			    ikine(&coords, &angles, CLOSED);
-			    set_goals(&goal_pos, angles);
-			    Motors.move_to_goal_pos( &goal_pos, curr_pos );
-			    sleep(3);
-			    */
 			    // Go to next state
 			    state = MOVE_AUTO;
 			    break;
 			    
 			case MOVE_AUTO:
+				validRead = false;
+				tmp.at(0) = autofill.at(0);
+				tmp.at(1) = autofill.at(1);
+				tmp.at(2) = coords.at(2) - 80;
+				// Ensure the current motor position is a valid result
+				while(!get_motor_angles(&motor_bit_angle, &Motors));
+				if(!generate_path(&pathGen, &tmp, &motor_bit_angle, CLOSED)) {
+					break;
+				}
+
+				// Perform the interpolation
+				for (size_t i = 0; i<pathGen.size(); i++) {
+				    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
+				    usleep(UPDATE_INTERVAL);
+				}
+				Motors.stillMoving();
+
+				// Go to next state
+				state = MOVE_DOWN;
+				break;
+			// Release cup
+			case MOVE_DOWN:
 				validRead = false;
 				// Ensure the current motor position is a valid result
 				while(!get_motor_angles(&motor_bit_angle, &Motors));
@@ -168,24 +178,16 @@ int main(int argc, char **argv) {
 				    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 				    usleep(UPDATE_INTERVAL);
 				}
-				sleep(1);
-
-				/*
-				ikine(&coords, &angles, CLOSED);
-				set_goals(&goal_pos, angles);
-				Motors.move_to_goal_pos( &goal_pos, curr_pos );
-				sleep(5);
-				*/
+				Motors.stillMoving();
 
 				// Go to next state
 				state = DROP;
 				break;
-			// Release cup
 			case DROP:
 				ikine(&autofill, &angles, OPEN);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
-				sleep(2);
+				Motors.stillMoving();
 				state = RESET;
 				break;
 			// Go back to starting position
@@ -199,8 +201,8 @@ int main(int argc, char **argv) {
 				state = GO_TO_CUP;
 				get_motor_angles(&motor_bit_angle, &Motors);
 				// Signal to parent for new cup location
-				cout << "1" << endl;
-				sleep(2);
+				cout << "1";
+				Motors.stillMoving();
 				break;
 
 
@@ -211,7 +213,7 @@ int main(int argc, char **argv) {
     Motors.no_torque_generate();
     Motors.set_torque(0);
     dxl_terminate();
-    cout << "Successfully exited program" << endl;
+    //cout << "Successfully exited program" << endl;
 
     return 0;
 }
