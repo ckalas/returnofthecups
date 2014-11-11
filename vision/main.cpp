@@ -6,7 +6,7 @@
 #include "fiducial.h"
 
 #define DEBUG 0
-#define ROBOT 0
+#define ROBOT 1
 
 using namespace cv;
 using namespace std;
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
     #endif
 
     FILE * output = fdopen(fromParent[1], "w");
-    //FILE * input = fdopen(toParent[0], "r");
+    FILE * input = fdopen(toParent[0], "r");
 
     // Set up for select() read of input pipe
     fd_set set;
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 
     /* Initialize the timeout data structure. */
     timeout.tv_sec = 0;
-    timeout.tv_usec = 100;
+    timeout.tv_usec = 10;
    
 
     string robot = "id7.png";
@@ -133,18 +133,25 @@ int main(int argc, char **argv) {
         average_cups(&cups);
         draw_cups(&rgbMat, cups);
         if (cups.size() > 0) {
-            cup_info(cups);
-<<<<<<< Updated upstream
-            Point2f prediction = cup_prediction(1, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+6)));
+            
+            Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+6)));
             if (ready) {
+		cup_info(cups);
                 fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
                 fflush(output);
                 ready = false;
+		cout << "sent message" << endl;
             }
             // Non-blocking read of pipe
-            if (select(FD_SETSIZE, &set, NULL, NULL, &timeout) > 0) {
+	    //int ret;
+            if (select(toParent[0]+1, &set, NULL, NULL, &timeout) > 0) {
+		fgetc(input);
                 ready = true;
             }
+	    FD_ZERO(&set);
+	    FD_SET(toParent[0],&set);
+
+	    //	    cout << "Ret: " << ret << endl;
             /*
 =======
             Point2f prediction = cup_prediction(0, Point2f(xt, yt));

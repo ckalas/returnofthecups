@@ -8,12 +8,12 @@
 
 #define WRIST_OFFSET 30.0
 #define ELBOW_OFFSET 0 //2.0
-#define HEIGHT       230
+#define HEIGHT       200
 #define DROP_HEIGHT  110
 
 using namespace std;
 
-enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_AUTO, MOVE_DOWN, DROP, RESET};
+enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_ACROSS, MOVE_DOWN, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
@@ -150,14 +150,14 @@ int main(int argc, char **argv) {
 			    Motors.stillMoving();
 
 			    // Go to next state
-			    state = MOVE_AUTO;
+			    state = MOVE_ACROSS;
 			    break;
 			    
-			case MOVE_AUTO:
+			case MOVE_ACROSS:
 				validRead = false;
 				tmp.at(0) = autofill.at(0);
 				tmp.at(1) = autofill.at(1);
-				tmp.at(2) = coords.at(2);
+				tmp.at(2) = coords.at(2)- 10;
 				//print_vector(&autofill);
 				//print_vector(&tmp);
 			

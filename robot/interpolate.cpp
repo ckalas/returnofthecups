@@ -77,7 +77,7 @@ bool generate_path( vector<vector<int>> *interpolatedPath, vector<double> *coord
     temp = {coords->at(0), coords->at(1), coords->at(2), coords->at(3)};
     if (!ikine(&temp, &temp, grip)) {
 	   cerr << "Ikine not happy" << endl;
-	   cout << 1 << endl;
+	   //cout << 1 << endl;
        return false;
     }
     rad2bits(&temp, &temp);
