@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     state_t state = INIT;
     bool finished = false;
 
-    slee(1);
+    sleep(1);
 
 
     // Main program loop
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
 				    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 				    usleep(UPDATE_INTERVAL);
 				}
-				sleep(1);
+				sleep(4);
 
 				// Go to next state
 				state = DROP;
