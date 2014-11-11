@@ -10,7 +10,7 @@
 #include "multi_motor.h"
 #include <cmath>
 
-#define COMPLIANCE 64
+#define COMPLIANCE 128
 #define VELOCITY 100 // 100 millimetre per second
 
 CMulti_DNMX_Motor::CMulti_DNMX_Motor()
@@ -47,13 +47,15 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     Motor_ID[3] = MOTOR_ID_4;
 
 
-    /*
+
     // Set the Compliance Slope
     for (int i = 1; i < 3; i++) {
 	dxl_write_word( i, CW_COMPLIANCE_SLOPE, COMPLIANCE); // clockwise
 	dxl_write_word( i, CCW_COMPLIANCE_SLOPE, COMPLIANCE); // counter-clockwise
     }
-    */
+
+    // making the register has been written
+    sleep(1);
     readCompliance();
 
     cerr << "Motor initialization" << endl; 
@@ -152,10 +154,25 @@ void CMulti_DNMX_Motor::readCompliance(void) {
     for(int i = 1; i < 3; i++ ) {
 	int ret = dxl_read_word( Motor_ID[i], CW_COMPLIANCE_SLOPE );
 	int ret2 = dxl_read_word( Motor_ID[i], CCW_COMPLIANCE_SLOPE );
-	//printf("MotorID: %d, CW slope: %d, CCW slope: %d\n", i, ret, ret2);
+	cerr << "MotorID: " << i << "CW slope: " << ret 
+	     << "CCW slope: " << ret2 << endl;
     }
 }
 	
+void CMulti_DNMX_Motor::stillMoving(void) {
+    while ( 1 ) {
+	int temp;
+
+	for( int i = 0; i < NUM_OF_MOTORS; i++ ) {
+	    temp |= dxl_read_word( Motor_ID[i], P_MOVING );
+	}
+
+	if ( !temp ) 
+	    break;
+
+	usleep(1000); // 1 ms
+    }
+}
 
 // Print communication result
 void CMulti_DNMX_Motor::PrintCommStatus(int CommStatus) {
