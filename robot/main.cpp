@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
 
     while (!finished) {
 
-    	cout << "Current state: " << state << endl;
+    	//cout << "Current state: " << state << endl;
 
 		switch (state) {
 			// Init state - get location of various markers
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 				break;
 			// Wait for input and move the cup there
 			case UP:
-			    cout << "UP" << endl;
+			    //cout << "UP" << endl;
 			    validRead = false;
 			    coords.at(2) += 180; //move the cup directly up 120
 			    // Ensure the current motor position is a valid result
@@ -199,7 +199,7 @@ int main(int argc, char **argv) {
 				state = GO_TO_CUP;
 				get_motor_angles(&motor_bit_angle, &Motors);
 				// Signal to parent for new cup location
-				cout << "1" << endl;
+				//cout << "1" << endl;
 				sleep(2);
 				break;
 
@@ -211,7 +211,7 @@ int main(int argc, char **argv) {
     Motors.no_torque_generate();
     Motors.set_torque(0);
     dxl_terminate();
-    cout << "Successfully exited program" << endl;
+    //cout << "Successfully exited program" << endl;
 
     return 0;
 }

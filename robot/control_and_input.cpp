@@ -65,14 +65,14 @@ void game_control(vector<double> *coords) {
 
 bool input_coords(vector<double> *coords) {
     
-    cout << "x: ";
+    cerr << "x: ";
     cin >> coords->at(0);
     coords->at(0) = coords->at(0) * 10; //scaling, from main is in cm
     
-    cout << "y: ";
+    cerr << "y: ";
     cin >> coords->at(1);
     coords->at(1) = coords->at(1) * 10; //scaling, from main is in cm
-    cout << "z: ";
+    cerr << "z: ";
     cin >> coords->at(2);
     coords->at(2) = 75;
     cerr << "xc: "<< coords->at(0) << endl; 

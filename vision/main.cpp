@@ -118,9 +118,10 @@ int main(int argc, char **argv) {
                 double yt = -(z+6);
                 fprintf(output, "%f\n%f\n0\n", xt,yt);
                 fflush(output);
+		fgetc(input);
         }
         
-        fgetc(input);
+
     
 
         if (showTarget) {

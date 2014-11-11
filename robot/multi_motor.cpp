@@ -56,18 +56,18 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     */
     readCompliance();
 
-    printf( "\n\n Motor initialization \n\n" );
+    //printf( "\n\n Motor initialization \n\n" );
 
     ///////// Open USB2Dynamixel ////////////
     if( dxl_initialize(deviceIndex, baudnum) == 0 )
 	{
-            printf( "Failed to open USB2Dynamixel!\n" );
+	    printf( "Failed to open USB2Dynamixel!\n" );
             printf( "Press key to terminate...\n" );
             getchar();
             return 0;
 	}
-    else
-	printf( "Succeed to open USB2Dynamixel!\n" );
+    //    else
+	//printf( "Succeed to open USB2Dynamixel!\n" );
 
 }
 
@@ -139,14 +139,14 @@ void CMulti_DNMX_Motor::set_speed(int speed) {
         }
 
         dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, setSpeed);
-        cout << "motor " << i << " speed: " << setSpeed << endl;
+        //cout << "motor " << i << " speed: " << setSpeed << endl;
     }
 }
 
 void CMulti_DNMX_Motor::read_speed(void) {
     for (int i=0; i < NUM_OF_MOTORS; i++) {
         int ret = dxl_read_word( Motor_ID[i], P_MOVING_SPEED_L);
-        printf("Motor No. %d, Speed value: %d\n", i, ret);
+        //printf("Motor No. %d, Speed value: %d\n", i, ret);
     }
 }
 
@@ -154,7 +154,7 @@ void CMulti_DNMX_Motor::readCompliance(void) {
     for(int i = 1; i < 3; i++ ) {
 	int ret = dxl_read_word( Motor_ID[i], CW_COMPLIANCE_SLOPE );
 	int ret2 = dxl_read_word( Motor_ID[i], CCW_COMPLIANCE_SLOPE );
-	printf("MotorID: %d, CW slope: %d, CCW slope: %d\n", i, ret, ret2);
+	//printf("MotorID: %d, CW slope: %d, CCW slope: %d\n", i, ret, ret2);
     }
 }
 	
