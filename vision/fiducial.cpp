@@ -164,7 +164,7 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
         (temp).push_back(add);
         temp2 = HT*temp;
         xt = -(temp2.at<double>(0)-18);
-        yt = (temp2.at<double>(2)+10);
+        yt = (temp2.at<double>(2)+20);
         zt = temp2.at<double>(1);
         (*tvec_r1)[0] = xt;
         (*tvec_r1)[1] = yt;
