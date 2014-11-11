@@ -5,8 +5,8 @@
 using namespace std;
 using namespace cv;
 
-#define OFF_X 180
-#define OFF_Y 220
+#define OFF_X 200 //270 at 70 cm //180 original
+#define OFF_Y 200 //150 at 90 cm //220 original
 
 #define FID_DIM 8
 

@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 
 
     // Pipe, fork, exec (to run robot as child)
-
+ 
     int toParent[2], fromParent[2];
     pipe(toParent);
     pipe(fromParent);
@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
 
     FILE * output = fdopen(fromParent[1], "w");
     FILE * input = fdopen(toParent[0], "r");
+   
 
     string robot = "id7.png";
     string autoFill = "id11.png";
@@ -78,25 +79,28 @@ int main(int argc, char **argv) {
     device.startVideo();
     device.startDepth();
 
-    cout << "Locating robot" << endl;
+
     // Locate fiducial at robot base
+    cout << "Locating robot" << endl;
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
+	usleep(10000);
     }
     while(!check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
     HT.convertTo(HT, CV_64F);
     cout << "Located robot" << endl;
 
-    cout << "Locating auto fill" << endl;
-
     // Locate fiducial at auto fill
+    cout << "Locating auto fill..." << endl;
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
+	usleep(10000);
     }
     while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
     cout << "Located auto fill" << endl;
+
 
     cout << "Transform to auto fill "<< endl << tvec_r1[0] << ", " << endl  << tvec_r1[1] << ", "  << tvec_r1[2] << ", " <<endl;
 
@@ -129,12 +133,11 @@ int main(int argc, char **argv) {
             cout << "Temp: " << temp << endl;
 
         }
-        
-
-    
 
         if (showTarget) {
-            rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
+            //rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
+	    //rectangle( rgbMat, Point(270,150), Point(420, 250), Scalar(255,0,0), 3); at 90 cm
+	    rectangle(rgbMat, Point(200,200), Point(420, 350), Scalar(255,0,0), 3); // at ~70 cm
         }
 
         imshow("rgb", rgbMat);
@@ -157,8 +160,8 @@ int main(int argc, char **argv) {
             case 'r':
                 showTarget = showTarget ? false : true;
                 cout << "Display ROI: " << showTarget << endl;
-            }
-
+		break;
+	}
     }
 
     device.stopVideo();

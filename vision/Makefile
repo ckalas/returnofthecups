@@ -1,6 +1,6 @@
 all: main
 
-run:
+run: main
 	sudo ./main
 
 OS := $(shell uname)

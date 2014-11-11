@@ -8,6 +8,8 @@
 
 #define WRIST_OFFSET 30.0
 #define ELBOW_OFFSET 0 //2.0
+#define HEIGHT       230
+#define DROP_HEIGHT  110
 
 using namespace std;
 
@@ -61,12 +63,18 @@ int main(int argc, char **argv) {
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 
-    state_t state = GO_TO_CUP;
+    state_t state = GO_TO_CUP;//INIT;
     bool finished = false;
 
     sleep(1);
 
     // Main program loop
+
+    // for testing
+    autofill.at(0) = 200;
+    autofill.at(1) = 100;
+    autofill.at(2) = 90;
+    autofill.at(3) = CLOSED;
 
     // NOTES : curr_pos is not used at all, probably get rid of it.
 
@@ -82,7 +90,7 @@ int main(int argc, char **argv) {
 				cin >> autofill.at(1); //y
 				autofill.at(1) = autofill.at(1) * 10; //scaling main is cm
 				cin >> autofill.at(2); //z
-				autofill.at(2) = 110; //hardcord autofill height
+				autofill.at(2) = DROP_HEIGHT; //hardcord autofill height
                                                     cerr << "Autofill location at: " << endl;
 				cerr << "x: "<< autofill.at(0) << endl; 
 				cerr << "y: " << autofill.at(1) << endl;
@@ -125,7 +133,7 @@ int main(int argc, char **argv) {
 			// Wait for input and move the cup there
 			case UP:
 			    validRead = false;
-			    coords.at(2) += 180; //move the cup directly up 120
+			    coords.at(2) = HEIGHT; //+= 180; //move the cup directly up 120
 			    // Ensure the current motor position is a valid result
 			    while(!get_motor_angles(&motor_bit_angle, &Motors));
 
@@ -147,7 +155,10 @@ int main(int argc, char **argv) {
 				validRead = false;
 				tmp.at(0) = autofill.at(0);
 				tmp.at(1) = autofill.at(1);
-				tmp.at(2) = coords.at(2) - 80;
+				tmp.at(2) = coords.at(2);
+				print_vector(&autofill);
+				print_vector(&tmp);
+			
 				// Ensure the current motor position is a valid result
 				while(!get_motor_angles(&motor_bit_angle, &Motors));
 				if(!generate_path(&pathGen, &tmp, &motor_bit_angle, CLOSED)) {
@@ -184,6 +195,7 @@ int main(int argc, char **argv) {
 				state = DROP;
 				break;
 			case DROP:
+			    autofill.at(2) = DROP_HEIGHT;
 				ikine(&autofill, &angles, OPEN);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
@@ -192,12 +204,20 @@ int main(int argc, char **argv) {
 				break;
 			// Go back to starting position
 			case RESET:
+			    // moves back up and then back to origin
+			    autofill.at(2) = HEIGHT;
+			    ikine(&autofill, &angles, OPEN);
+			    set_goals(&goal_pos, angles);
+			    Motors.move_to_goal_pos(&goal_pos, curr_pos);
+			    Motors.stillMoving();
+
 				coords.at(0) = 0.0;
 				coords.at(1) = 150.0;
 				coords.at(2) = 300.0;
 				ikine(&coords, &angles, OPEN);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
+				Motors.stillMoving();
 				state = GO_TO_CUP;
 				get_motor_angles(&motor_bit_angle, &Motors);
 				// Signal to parent for new cup location

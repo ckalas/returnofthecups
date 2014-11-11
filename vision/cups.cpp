@@ -5,7 +5,9 @@
 
 #define DEBUG 1
 
-Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430));
+//Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430)); // original
+//Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 250)); // at 90 cm
+Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 350));
 
 /**
  * Stores the pixel locations of all the cups that are present in the frame.

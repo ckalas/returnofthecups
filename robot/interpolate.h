@@ -7,7 +7,7 @@
 #include <cmath>
 
 #define SAMPLES 100 // samples bewteen points
-#define HEIGHT 250 // temporary fixed height
+//#define HEIGHT 250 // temporary fixed height
 #define WRIST_OFFSET 30.0
 #define VELOCITY 5 // mm per second
 //#define UPDATE_INTERVAL 100000 // 1/SAMPLES as micro seconds

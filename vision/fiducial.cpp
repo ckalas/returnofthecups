@@ -82,7 +82,7 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
         scene.push_back(keypoints_scene[good_matches[i].trainIdx].pt);
     }
 
-
+    
     if (obj.size() <= 3 || scene.size() <= 3) {
         return false;
     }
@@ -106,8 +106,8 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
     line(img_matches, scene_corners[3] + Point2f(img_object.cols, 0), scene_corners[0] + Point2f(img_object.cols, 0), Scalar(0,255,0), 4);
 
     imshow("matches", img_matches);
-    waitKey(0);
-    destroyWindow("matches");
+    //waitKey(0);
+    //destroyWindow("matches");
     #endif
 
     Mat rvec = Mat(Size(3,1), CV_64F);
@@ -128,13 +128,19 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
     markerPoints.push_back(Point3f(FID_SIZE, FID_SIZE, 0.0));
     markerPoints.push_back(Point3f(0.0, FID_SIZE, 0.0));
  
+
+
     solvePnP(Mat(markerPoints), Mat(scene_corners), intrinsics, distortion,rvec, tvec, false, CV_P3P);
+
+
     // Use depth map to get accurate depth depth(y,x)
     double depth = depthMat.at<unsigned short>(scene_corners[0].y+FID_PIX, 
                    scene_corners[0].x+FID_PIX)/10.0;
     // check if the solve PnP is valid
     double rotx= abs(rvec.at<double>(0)*(180/M_PI));
     double rotz = abs(rvec.at<double>(2)*(180/M_PI));
+
+   
 
     #if DEBUG
     destroyWindow("depth fid");
