@@ -60,6 +60,7 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
                                        fidCoords.at<double>(2));
 
         newCup.sorted = false;
+        cout << "Cup height: " << newCup.worldLocation.y << endl;
 
         cups->push_back(newCup);
     }
