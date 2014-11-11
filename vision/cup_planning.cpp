@@ -14,6 +14,7 @@ Point2f cup_prediction(float t, Point2f p_0, Point2f* p_c) {
     Point2f offSet; //offset from fiducial to center of turn table
     offSet.x = 0;
     offSet.y = 0;
+    
     Point2f pointOnTable;
     pointOnTable.x = p_0.x + offSet.x;
     pointOnTable.y = p_0.y + offSet.y;
