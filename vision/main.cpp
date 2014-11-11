@@ -108,8 +108,8 @@ int main(int argc, char **argv) {
     // Main loop
     while (!finished) {
 
-	device.getVideo(rgbMat);
-	device.getDepth(depthMat);
+        device.getVideo(rgbMat);
+        device.getDepth(depthMat);
 
         accumlate_cups(&rgbMat, depthMat, rectCup, &cups, cameraInv, HT);
         average_cups(&cups);
@@ -121,7 +121,8 @@ int main(int argc, char **argv) {
             double xt = -(x - 18);
             double yt = -(z + 6);
             cup_info(cups);
-            fprintf(output, "%f\n%f\n0\n", xt, yt);
+            Point2f prediction = cup_prediction(2, Point2f(xt, yt));
+            fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
             fflush(output);
             cout << "blocking in vision " << endl;
             temp = fgetc(input);

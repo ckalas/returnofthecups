@@ -24,6 +24,7 @@ void accumlate_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, vector
 void average_cups(vector<Cup> *cups);
 void draw_cups(Mat *rgbMat, vector<Cup> cup);
 void cup_info(vector<Cup> cups);
+Point2f cup_prediction(float t, Point2f p_0);
 
 time_t get_time(void) ;
 double elapsed_time(time_t previous);
