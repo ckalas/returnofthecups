@@ -67,15 +67,17 @@ bool input_coords(vector<double> *coords) {
     
     cout << "x: ";
     cin >> coords->at(0);
-
-    if(coords->at(0) == -1) {
-    	return false;
-    }
+    coords->at(0) = coords->at(0) * 10; //scaling, from main is in cm
     
     cout << "y: ";
     cin >> coords->at(1);
+    coords->at(1) = coords->at(1) * 10; //scaling, from main is in cm
     cout << "z: ";
     cin >> coords->at(2);
+    coords->at(2) = 75;
+    cerr << "xc: "<< coords->at(0) << endl; 
+    cerr << "yc: " << coords->at(1) << endl;
+    cerr << "zc: "<< coords->at(2) << endl;
     /*
     cout << "grip: (1 on, 0 off) ";
     cin >> coords->at(3);

@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
     while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
     cout << "Located auto fill" << endl;
 
-    cout << "Transform to auto fill "<< endl << tvec_r1[0] << ", " << endl  << tvec_r1[1] << ", "  << tvec_r1[2] << ", " <<endl;;
+    cout << "Transform to auto fill "<< endl << tvec_r1[0] << ", " << endl  << tvec_r1[1] << ", "  << tvec_r1[2] << ", " <<endl;
 
     // Send XYZ of autofill to child
     fprintf(output, "%f\n%f\n0\n", tvec_r1[0],tvec_r1[1]);
@@ -141,9 +141,10 @@ int main(int argc, char **argv) {
                     double x = cups[0].worldLocation.x;
                     double z = cups[0].worldLocation.z;
                     double xt = -(x-18);
-                    double yt = -(z+6)
+                    double yt = -(z+6);
                     fprintf(output, "%f\n%f\n0\n", xt,yt);
                     fflush(output);
+		    sleep(2);
             }
             //usleep(1000);
         }

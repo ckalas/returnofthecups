@@ -145,7 +145,7 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
     cout << "rvec: " << rvec << endl;
     #endif
 
-    if  (std::isnan(depth) || depth > 120 || depth <= 50 || rotx > max_angle || rotx < 1 
+    if  (isnan(depth) || depth > 120 || depth <= 50 || rotx > max_angle || rotx < 1 
          || rotz > max_angle) {
         return false;
     }
