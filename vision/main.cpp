@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
-	usleep(10000);
+	//usleep(10000);
     }
     while(!check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
     HT.convertTo(HT, CV_64F);
@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
-	usleep(10000);
+	//usleep(10000);
     }
     while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
     cout << "Located auto fill" << endl;
@@ -134,6 +134,7 @@ int main(int argc, char **argv) {
         draw_cups(&rgbMat, cups);
         if (cups.size() > 0) {
             cup_info(cups);
+<<<<<<< Updated upstream
             Point2f prediction = cup_prediction(1, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+6)));
             if (ready) {
                 fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
@@ -145,6 +146,11 @@ int main(int argc, char **argv) {
                 ready = true;
             }
             /*
+=======
+            Point2f prediction = cup_prediction(0, Point2f(xt, yt));
+            fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
+            fflush(output);
+>>>>>>> Stashed changes
             cout << "blocking in vision " << endl;
             char temp = fgetc(input);
             cout << "Temp: " << temp << endl;
@@ -153,9 +159,9 @@ int main(int argc, char **argv) {
         }
 
         if (showTarget) {
-            //rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
+            rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
 	    //rectangle( rgbMat, Point(270,150), Point(420, 250), Scalar(255,0,0), 3); at 90 cm
-	    rectangle(rgbMat, Point(200,200), Point(420, 350), Scalar(255,0,0), 3); // at ~70 cm
+	    //rectangle(rgbMat, Point(200,200), Point(420, 350), Scalar(255,0,0), 3); // at ~70 cm
         }
 
         imshow("rgb", rgbMat);

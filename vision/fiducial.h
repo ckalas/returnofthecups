@@ -15,7 +15,7 @@
 
 #define MIN_MATCH_COUNT 10
 #define FID_SIZE 8.0 // The size of the fiducial marker - VERY important to be right
-#define FID_PIX 20 // An offset to find marker in depthMat, a bit hacky.
+#define FID_PIX 10 // An offset to find marker in depthMat, a bit hacky.
 
 using namespace std;
 using namespace cv;

@@ -5,8 +5,14 @@
 
 #define DEBUG 1
 
+<<<<<<< Updated upstream
 
 Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 350));
+=======
+Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430)); // original
+//Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 250)); // at 90 cm
+//Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 350));
+>>>>>>> Stashed changes
 
 /**
  * Stores the pixel locations of all the cups that are present in the frame.
@@ -128,8 +134,13 @@ Point2f cup_prediction(float t, Point2f p_0) {
 
     //offset the coord with table at the center
     Point2f offSet; //offset from fiducial to center of turn table
+<<<<<<< Updated upstream
     offSet.x = 18;
     offSet.y = 14;
+=======
+    offSet.x = 18;  //14;
+    offSet.y = 15; //18.5;
+>>>>>>> Stashed changes
     
     Point2f pointOnTable;
     pointOnTable.x = p_0.x + offSet.x;
