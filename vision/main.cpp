@@ -115,15 +115,15 @@ int main(int argc, char **argv) {
         average_cups(&cups);
         draw_cups(&rgbMat, cups);
         if (cups.size() > 0) {
-	    char temp;
+	   char temp;
                 double x = cups[0].worldLocation.x;
                 double z = cups[0].worldLocation.z;
                 double xt = -(x-18);
                 double yt = -(z+6);
-                fprintf(output, "%f\n%f\n0\n", xt,yt);
+                fprintf(output, "%c\n%f\n%f\n0\n",'g', xt,yt);
                 fflush(output);
                 temp = fgetc(input);
-		cout << "Temp: " << temp << endl;
+                cout << "Temp: " << temp << endl;
 
         }
         
