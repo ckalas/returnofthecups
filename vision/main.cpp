@@ -118,10 +118,12 @@ int main(int argc, char **argv) {
 	    char temp;
                 double x = cups[0].worldLocation.x;
                 double z = cups[0].worldLocation.z;
-                double xt = -(x-18);
-                double yt = -(z+6);
-                fprintf(output, "%f\n%f\n0\n", xt,yt);
+		double xt = -(x - 18);
+		double yt = -(z + 6);
+                cup_info(cups);
+		fprintf(output, "%f\n%f\n0\n", xt, yt);
                 fflush(output);
+		cout << "blocking in vision " << endl;
                 temp = fgetc(input);
 		cout << "Temp: " << temp << endl;
 
