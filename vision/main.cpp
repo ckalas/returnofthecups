@@ -6,12 +6,12 @@
 #include "fiducial.h"
 
 #define DEBUG 0
+#define ROBOT 0
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, char **argv) {
-
 
     // Pipe, fork, exec (to run robot as child)
  
@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
     pipe(toParent);
     pipe(fromParent);
 
+    #if ROBOT
     if (fork()) { // parent
         close(toParent[1]);
         close(fromParent[0]);
@@ -32,9 +33,22 @@ int main(int argc, char **argv) {
         close(fromParent[0]);
         execl("../robot/robot", "../robot/robot", (char *) NULL);
     }
+    #endif
 
     FILE * output = fdopen(fromParent[1], "w");
-    FILE * input = fdopen(toParent[0], "r");
+    //FILE * input = fdopen(toParent[0], "r");
+
+    // Set up for select() read of input pipe
+    fd_set set;
+    struct timeval timeout;
+
+    /* Initialize the file descriptor set. */
+    FD_ZERO(&set);
+    FD_SET(toParent[0], &set);
+
+    /* Initialize the timeout data structure. */
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 100;
    
 
     string robot = "id7.png";
@@ -48,7 +62,7 @@ int main(int argc, char **argv) {
     }
 
     // Flags for output options 
-    bool finished(false), showTarget(true);
+    bool finished(false), showTarget(true), ready(true);
 
     // Storage for RGB and DEPTH frames
     Mat depthMat(Size(640,480),CV_16UC1);
@@ -119,18 +133,22 @@ int main(int argc, char **argv) {
         average_cups(&cups);
         draw_cups(&rgbMat, cups);
         if (cups.size() > 0) {
-            char temp;
-            double x = cups[0].worldLocation.x;
-            double z = cups[0].worldLocation.z;
-            double xt = -(x - 18);
-            double yt = -(z + 6);
             cup_info(cups);
-            Point2f prediction = cup_prediction(2, Point2f(xt, yt));
-            fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
-            fflush(output);
+            Point2f prediction = cup_prediction(1, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+6)));
+            if (ready) {
+                fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
+                fflush(output);
+                ready = false;
+            }
+            // Non-blocking read of pipe
+            if (select(FD_SETSIZE, &set, NULL, NULL, &timeout) > 0) {
+                ready = true;
+            }
+            /*
             cout << "blocking in vision " << endl;
-            temp = fgetc(input);
+            char temp = fgetc(input);
             cout << "Temp: " << temp << endl;
+            */
 
         }
 
