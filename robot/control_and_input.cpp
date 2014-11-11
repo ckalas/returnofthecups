@@ -78,6 +78,7 @@ bool input_coords(vector<double> *coords) {
     cerr << "xc: "<< coords->at(0) << endl; 
     cerr << "yc: " << coords->at(1) << endl;
     cerr << "zc: "<< coords->at(2) << endl;
+    fflush(stdin);
 
     return true;
 }

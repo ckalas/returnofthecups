@@ -125,7 +125,7 @@ void CMulti_DNMX_Motor::set_speed(int speed) {
     for (int i=0; i<NUM_OF_MOTORS; i++) {
         switch (i) {
             case 0:
-                setSpeed = speed;//(int)speed/7.9661;
+                setSpeed = (int)speed/7.9661;
                 break;
             case 1:
                 setSpeed = speed;
