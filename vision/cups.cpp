@@ -55,7 +55,7 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
         Mat add = Mat::ones(1,1, CV_64F);
         cameraCoords.push_back(add);
         fidCoords = HT*cameraCoords;
-        newCup.worldLocation = Point3f(fidCoords.at<double>(0),fidCoords.at<double>(1),
+        newCup.worldLocation = Point3f(fidCoords.at<double>(0)-8,fidCoords.at<double>(1),
                                        fidCoords.at<double>(2));
 
         newCup.sorted = false;
@@ -74,30 +74,48 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
 
 void average_cups(vector<Cup> *cups) {
 
-    for (auto it = cups->begin(); it != cups->end(); ++it) {
+
+    // REMOVE OLD CUPS
+    for (auto it = cups->begin(); it != cups->end(); ) {
         for (auto jt = std::next(it); jt != cups->end(); ) {
             if (norm((*it).pixelLocation-(*jt).pixelLocation) <= 25) {
+                std::swap(*it,*jt);
                 jt = cups->erase(jt);
             }
             else {
                 ++jt;
             }
+
+        }
+
+        if (elapsed_time((*it).timestamp) > 0) {
+            it = cups->erase(it);
+        }
+        else {
+            ++it;
         }
     }
 }
 
-void transpose_cup(Cup cup) {
+void cup_info(vector<Cup> cups) {
     double x,xt,y,yt,z,zt;
-    x = cup.worldLocation.x;
-    y = cup.worldLocation.y;
-    z = cup.worldLocation.z;
-    cout << "Fiducial Coords" << endl;
-    cout << "x: " << x << ", y: " << y << ", z: " << z << endl;
-    xt = -(x-18);
-    yt = -z;
-    zt = y;
-    cout << "Transposed Coords" << endl;
-    cout << "x: " << xt << ", y: " << yt << ", z: " << zt << endl;
+
+    for (size_t i = 0; i < cups.size() ; i++) {   
+        Cup cup = cups[i];
+        x = cup.worldLocation.x;
+        y = cup.worldLocation.y;
+        z = cup.worldLocation.z;
+        cout << "------------------------------------------" <<  endl << "Cup " << i << endl;
+        cout << "Last updated " << elapsed_time(cup.timestamp) << " seconds ago" << endl;
+        cout << "Fiducial Coords" << endl;
+        cout << "x: " << x << ", y: " << y << ", z: " << z << endl;
+        xt = -(x-18);
+        yt = -(z+6);
+        zt = y;
+        cout << "Transposed Coords" << endl;
+        cout << "x: " << xt << ", y: " << yt << ", z: " << zt << endl;
+        cout << "-----------------------------------------" << endl;
+    }
 }
 
 /**
@@ -114,16 +132,16 @@ void draw_cups(Mat *rgbMat, vector<Cup> cups) {
     }
 }
 
-double get_time(void) {
+time_t get_time(void) {
     time_t t = time(0);   // get time now
-    struct tm * now = localtime( & t );
-    return now->tm_sec;
+    //struct tm * now = localtime( & t );
+    return t;
 }
 
-double elapsed_time(double previous) {
+double elapsed_time(time_t previous) {
     time_t t = time(0);   // get time now
-    struct tm * now = localtime( & t );
-    return now->tm_sec-previous;
+    //struct tm * now = localtime( & t );
+    return difftime(t, previous);
 }
 
 

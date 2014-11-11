@@ -15,12 +15,12 @@
 
 #define MIN_MATCH_COUNT 10
 #define FID_SIZE 8.0 // The size of the fiducial marker - VERY important to be right
-#define FID_PIX 10 // An offset to find marker in depthMat, a bit hacky.
+#define FID_PIX 20 // An offset to find marker in depthMat, a bit hacky.
 
 using namespace std;
 using namespace cv;
 
-bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion, int minFeat, int minDist, int multi,  Mat &HT);
+bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion, int minFeat, int minDist, int multi,  Mat &HT,vector<double> *tvec_r1);
 Mat reconfigure_reference(Mat rvec, Mat tvec);
 
 

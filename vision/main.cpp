@@ -1,3 +1,6 @@
+#include <unistd.h>
+#include <stdlib.h>
+#include <fstream>
 #include "cups.h"
 #include "device.h"
 #include "fiducial.h"
@@ -8,6 +11,28 @@ using namespace cv;
 using namespace std;
 
 int main(int argc, char **argv) {
+
+
+    int toParent[2], fromParent[2];
+    pipe(toParent);
+    pipe(fromParent);
+
+    if (fork()) { // parent
+        close(toParent[1]);
+        close(fromParent[0]);
+    }
+    else {
+        close(toParent[0]);
+        close(fromParent[1]);
+        dup2(toParent[1], 1);
+        dup2(fromParent[0], 0);
+        close(toParent[1]);
+        close(fromParent[0]);
+        execl("robot", "robot", (char *) NULL);
+    }
+
+    FILE * output = fdopen(fromParent[1], "w");
+    FILE * input = fdopen(toParent[0], "r");
 
     string robot = "id7.png";
     string autoFill = "id11.png";
@@ -24,8 +49,7 @@ int main(int argc, char **argv) {
     int fps;
 
     // Flags for output options	
-    bool finished(false), showFrames(false), showDepth(false), showLocation(false), showTarget(true),
-             showTracker(false);
+    bool finished(false), showFrames(false), showDepth(false), showTarget(true), showTracker(true);
 
     // Storage for RGB and DEPTH frames
     Mat depthMat(Size(640,480),CV_16UC1);
@@ -45,6 +69,7 @@ int main(int argc, char **argv) {
 
     // Storage for cup locations (aggregate)
     vector<Cup> cups;
+    vector<double> tvec_r1 (3);
 
     // Setup the kinect device
     Freenect::Freenect freenect;
@@ -60,7 +85,7 @@ int main(int argc, char **argv) {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
     }
-    while(!check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT));
+    while(!check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
     HT.convertTo(HT, CV_64F);
     cout << "Located robot" << endl;
 
@@ -71,21 +96,14 @@ int main(int argc, char **argv) {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
     }
-    while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT));
+    while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
     cout << "Located auto fill" << endl;
 
-    #if DEBUG 
-    cout << "Homogenous Transform to Fiducial "<< endl << HT << endl;
-    #endif
-    cout << "Sampling initial scene" << endl;
-    // Find the cups across 100 frames
-    for(int i = 0; i < 100; i++) {
-        device.getVideo(rgbMat);
-        accumlate_cups(&rgbMat, depthMat, rectCup, &cups,cameraInv, HT);
-        waitKey(100);
-    }
-    // Decide which cups are valid
-    average_cups(&cups);
+    cout << "Transform to auto fill "<< endl << tvec_r1[0] << ", " << endl  << tvec_r1[1] << ", "  << tvec_r1[2] << ", " <<endl;;
+
+    // Send XYZ of autofill to child
+    fprintf(output, "%f\n%f\n0\n", tvec_r1[0],tvec_r1[1]);
+    fflush(output);
 
     #if DEBUG
     device.getVideo(rgbMat);
@@ -93,12 +111,14 @@ int main(int argc, char **argv) {
     imshow("rgb", rgbMat);
     waitKey(0);
     #endif
+    cout << "Commencing main loop" << endl;
     // Main loop
     while (!finished) {
        // Check the clock tick
         e1 = cv::getTickCount();
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
+
 
         if (showFrames) {
             // Calculate the fps and finding the time diff executing the code
@@ -117,15 +137,18 @@ int main(int argc, char **argv) {
             accumlate_cups(&rgbMat, depthMat, rectCup, &cups, cameraInv, HT);
             average_cups(&cups);
             draw_cups(&rgbMat, cups);
+            if (cups.size() > 0) {
+                    double x = cups[0].worldLocation.x;
+                    double y = cups[0].worldLocation.y;
+                    fprintf(output, "%f\n%f\n0\n", x,y);
+                    fflush(output);
+            }
+            //usleep(1000);
         }
 
 
         if (showTarget) {
             rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
-        }
-
-        if (showLocation && cups.size() > 0) {
-            transpose_cup(cups[0]);
         }
 
         imshow("rgb", rgbMat);
@@ -154,10 +177,13 @@ int main(int argc, char **argv) {
                 }
                 cout << "Depth : " << showDepth << endl;
                 break;
-            case 'l':
-                showLocation = showLocation ? false : true;
+            case 'i':
+                if (cups.size() > 0) {
+                    cup_info(cups);
+                }
                 break;
             case 'n':
+                cout << "Cleared cups" << endl;
                 cups.clear();
                 break;
             case 'r':
