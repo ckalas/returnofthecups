@@ -3,7 +3,7 @@ LIBS = $(shell pkg-config --libs opencv)
 
 all: main
 
-run:
+run: main
 	sudo ./robot
 
 main: main.o multi_motor.o dynamixel.o dxl_hal.o ikine.o fkine.o control_and_input.o interpolate.o

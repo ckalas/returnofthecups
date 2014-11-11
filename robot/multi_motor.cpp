@@ -48,115 +48,112 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
 
 
 
-    // Set the Compliance Slope
-    for (int i = 1; i < 3; i++) {
-	dxl_write_word( i, CW_COMPLIANCE_SLOPE, COMPLIANCE); // clockwise
-	dxl_write_word( i, CCW_COMPLIANCE_SLOPE, COMPLIANCE); // counter-clockwise
-    }
+   
 
-    // making the register has been written
-    sleep(1);
-    readCompliance();
+     cerr << "Motor initialization" << endl; 
 
-    cerr << "Motor initialization" << endl; 
-
-    ///////// Open USB2Dynamixel ////////////
-    if( dxl_initialize(deviceIndex, baudnum) == 0 ) {
-	    printf( "Failed to open USB2Dynamixel!\n" );
-            printf( "Press key to terminate...\n" );
-            getchar();
-            return 0;
-    }
-    else
-	cerr << "Succeed to open USB2Dynamixel!" << endl;
-
-}
+     ///////// Open USB2Dynamixel ////////////
+     if( dxl_initialize(deviceIndex, baudnum) == 0 ) {
+	 cerr <<  "Failed to open USB2Dynamixel!" << endl;
+	 cerr <<  "Press key to terminate..." << endl;
+	 getchar();
+	 return 0;
+     }
+     else
+	 cerr << "Succeed to open USB2Dynamixel!" << endl;
+ }
 
 
-void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[]){
+ void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[]){
 
-    // add do while loop if it is still moving or has not at least reached it's 
-    // goal position (need function to check if +- 5-->10 bit )
+     // add do while loop if it is still moving or has not at least reached it's 
+     // goal position (need function to check if +- 5-->10 bit )
 
-    // add acceleration depending on diff of goal and curr pos
-    bool finished = false;
-    int i;
-    while (!finished) {
-        for(i=0;i<NUM_OF_MOTORS ;i++){
+     // add acceleration depending on diff of goal and curr pos
+     bool finished = false;
+     int i;
+     while (!finished) {
+	 for(i=0;i<NUM_OF_MOTORS ;i++){
 
-            // Write goal position
-            dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
-            // If error, try again
-            if (check_com_status() != 0) {
-                break;
-            }
-        }
+	     // Write goal position
+	     dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
+	     // If error, try again
+	     if (check_com_status() != 0) {
+		 break;
+	     }
+	 }
 
-        if (i == NUM_OF_MOTORS) {
-            finished = true;
-        }
-    }
-}
+	 if (i == NUM_OF_MOTORS) {
+	     finished = true;
+	 }
+     }
+ }
 
-void CMulti_DNMX_Motor::read_motor_angles(vector<int> *PresentPos) {
-	for(int i=0; i<NUM_OF_MOTORS; i++) {
-		PresentPos->at(i) = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );
+ void CMulti_DNMX_Motor::read_motor_angles(vector<int> *PresentPos) {
+	 for(int i=0; i<NUM_OF_MOTORS; i++) {
+		 PresentPos->at(i) = dxl_read_word( Motor_ID[i], P_PRESENT_POSITION_L );
 
-		if (check_com_status() != 0)
-			break;
-	}
-}
+		 if (check_com_status() != 0)
+			 break;
+	 }
+ }
 
-int CMulti_DNMX_Motor::check_com_status(void) {
-    CommStatus = dxl_get_result();
+ int CMulti_DNMX_Motor::check_com_status(void) {
+     CommStatus = dxl_get_result();
 
-    if( CommStatus == COMM_RXSUCCESS ) {
-        PrintErrorCode();
-    } else {
-	    PrintCommStatus(CommStatus);
-	    return 1;
-    }
+     if( CommStatus == COMM_RXSUCCESS ) {
+	 PrintErrorCode();
+     } else {
+	     PrintCommStatus(CommStatus);
+	     return 1;
+     }
 
-    return 0;
-}
+     return 0;
+ }
 
-void CMulti_DNMX_Motor::set_speed(int speed) {
-    int setSpeed;
-    for (int i=0; i<NUM_OF_MOTORS; i++) {
-        switch (i) {
-            case 0:
-                setSpeed = speed;//(int)speed/7.9661;
-                break;
-            case 1:
-                setSpeed = speed;
-                break;
-            case 2:
-                setSpeed = speed;
-                break;
-            case 3:
-                setSpeed = speed;
-                break;
-        }
+ void CMulti_DNMX_Motor::set_speed(int speed) {
+     int setSpeed;
+     for (int i=0; i<NUM_OF_MOTORS; i++) {
+	 switch (i) {
+	     case 0:
+		 setSpeed = speed;//(int)speed/7.9661;
+		 break;
+	     case 1:
+		 setSpeed = speed;
+		 break;
+	     case 2:
+		 setSpeed = speed;
+		 break;
+	     case 3:
+		 setSpeed = speed;
+		 break;
+	 }
 
-        dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, setSpeed);
-        cerr << "motor " << i << " speed: " << setSpeed << endl;
-    }
-}
+	 dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, setSpeed);
+	 cerr << "motor " << i << " speed: " << setSpeed << endl;
+     }
+ }
 
-void CMulti_DNMX_Motor::read_speed(void) {
-    for (int i=0; i < NUM_OF_MOTORS; i++) {
-        int ret = dxl_read_word( Motor_ID[i], P_MOVING_SPEED_L);
-        //printf("Motor No. %d, Speed value: %d\n", i, ret);
-    }
-}
+ void CMulti_DNMX_Motor::read_speed(void) {
+     for (int i=0; i < NUM_OF_MOTORS; i++) {
+	 int ret = dxl_read_word( Motor_ID[i], P_MOVING_SPEED_L);
+	 //printf("Motor No. %d, Speed value: %d\n", i, ret);
+     }
+ }
 
-void CMulti_DNMX_Motor::readCompliance(void) {
+bool CMulti_DNMX_Motor::read_compliance(void) {
+    int ret, ret2;
     for(int i = 1; i < 3; i++ ) {
-	int ret = dxl_read_word( Motor_ID[i], CW_COMPLIANCE_SLOPE );
-	int ret2 = dxl_read_word( Motor_ID[i], CCW_COMPLIANCE_SLOPE );
-	cerr << "MotorID: " << i << "CW slope: " << ret 
-	     << "CCW slope: " << ret2 << endl;
+	ret = dxl_read_byte( Motor_ID[i], CW_COMPLIANCE_SLOPE );
+	ret2 = dxl_read_byte( Motor_ID[i], CCW_COMPLIANCE_SLOPE );
+	cerr << "MotorID: " << i << ", CW slope: " << ret 
+	     << ", CCW slope: " << ret2 << endl;
     }
+
+    if (ret != 128 && ret2 != 128)
+	return false;
+    else 
+	return true;
 }
 	
 void CMulti_DNMX_Motor::stillMoving(void) {
@@ -247,7 +244,7 @@ void CMulti_DNMX_Motor::set_torque(int torque){
     }
 }
 
-void CMulti_DNMX_Motor::no_torque_generate(){
+void CMulti_DNMX_Motor::no_torque_generate(void){
     for (int i=0;i<NUM_OF_MOTORS;i++){
         dxl_write_word( Motor_ID[i], P_TORQUE_ENABLE, 0 );
     }
@@ -273,4 +270,29 @@ int ax12a_angle2bits_elbow( double radians) {
     return int( actual_angle / AX_12A_ANGLE * AX_12A_BITS);
 }
 
-    
+void CMulti_DNMX_Motor::test_registers(void) {
+    int register_ret;
+    for (int j = 1; j < 3; j++) {
+    for (int i = 0; i < 50; i++) {
+	register_ret = dxl_read_word( Motor_ID[j], i );
+	cerr << "Register : " << i << " --> value = " << register_ret << endl;
+    }
+    }
+}
+
+void CMulti_DNMX_Motor::set_compliance(void) {
+    //while ( !read_compliance() ) {
+    //   for (int j = 0; j < 5; j++) {
+	// Set the Compliance Slope
+	for (int i = 1; i < 3; i++) {
+	    dxl_write_byte( Motor_ID[i], CW_COMPLIANCE_SLOPE, COMPLIANCE); // clockwise
+	    dxl_write_byte( Motor_ID[i], CCW_COMPLIANCE_SLOPE, COMPLIANCE); // counter-clockwise
+	    check_com_status();
+	}
+
+	// making the register has been written
+	//	usleep(1000);
+	//    }
+
+    read_compliance();
+}

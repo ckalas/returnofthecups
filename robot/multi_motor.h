@@ -76,6 +76,8 @@ private:
     void PrintCommStatus(int CommStatus);
     void PrintErrorCode();
 
+    bool read_compliance(void);
+
 
 public:
     CMulti_DNMX_Motor();
@@ -87,13 +89,13 @@ public:
     void set_torque(int torque);
 
     void stillMoving(void);
-    void readCompliance(void);
 
     void set_speed(int speed);
     void read_speed(void);
-    void no_torque_generate();
+    void no_torque_generate(void);
 
-
+    void test_registers(void);
+    void set_compliance(void);
 };
 
 

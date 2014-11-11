@@ -53,18 +53,18 @@ int main(int argc, char **argv) {
     // Init with baud 1Mbps, refer to bauds.txt for mapping
 
     Motors.initialization(1);
+    Motors.set_compliance();
     Motors.set_torque(1023);
-    Motors.set_speed(1023);
+    Motors.set_speed(200);
+
+    //Motors.test_registers();
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 
-    
-
-    state_t state = INIT;
+    state_t state = GO_TO_CUP;
     bool finished = false;
 
     sleep(1);
-
 
     // Main program loop
 

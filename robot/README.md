@@ -17,3 +17,8 @@ http://www.hessmer.org/uploads/RobotArm/Inverse%2520Kinematics%2520for%2520Robot
 
 To get the arm moving smoothly make sure to set the CW and CWW 
 compliance slope to 128 in the Dynamixel Wizard
+
+The following link explains how byte size registers should be written 
+(in this case it was to write the compliance slope, which removes a lot 
+the jerky movement)
+http://www.robotis.com/xe/qna_en/206198
