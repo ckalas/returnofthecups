@@ -25,51 +25,44 @@ vector<double> linspace(double a, double b, int n) {
 void print_vector (vector<double> print) {
     for (vector<double>::const_iterator i = print.begin(); i != print.end(); ++i) {
 
-	cout << *i << ", ";
+	cerr << *i << ", ";
     }
-    cout << endl;
+    cerr << endl;
 }
 
 void print_vector( vector< vector<double> > *print) {
     for(vector< vector<double> >::const_iterator i = print->begin(); i!= print->end(); ++i) {
-	cout << "[ ";
+	cerr << "[ ";
 	for(int j = 0; j<4; j++) {
-	    cout << (*i).at(j) << " ";
+	    cerr << (*i).at(j) << " ";
 	}
-	cout << "]" << endl;
+	cerr << "]" << endl;
     }
 }
 
 void interpolate( vector< vector<double> > *pathGen, vector< vector<double> > *mainPos ) {
-    cout << "In interpolate" << endl;
+    cerr<< "In interpolate" << endl;
 
     vector<double> x,y,z,g, temp(4);
 
     for(int i = 0 ; i<mainPos->size()-1; i++) {
 
-	cout << "loop: " << i << endl;
-	cout << "start x: " << mainPos->at(i).at(0) << endl;	
-	cout << "end x : " << mainPos->at(i+1).at(0) << endl;
+	cerr << "loop: " << i << endl;
+	cerr<< "start x: " << mainPos->at(i).at(0) << endl;	
+	cerr << "end x : " << mainPos->at(i+1).at(0) << endl;
 
 	x = linspace(mainPos->at(i).at(0), mainPos->at(i+1).at(0), SAMPLES);
 	y = linspace(mainPos->at(i).at(1), mainPos->at(i+1).at(1), SAMPLES);
 	z = linspace(mainPos->at(i).at(2), mainPos->at(i+1).at(2), SAMPLES);
 	g = linspace(mainPos->at(i).at(3), mainPos->at(i+1).at(3), SAMPLES);
-
-	/*
-	print_vector(x);
-	print_vector(y);
-	print_vector(z);
-	print_vector(g);
-	*/
-
+	
 	for (int j = 0; j<SAMPLES; j++) {
 
 	    temp = { x.at(j), y.at(j), z.at(j), g.at(j) };
 	    pathGen->push_back(temp);
 	}
 
-	cout << endl << endl;
+	cerr << endl;
     }
 }
 

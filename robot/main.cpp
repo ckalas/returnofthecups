@@ -15,7 +15,7 @@ enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_AUTO, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
-    cout << "x: " << coords->at(0) << ", y: "
+    cerr<< "x: " << coords->at(0) << ", y: "
 	 << coords->at(1) << ", z: " << coords->at(2)
 	 << ", grip: " << coords->at(3) << endl;    
 }
