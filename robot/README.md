@@ -14,3 +14,6 @@ Take note of the control table, it allows setting of available parameters
 The following pdf were used to find the inverse kinematics
 
 http://www.hessmer.org/uploads/RobotArm/Inverse%2520Kinematics%2520for%2520Robot%2520Arm.pdf
+
+To get the arm moving smoothly make sure to set the CW and CWW 
+compliance slope to 128 in the Dynamixel Wizard
