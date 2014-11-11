@@ -37,6 +37,7 @@
 #define CW_COMPLIANCE_SLOPE    28
 #define CCW_COMPLIANCE_SLOPE   29
 
+
 #define P_TORQUE_ENABLE		    24
 #define P_TORQUE_LIMIT_L        34
 #define P_TORQUE_LIMIT_H        35
