@@ -1,5 +1,8 @@
 all: main
 
+run:
+	sudo ./main
+
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
 	CFLAGS= -std=c++11 -fPIC -g -Wall  `pkg-config --cflags opencv` -I /usr/local/include/libusb-1.0/ 
