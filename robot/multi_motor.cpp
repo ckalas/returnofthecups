@@ -56,18 +56,17 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     */
     readCompliance();
 
-    //printf( "\n\n Motor initialization \n\n" );
+    cerr << "Motor initialization" << endl; 
 
     ///////// Open USB2Dynamixel ////////////
-    if( dxl_initialize(deviceIndex, baudnum) == 0 )
-	{
+    if( dxl_initialize(deviceIndex, baudnum) == 0 ) {
 	    printf( "Failed to open USB2Dynamixel!\n" );
             printf( "Press key to terminate...\n" );
             getchar();
             return 0;
-	}
-    //    else
-	//printf( "Succeed to open USB2Dynamixel!\n" );
+    }
+    else
+	cerr << "Succeed to open USB2Dynamixel!" << endl;
 
 }
 
@@ -87,7 +86,6 @@ void CMulti_DNMX_Motor::move_to_goal_pos(vector<int> *GoalPos, int PresentPos[])
             dxl_write_word( Motor_ID[i], P_GOAL_POSITION_L, GoalPos->at(i) );
             // If error, try again
             if (check_com_status() != 0) {
-                //cout << "Retrying command" << endl;
                 break;
             }
         }
@@ -139,7 +137,7 @@ void CMulti_DNMX_Motor::set_speed(int speed) {
         }
 
         dxl_write_word( Motor_ID[i], P_MOVING_SPEED_L, setSpeed);
-        //cout << "motor " << i << " speed: " << setSpeed << endl;
+        cerr << "motor " << i << " speed: " << setSpeed << endl;
     }
 }
 
@@ -160,63 +158,61 @@ void CMulti_DNMX_Motor::readCompliance(void) {
 	
 
 // Print communication result
-void CMulti_DNMX_Motor::PrintCommStatus(int CommStatus)
-{
+void CMulti_DNMX_Motor::PrintCommStatus(int CommStatus) {
     switch(CommStatus)
         {
         case COMM_TXFAIL:
-	    printf("COMM_TXFAIL: Failed transmit instruction packet!\n");
+	    cerr << "COMM_TXFAIL: Failed transmit instruction packet!" << endl;
 	    break;
 
         case COMM_TXERROR:
-	    printf("COMM_TXERROR: Incorrect instruction packet!\n");
+	    cerr << "COMM_TXERROR: Incorrect instruction packet!" << endl;
 	    break;
 
         case COMM_RXFAIL:
-	    printf("COMM_RXFAIL: Failed get status packet from device!\n");
+	    cerr << "COMM_RXFAIL: Failed get status packet from device!" << endl;
 	    break;
 
         case COMM_RXWAITING:
-	    printf("COMM_RXWAITING: Now recieving status packet!\n");
+	    cerr << "COMM_RXWAITING: Now recieving status packet!" << endl;
 	    break;
 
         case COMM_RXTIMEOUT:
-	    printf("COMM_RXTIMEOUT: There is no status packet!\n");
+	    cerr << "COMM_RXTIMEOUT: There is no status packet!" << endl;
 	    break;
 
         case COMM_RXCORRUPT:
-	    printf("COMM_RXCORRUPT: Incorrect status packet!\n");
+	    cerr << "COMM_RXCORRUPT: Incorrect status packet!" << endl;
 	    break;
 
         default:
-	    printf("This is unknown error code!\n");
+	    cerr << "This is unknown error code!" << endl;
 	    break;
         }
 }
 
 // Print error bit of status packet
-void CMulti_DNMX_Motor::PrintErrorCode()
-{
+void CMulti_DNMX_Motor::PrintErrorCode() {
     if(dxl_get_rxpacket_error(ERRBIT_VOLTAGE) == 1)
-	printf("Input voltage error!\n");
+	cerr <<"Input voltage error!" << endl;
 
     if(dxl_get_rxpacket_error(ERRBIT_ANGLE) == 1)
-	printf("Angle limit error!\n");
+	cerr << "Angle limit error!" << endl;
 
     if(dxl_get_rxpacket_error(ERRBIT_OVERHEAT) == 1)
-	printf("Overheat error!\n");
+	cerr << "Overheat error!" << endl;
 
     if(dxl_get_rxpacket_error(ERRBIT_RANGE) == 1)
-	printf("Out of range error!\n");
+	cerr << "Out of range error!" << endl;
 
     if(dxl_get_rxpacket_error(ERRBIT_CHECKSUM) == 1)
-	printf("Checksum error!\n");
+	cerr << "Checksum error!" << endl;
 
     if(dxl_get_rxpacket_error(ERRBIT_OVERLOAD) == 1)
-	printf("Overload error!\n");
+	cerr << "Overload error!" << endl;
 
     if(dxl_get_rxpacket_error(ERRBIT_INSTRUCTION) == 1)
-	printf("Instruction code error!\n");
+	cerr << "Instruction code error!" << endl;
 }
 
 

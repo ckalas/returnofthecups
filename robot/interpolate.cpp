@@ -76,7 +76,7 @@ bool generate_path( vector<vector<int>> *interpolatedPath, vector<double> *coord
         
     temp = {coords->at(0), coords->at(1), coords->at(2), coords->at(3)};
     if (!ikine(&temp, &temp, grip)) {
-	   cout << "Ikine not happy" << endl;
+	   cerr << "Ikine not happy" << endl;
        return false;
     }
     rad2bits(&temp, &temp);
@@ -98,27 +98,27 @@ void rad2bits( vector<double> *radian, vector<double> *bits) {
 
 void print_vector (vector<double> *print) {
     for (vector<double>::const_iterator i = print->begin(); i != print->end(); ++i) {
-    cout << *i << ", ";    
+    cerr << *i << ", ";    
     }
-    cout << endl << endl;
+    cerr << endl << endl;
 }
 
 void print_vector( vector< vector<double> > *print) {
     for(vector< vector<double> >::const_iterator i = print->begin(); i!= print->end(); ++i) {
-    cout << "[ ";
+    cerr<< "[ ";
     for(int j = 0; j<4; j++) {
-        cout << (*i).at(j) << " ";
+        cerr << (*i).at(j) << " ";
     }
-    cout << "]" << endl;
+    cerr << "]" << endl;
     }
 }
 
 void print_vector( vector< vector<int> > *print) {
     for(vector< vector<int> >::const_iterator i = print->begin(); i!= print->end(); ++i) {
-    cout << "[ ";
+    cerr << "[ ";
     for(int j = 0; j<4; j++) {
-        cout << (*i).at(j) << " ";
+        cerr << (*i).at(j) << " ";
     }
-    cout << "]" << endl;
+    cerr << "]" << endl;
     }
 }
