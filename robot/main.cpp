@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
 
     Motors.initialization(1);
     Motors.set_torque(1023);
-    Motors.set_speed(100);
+    Motors.set_speed(1023);
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 

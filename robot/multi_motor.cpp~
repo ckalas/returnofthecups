@@ -165,7 +165,6 @@ void CMulti_DNMX_Motor::stillMoving(void) {
 
 	for( int i = 0; i < NUM_OF_MOTORS; i++ ) {
 	    temp |= dxl_read_word( Motor_ID[i], P_MOVING );
-	cerr << "MotorID:  " << i << " moving : " << dxl_read_word( Motor_ID[i], P_MOVING ) << endl; 
 	}	
 
 	if ( !temp ) break;
