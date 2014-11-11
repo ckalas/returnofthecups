@@ -85,7 +85,8 @@ int main(int argc, char **argv) {
 				if(input_coords(&coords)){
 					// Ensure the current motor position is a valid result
 					while(!get_motor_angles(&motor_bit_angle, &Motors));
-					if(!generate_path(&pathGen, &coords, &motor_bit_angle, OPEN)) {
+					/*
+					  if(!generate_path(&pathGen, &coords, &motor_bit_angle, OPEN)) {
 						break;
 					}
 					// Perform the interpolation
@@ -93,6 +94,14 @@ int main(int argc, char **argv) {
 					    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 					    usleep(UPDATE_INTERVAL);
 					}
+					*/
+
+					ikine(&coords, &angles, OPEN);
+					set_goals(&goal_pos, angles);
+					Motors.move_to_goal_pos(&goal_pos, curr_pos);
+					usleep(1000000);
+
+					//sleep(2);
 					// Go to next state
 					state = GRIP;
 				}
@@ -105,7 +114,7 @@ int main(int argc, char **argv) {
 				ikine(&coords, &angles, CLOSED);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
-				usleep(1000000);
+				sleep(3);
 				state = UP;
 				break;
 			// Wait for input and move the cup there

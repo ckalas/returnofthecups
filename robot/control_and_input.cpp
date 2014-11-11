@@ -90,6 +90,8 @@ void set_goals(vector<int> *goal_pos, vector<double> angles) {
 	goal_pos->at(1) = ax12a_angle2bits(angles[1]);
 	goal_pos->at(2) = ax12a_angle2bits(angles[2]);
 	goal_pos->at(3) = ax12a_angle2bits(angles[3]);
+
+	//print_vector(goal_pos);
 }
 
 bool get_motor_angles(vector<int> *motor_bit_angle, CMulti_DNMX_Motor *Motors) {

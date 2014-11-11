@@ -1,5 +1,7 @@
 //////////////////////////////////////////////////////////////
 //                                                          //
+//      This work was derived from (below):                 //
+//                                                          //
 //      Mult Dynamixel Control Program                      //
 //                Youngmok Yun (yunyoungmok@gmail.com)      //
 //                                                          //
@@ -42,6 +44,12 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     Motor_ID[1] = MOTOR_ID_2;
     Motor_ID[2] = MOTOR_ID_3;
     Motor_ID[3] = MOTOR_ID_4;
+
+    // Set the Compliance Slope
+    for (int i = 1; i < 3; i++) {
+	dxl_write_word( i, CW_COMPLIANCE_SLOPE, 128); // clockwise
+	dxl_write_word( i, CCW_COMPLIANCE_SLOPE, 128); // counter-clockwise
+    }
 
     printf( "\n\n Motor initialization \n\n" );
 

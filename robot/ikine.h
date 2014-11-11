@@ -15,7 +15,7 @@
 #define THETA_B_OFFSET	0
 #define THETA_C_OFFSET 	0
 
-#define GRIP_ANGLE 65 
+#define GRIP_ANGLE 82
 
 #define OPEN 1
 #define CLOSED 0
