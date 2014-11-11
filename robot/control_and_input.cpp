@@ -75,9 +75,12 @@ bool input_coords(vector<double> *coords) {
     cerr << "z: ";
     cin >> coords->at(2);
     coords->at(2) = 75;
+
+    /*
     cerr << "xc: "<< coords->at(0) << endl; 
     cerr << "yc: " << coords->at(1) << endl;
     cerr << "zc: "<< coords->at(2) << endl;
+    */
     fflush(stdin);
 
     return true;

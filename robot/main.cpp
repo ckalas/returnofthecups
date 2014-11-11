@@ -8,16 +8,16 @@
 
 #define WRIST_OFFSET 30.0
 #define ELBOW_OFFSET 0 //2.0
-#define HEIGHT       230
+#define HEIGHT       200
 #define DROP_HEIGHT  110
 
 using namespace std;
 
-enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_AUTO, MOVE_DOWN, DROP, RESET};
+enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_ACROSS, MOVE_DOWN, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
-    cerr<< "x: " << coords->at(0) << ", y: "
+    cerr << "x: " << coords->at(0) << ", y: "
 	 << coords->at(1) << ", z: " << coords->at(2)
 	 << ", grip: " << coords->at(3) << endl;    
 }
@@ -63,18 +63,20 @@ int main(int argc, char **argv) {
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 
-    state_t state = GO_TO_CUP;//INIT;
+    state_t state = INIT;//INIT;
     bool finished = false;
 
     sleep(1);
 
     // Main program loop
 
+    /*
     // for testing
     autofill.at(0) = 200;
     autofill.at(1) = 100;
     autofill.at(2) = 90;
     autofill.at(3) = CLOSED;
+    */
 
     // NOTES : curr_pos is not used at all, probably get rid of it.
 
@@ -148,16 +150,16 @@ int main(int argc, char **argv) {
 			    Motors.stillMoving();
 
 			    // Go to next state
-			    state = MOVE_AUTO;
+			    state = MOVE_ACROSS;
 			    break;
 			    
-			case MOVE_AUTO:
+			case MOVE_ACROSS:
 				validRead = false;
 				tmp.at(0) = autofill.at(0);
 				tmp.at(1) = autofill.at(1);
-				tmp.at(2) = coords.at(2);
-				print_vector(&autofill);
-				print_vector(&tmp);
+				tmp.at(2) = coords.at(2)- 10;
+				//print_vector(&autofill);
+				//print_vector(&tmp);
 			
 				// Ensure the current motor position is a valid result
 				while(!get_motor_angles(&motor_bit_angle, &Motors));
