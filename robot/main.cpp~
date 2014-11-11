@@ -170,6 +170,9 @@ int main(int argc, char **argv) {
 
 				// Go to next state
 				state = DROP;
+				else {
+					finished = true;
+				}
 				break;
 			// Release cup
 			case DROP:
