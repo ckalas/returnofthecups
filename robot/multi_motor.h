@@ -85,6 +85,8 @@ public:
     void read_motor_angles(vector<int> *PresentPos);
     void set_torque(int torque);
 
+    void readCompliance(void);
+
     void set_speed(int speed);
     void read_speed(void);
     void no_torque_generate();

@@ -10,6 +10,7 @@
 #include "multi_motor.h"
 #include <cmath>
 
+#define COMPLIANCE 64
 #define VELOCITY 100 // 100 millimetre per second
 
 CMulti_DNMX_Motor::CMulti_DNMX_Motor()
@@ -47,9 +48,11 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
 
     // Set the Compliance Slope
     for (int i = 1; i < 3; i++) {
-	dxl_write_word( i, CW_COMPLIANCE_SLOPE, 128); // clockwise
-	dxl_write_word( i, CCW_COMPLIANCE_SLOPE, 128); // counter-clockwise
+	dxl_write_word( i, CW_COMPLIANCE_SLOPE, COMPLIANCE); // clockwise
+	dxl_write_word( i, CCW_COMPLIANCE_SLOPE, COMPLIANCE); // counter-clockwise
     }
+
+    readCompliance();
 
     printf( "\n\n Motor initialization \n\n" );
 
@@ -144,6 +147,15 @@ void CMulti_DNMX_Motor::read_speed(void) {
         printf("Motor No. %d, Speed value: %d\n", i, ret);
     }
 }
+
+void CMulti_DNMX_Motor::readCompliance(void) {
+    for(int i = 1; i < 3; i++ ) {
+	int ret = dxl_read_word( Motor_ID[i], CW_COMPLIANCE_SLOPE );
+	int ret2 = dxl_read_word( Motor_ID[i], CCW_COMPLIANCE_SLOPE );
+	printf("MotorID: %d, CW slope: %d, CCW slope: %d\n", i, ret, ret2);
+    }
+}
+	
 
 // Print communication result
 void CMulti_DNMX_Motor::PrintCommStatus(int CommStatus)
