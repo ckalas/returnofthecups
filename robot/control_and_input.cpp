@@ -78,10 +78,7 @@ bool input_coords(vector<double> *coords) {
     cerr << "xc: "<< coords->at(0) << endl; 
     cerr << "yc: " << coords->at(1) << endl;
     cerr << "zc: "<< coords->at(2) << endl;
-    /*
-    cout << "grip: (1 on, 0 off) ";
-    cin >> coords->at(3);
-    */
+
     return true;
 }
 

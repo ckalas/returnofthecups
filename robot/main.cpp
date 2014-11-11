@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     state_t state = INIT;
     bool finished = false;
 
-    usleep(1000000);
+    slee(1);
 
 
     // Main program loop
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
 
     while (!finished) {
 
-    	//cout << "Current state: " << state << endl;
+    	cerr << "Current state: " << state << endl;
 
 		switch (state) {
 			// Init state - get location of various markers
@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
 				autofill.at(1) = autofill.at(1) * 10; //scaling main is cm
 				cin >> autofill.at(2); //z
 				autofill.at(2) = 90; //hardcord autofill height
+                                                    cerr << "Autofill location at: " << endl;
 				cerr << "x: "<< autofill.at(0) << endl; 
 				cerr << "y: " << autofill.at(1) << endl;
 				cerr << "z: "<< autofill.at(2) << endl;
@@ -104,14 +105,6 @@ int main(int argc, char **argv) {
 					    usleep(UPDATE_INTERVAL);
 					}
 
-					/*
-					ikine(&coords, &angles, OPEN);
-					set_goals(&goal_pos, angles);
-					Motors.move_to_goal_pos(&goal_pos, curr_pos);
-					usleep(1000000);
-					*/
-
-					//sleep(2);
 					// Go to next state
 					state = GRIP;
 				}
@@ -129,7 +122,6 @@ int main(int argc, char **argv) {
 				break;
 			// Wait for input and move the cup there
 			case UP:
-			    //cout << "UP" << endl;
 			    validRead = false;
 			    coords.at(2) += 180; //move the cup directly up 120
 			    // Ensure the current motor position is a valid result
@@ -145,12 +137,6 @@ int main(int argc, char **argv) {
 			    }
 			    sleep(2);
 
-			    /*
-			    ikine(&coords, &angles, CLOSED);
-			    set_goals(&goal_pos, angles);
-			    Motors.move_to_goal_pos( &goal_pos, curr_pos );
-			    sleep(3);
-			    */
 			    // Go to next state
 			    state = MOVE_AUTO;
 			    break;
@@ -169,13 +155,6 @@ int main(int argc, char **argv) {
 				    usleep(UPDATE_INTERVAL);
 				}
 				sleep(1);
-
-				/*
-				ikine(&coords, &angles, CLOSED);
-				set_goals(&goal_pos, angles);
-				Motors.move_to_goal_pos( &goal_pos, curr_pos );
-				sleep(5);
-				*/
 
 				// Go to next state
 				state = DROP;
@@ -199,7 +178,7 @@ int main(int argc, char **argv) {
 				state = GO_TO_CUP;
 				get_motor_angles(&motor_bit_angle, &Motors);
 				// Signal to parent for new cup location
-				//cout << "1" << endl;
+				cout << "1" << endl;
 				sleep(2);
 				break;
 
