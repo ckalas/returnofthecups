@@ -139,8 +139,10 @@ int main(int argc, char **argv) {
             draw_cups(&rgbMat, cups);
             if (cups.size() > 0) {
                     double x = cups[0].worldLocation.x;
-                    double y = cups[0].worldLocation.y;
-                    fprintf(output, "%f\n%f\n0\n", x,y);
+                    double z = cups[0].worldLocation.z;
+                    double xt = -(x-18);
+                    double yt = -(z+6)
+                    fprintf(output, "%f\n%f\n0\n", xt,yt);
                     fflush(output);
             }
             //usleep(1000);
