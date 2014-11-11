@@ -13,6 +13,8 @@ using namespace std;
 int main(int argc, char **argv) {
 
 
+    // Pipe, fork, exec (to run robot as child)
+
     int toParent[2], fromParent[2];
     pipe(toParent);
     pipe(fromParent);
@@ -28,7 +30,7 @@ int main(int argc, char **argv) {
         dup2(fromParent[0], 0);
         close(toParent[1]);
         close(fromParent[0]);
-        execl("robot", "robot", (char *) NULL);
+        execl("../robot/robot", "../robot/robot", (char *) NULL);
     }
 
     FILE * output = fdopen(fromParent[1], "w");
@@ -43,13 +45,9 @@ int main(int argc, char **argv) {
         cout << "Error loading classifier" << endl;
         return 1;
     }
-    // Variables to determine FPS
-    long int e1, e2;
-    double t;
-    int fps;
 
-    // Flags for output options	
-    bool finished(false), showFrames(false), showDepth(false), showTarget(true), showTracker(true);
+    // Flags for output options 
+    bool finished(false), showTarget(true);
 
     // Storage for RGB and DEPTH frames
     Mat depthMat(Size(640,480),CV_16UC1);
@@ -69,6 +67,7 @@ int main(int argc, char **argv) {
 
     // Storage for cup locations (aggregate)
     vector<Cup> cups;
+    // Location of autofill fiducial
     vector<double> tvec_r1 (3);
 
     // Setup the kinect device
@@ -105,49 +104,32 @@ int main(int argc, char **argv) {
     fprintf(output, "%f\n%f\n0\n", tvec_r1[0],tvec_r1[1]);
     fflush(output);
 
-    #if DEBUG
-    device.getVideo(rgbMat);
-    draw_cups(&rgbMat, cups);
-    imshow("rgb", rgbMat);
-    waitKey(0);
-    #endif
     cout << "Commencing main loop" << endl;
     // Main loop
     while (!finished) {
-       // Check the clock tick
-        e1 = cv::getTickCount();
-        device.getVideo(rgbMat);
-        device.getDepth(depthMat);
 
+	device.getVideo(rgbMat);
+	device.getDepth(depthMat);
 
-        if (showFrames) {
-            // Calculate the fps and finding the time diff executing the code
-            e2 = cv::getTickCount();
-            t = double((e2 - e1) / cv::getTickFrequency());
-            fps = int( 1 / t );
-            show_fps(&rgbMat, fps);
+        accumlate_cups(&rgbMat, depthMat, rectCup, &cups, cameraInv, HT);
+        average_cups(&cups);
+        draw_cups(&rgbMat, cups);
+        if (cups.size() > 0) {
+	    char temp;
+                double x = cups[0].worldLocation.x;
+                double z = cups[0].worldLocation.z;
+		double xt = -(x - 18);
+		double yt = -(z + 6);
+                cup_info(cups);
+		fprintf(output, "%f\n%f\n0\n", xt, yt);
+                fflush(output);
+                temp = fgetc(input);
+		cout << "Temp: " << temp << endl;
+
         }
+        
 
-        if (showDepth) {
-            depthMat.convertTo(depthf, CV_8UC1, 255.0/2048.0);
-            imshow("depth", depthf);
-        }
-
-        if (showTracker) {
-            accumlate_cups(&rgbMat, depthMat, rectCup, &cups, cameraInv, HT);
-            average_cups(&cups);
-            draw_cups(&rgbMat, cups);
-            if (cups.size() > 0) {
-                    double x = cups[0].worldLocation.x;
-                    double z = cups[0].worldLocation.z;
-                    double xt = -(x-18);
-                    double yt = -(z+6);
-                    fprintf(output, "%f\n%f\n0\n", xt,yt);
-                    fflush(output);
-            }
-            //usleep(1000);
-        }
-
+    
 
         if (showTarget) {
             rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
@@ -160,24 +142,6 @@ int main(int argc, char **argv) {
         switch(c) {
             case 27:
                 finished = true;
-                break;
-            case 'f':
-                showFrames = showFrames? false: true;
-                break;
-            case 't':
-                showTracker = showTracker ? false : true;
-                cout << "Tracking : " << showTracker << endl;
-                break;
-            case 'd':
-                showDepth = showDepth? false : true;
-                if (!showDepth){
-                    destroyWindow("depth");
-                }
-                else {
-                    namedWindow("depth", CV_WINDOW_AUTOSIZE);
-                    moveWindow("depth", 650, 0);
-                }
-                cout << "Depth : " << showDepth << endl;
                 break;
             case 'i':
                 if (cups.size() > 0) {

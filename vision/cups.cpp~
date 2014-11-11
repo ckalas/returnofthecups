@@ -55,7 +55,7 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
         Mat add = Mat::ones(1,1, CV_64F);
         cameraCoords.push_back(add);
         fidCoords = HT*cameraCoords;
-        newCup.worldLocation = Point3f(fidCoords.at<double>(0)-8,fidCoords.at<double>(1),
+        newCup.worldLocation = Point3f(fidCoords.at<double>(0),fidCoords.at<double>(1),
                                        fidCoords.at<double>(2));
 
         newCup.sorted = false;
