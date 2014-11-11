@@ -57,6 +57,8 @@ int main(int argc, char **argv) {
 
     Motors.move_to_goal_pos(&goal_pos, curr_pos);
 
+    
+
     state_t state = GO_TO_CUP;
     bool finished = false;
 
@@ -85,6 +87,7 @@ int main(int argc, char **argv) {
 				if(input_coords(&coords)){
 					// Ensure the current motor position is a valid result
 					while(!get_motor_angles(&motor_bit_angle, &Motors));
+
 					if(!generate_path(&pathGen, &coords, &motor_bit_angle, OPEN)) {
 						break;
 					}
@@ -93,6 +96,15 @@ int main(int argc, char **argv) {
 					    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 					    usleep(UPDATE_INTERVAL);
 					}
+
+					/*
+					ikine(&coords, &angles, OPEN);
+					set_goals(&goal_pos, angles);
+					Motors.move_to_goal_pos(&goal_pos, curr_pos);
+					usleep(1000000);
+					*/
+
+					//sleep(2);
 					// Go to next state
 					state = GRIP;
 				}
@@ -105,7 +117,7 @@ int main(int argc, char **argv) {
 				ikine(&coords, &angles, CLOSED);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
-				usleep(1000000);
+				sleep(3);
 				state = UP;
 				break;
 			// Wait for input and move the cup there
@@ -124,6 +136,13 @@ int main(int argc, char **argv) {
 				Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 				usleep(UPDATE_INTERVAL);
 			    }
+
+			    /*
+			    ikine(&coords, &angles, CLOSED);
+			    set_goals(&goal_pos, angles);
+			    Motors.move_to_goal_pos( &goal_pos, curr_pos );
+			    sleep(3);
+			    */
 			    // Go to next state
 			    state = MOVE_AUTO;
 			    break;
@@ -136,11 +155,20 @@ int main(int argc, char **argv) {
 					if(!generate_path(&pathGen, &coords, &motor_bit_angle, CLOSED)) {
 						break;
 					}
+
 					// Perform the interpolation
 					for (size_t i = 0; i<pathGen.size(); i++) {
 					    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 					    usleep(UPDATE_INTERVAL);
 					}
+
+					/*
+					ikine(&coords, &angles, CLOSED);
+					set_goals(&goal_pos, angles);
+					Motors.move_to_goal_pos( &goal_pos, curr_pos );
+					sleep(5);
+					*/
+
 					// Go to next state
 					state = DROP;
 				}

@@ -10,7 +10,8 @@
 #define HEIGHT 250 // temporary fixed height
 #define WRIST_OFFSET 30.0
 #define VELOCITY 5 // mm per second
-#define UPDATE_INTERVAL 1000 // 1/SAMPLES as micro seconds
+//#define UPDATE_INTERVAL 100000 // 1/SAMPLES as micro seconds
+#define UPDATE_INTERVAL 10000 / SAMPLES
 using namespace std;
 
 int calculate_samples(vector<double> start, vector<double> end);

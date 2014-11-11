@@ -33,6 +33,11 @@
 #define P_PRESENT_SPEED_H       39
 #define P_MOVING		        46
 
+// Compliance slope for both rotation
+#define CW_COMPLIANCE_SLOPE    28
+#define CCW_COMPLIANCE_SLOPE   29
+
+
 #define P_TORQUE_ENABLE		    24
 #define P_TORQUE_LIMIT_L        34
 #define P_TORQUE_LIMIT_H        35
@@ -80,6 +85,8 @@ public:
     void move_to_goal_pos (vector<int> *GoalPos, int PresentPos[]);
     void read_motor_angles(vector<int> *PresentPos);
     void set_torque(int torque);
+
+    void readCompliance(void);
 
     void set_speed(int speed);
     void read_speed(void);
