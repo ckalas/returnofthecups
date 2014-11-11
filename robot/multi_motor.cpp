@@ -46,12 +46,14 @@ bool CMulti_DNMX_Motor::initialization(int baudnum){
     Motor_ID[2] = MOTOR_ID_3;
     Motor_ID[3] = MOTOR_ID_4;
 
+
+    /*
     // Set the Compliance Slope
     for (int i = 1; i < 3; i++) {
 	dxl_write_word( i, CW_COMPLIANCE_SLOPE, COMPLIANCE); // clockwise
 	dxl_write_word( i, CCW_COMPLIANCE_SLOPE, COMPLIANCE); // counter-clockwise
     }
-
+    */
     readCompliance();
 
     printf( "\n\n Motor initialization \n\n" );
