@@ -19,11 +19,11 @@ bool ikine(vector<double> *coords, vector<double> *angles, int grip) {
     double magnitude = sqrt( pow(x,2) + pow(y,2) + pow(z,2) );
     
     #if DEBUG
-    cout << "Resultant Vector: " << magnitude << endl;
+    cerr << "Resultant Vector: " << magnitude << endl;
     #endif
 
     if ( magnitude  > (L2 + L3) ) {
-		cout << "Out of reach" << endl;
+	cerr << "Out of reach" << endl;
 		//return false;
     }
 
@@ -58,12 +58,12 @@ bool ikine(vector<double> *coords, vector<double> *angles, int grip) {
 }
 
 void print_values( vector<double>* values) {
-    cout << "Print value: " << endl;
+    cerr << "Print value: " << endl;
 
     for( int i = 0; i < values->size(); i++ ) {
-	cout << values->at(i) / M_PI * 180 << ", ";
+	cerr << values->at(i) / M_PI * 180 << ", ";
     }
-    cout << endl << endl;
+    cerr << endl << endl;
 }
 
 bool check_angle_range(vector<double> *angles) {

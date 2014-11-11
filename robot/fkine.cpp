@@ -15,7 +15,7 @@ void fkine(vector<double> *angles, vector<double> *coords) {
 	theta1 += 90; //M_PI / 4;
 	theta2 -= 60; //M_PI / 3;
 
-	cout << "theta0: " << theta0 << endl
+	cerr << "theta0: " << theta0 << endl
 	     << "theta1: " << theta1 << endl
 	     << "theta2: " << theta2 << endl;
 
@@ -31,14 +31,14 @@ void fkine(vector<double> *angles, vector<double> *coords) {
 }
 
 void print_angle(vector<int> *fkine_vector) {
-	cout << fkine_vector->at(0) << ", "
+	cerr << fkine_vector->at(0) << ", "
 			<< fkine_vector->at(1) << ", "
 			<< fkine_vector->at(2) << ", "
 			<< fkine_vector->at(3) << endl;
 }
 
 void print_angle(vector<double> *fkine_vector) {
-	cout << fkine_vector->at(0) << ", "
+	cerr << fkine_vector->at(0) << ", "
 			<< fkine_vector->at(1) << ", "
 			<< fkine_vector->at(2) << ", "
 			<< fkine_vector->at(3) << endl;
