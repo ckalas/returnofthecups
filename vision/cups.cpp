@@ -64,9 +64,6 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
         fidCoords = HT*cameraCoords;
         newCup.worldLocation = Point3f(fidCoords.at<double>(0)-8,fidCoords.at<double>(1),
                                        fidCoords.at<double>(2));
-
-        newCup.sorted = false;
-
         cups->push_back(newCup);
     }
 
@@ -81,8 +78,6 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
 
 void average_cups(vector<Cup> *cups) {
 
-
-    // REMOVE OLD CUPS
     for (auto it = cups->begin(); it != cups->end(); ) {
         for (auto jt = std::next(it); jt != cups->end(); ) {
             if (norm((*it).pixelLocation-(*jt).pixelLocation) <= 25) {
