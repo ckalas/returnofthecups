@@ -8,8 +8,8 @@
 
 #define WRIST_OFFSET 30.0
 #define ELBOW_OFFSET 0 //2.0
-#define HEIGHT       200
-#define DROP_HEIGHT  90 
+#define HEIGHT       260
+#define DROP_HEIGHT  150
 
 using namespace std;
 
@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     Motors.initialization(1);
     Motors.set_compliance();
     Motors.set_torque(1023);
-    Motors.set_speed(200);
+    Motors.set_speed(1023);
 
     //Motors.test_registers();
 
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
 
     while (!finished) {
 
-    	cerr << "Current state: " << state << endl;
+    	//cerr << "Current state: " << state << endl;
 
 		switch (state) {
 			// Init state - get location of various markers
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
 				state = UP;
 				break;
 			// Wait for input and move the cup there
-			case UP:
+		case UP:
 			    validRead = false;
 			    coords.at(2) = HEIGHT; //+= 180; //move the cup directly up 120
 			    // Ensure the current motor position is a valid result
@@ -185,9 +185,12 @@ int main(int argc, char **argv) {
 				// Go to next state
 				state = MOVE_DOWN;
 				break;
-			// Release cup
+				
 			case MOVE_DOWN:
 				validRead = false;
+				
+				//print_vector(&autofill);
+				
 				// Ensure the current motor position is a valid result
 				while(!get_motor_angles(&motor_bit_angle, &Motors));
 				if(!generate_path(&pathGen, &autofill, &motor_bit_angle, CLOSED)) {
@@ -203,10 +206,17 @@ int main(int argc, char **argv) {
 
 				// Go to next state
 				state = MOVE_UP;
-				sleep(5);
+				sleep(3);
 				break;
 			case MOVE_UP:
 				validRead = false;
+				
+				tmp.at(0) = autofill.at(0);
+				tmp.at(1) = autofill.at(1);
+				tmp.at(2) = HEIGHT - 10;
+
+				//print_vector(&tmp);
+
 				// Ensure the current motor position is a valid result
 				while(!get_motor_angles(&motor_bit_angle, &Motors));
 				//move to tmp as per location of move accross
@@ -223,12 +233,12 @@ int main(int argc, char **argv) {
 
 				// Go to next state
 				state = COASTER;
-				sleep(5);
 				break;
 			case COASTER:
 				tmp.at(0) = coaster.at(0);
 				tmp.at(1) = coaster.at(1);
-				tmp.at(2) = tmp.at(2); //leave at the same height as the previous state
+				tmp.at(2) = HEIGHT;
+				//tmp.at(2) = tmp.at(2); //leave at the same height as the previous state
 				validRead = false;
 				// Ensure the current motor position is a valid result
 				while(!get_motor_angles(&motor_bit_angle, &Motors));
@@ -246,7 +256,6 @@ int main(int argc, char **argv) {
 
 				// Go to next state
 				state = COASTER_DOWN;
-				sleep(5);
 				break;
 			case COASTER_DOWN:
 				validRead = false;
@@ -266,12 +275,15 @@ int main(int argc, char **argv) {
 
 				// Go to next state
 				state = DROP;
-				sleep(5);
+				//sleep(5);
 				break;
 
 			case DROP:
-			    autofill.at(2) = DROP_HEIGHT;
-				ikine(&autofill, &angles, OPEN);
+			    //autofill.at(2) = DROP_HEIGHT;
+			    tmp.at(0) = coaster.at(0);
+			    tmp.at(1) = coaster.at(1);
+			    tmp.at(2) = DROP_HEIGHT;
+				ikine(&tmp, &angles, OPEN);
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
 				Motors.stillMoving();
@@ -280,11 +292,13 @@ int main(int argc, char **argv) {
 			// Go back to starting position
 			case RESET:
 			    // moves back up and then back to origin
-			    autofill.at(2) = HEIGHT;
-			    ikine(&autofill, &angles, OPEN);
+			    coaster.at(2) = HEIGHT;
+			    ikine(&coaster, &angles, OPEN);
 			    set_goals(&goal_pos, angles);
 			    Motors.move_to_goal_pos(&goal_pos, curr_pos);
 			    Motors.stillMoving();
+
+
 
 				coords.at(0) = 0.0;
 				coords.at(1) = 150.0;

@@ -7,7 +7,7 @@
 
 // The following are in mm units:
 #define L1			150 //156
-#define L2			95
+#define L2			175
 #define L3			170 // sum = 94 + 165 = 259
 //#define L4			10
 

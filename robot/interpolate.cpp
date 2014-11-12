@@ -83,7 +83,7 @@ bool generate_path( vector<vector<int>> *interpolatedPath, vector<double> *coord
     rad2bits(&temp, &temp);
     generalPath.push_back( temp );
     
-    print_vector(&generalPath);
+    //print_vector(&generalPath);
     
     interpolate(interpolatedPath, &generalPath);
     return true;

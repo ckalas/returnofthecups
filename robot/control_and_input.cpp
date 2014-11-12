@@ -74,7 +74,7 @@ bool input_coords(vector<double> *coords) {
     coords->at(1) = coords->at(1) * 10; //scaling, from main is in cm
     cerr << "z: ";
     cin >> coords->at(2);
-    coords->at(2) = 75;
+    coords->at(2) = 140;
 
     /*
     cerr << "xc: "<< coords->at(0) << endl; 

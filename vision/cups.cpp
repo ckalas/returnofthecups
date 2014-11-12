@@ -154,17 +154,17 @@ Point2f cup_prediction(float t, Point2f p_0) {
 
     
     //theta = 0 corresponds to the +x_axis in rectangular coords
-    moveArm.x = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2)); /** 
-	(cos(atan(pointOnTable.y / pointOnTable.x)) + cos((M_PI / 30) * t * RPM)) + offSet.x;
-    */
-	moveArm.y = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2));/* * 
-    (sin(atan(pointOnTable.y / pointOnTable.x)) + sin((M_PI / 30) * t * RPM)) + offSet.y;*/
-
+    moveArm.x = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2))* 
+	(cos(atan(pointOnTable.y / pointOnTable.x) + cos((M_PI / 30) * t * RPM))) + offSet.x;
     
+    moveArm.y = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2)) * 
+	(sin(atan(pointOnTable.y / pointOnTable.x) + sin((M_PI / 30) * t * RPM))) + offSet.y;
+
+	/*
 	cerr << "radius " << moveArm << endl
 	 << "point on table: " << pointOnTable << endl
 	 << "original cup position: " << p_0 << endl;
-
+	*/
     return moveArm;
 }
 

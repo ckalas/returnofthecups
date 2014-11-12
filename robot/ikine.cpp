@@ -51,7 +51,7 @@ bool ikine(vector<double> *coords, vector<double> *angles, int grip) {
     
     // open : close
     angles->at(3) = grip ? 1.3 : -1.4;//(-GRIP_ANGLE / 180.0 * M_PI) ;
-    print_values(angles);
+    //print_values(angles);
 
     return check_angle_range(angles);
 

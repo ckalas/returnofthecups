@@ -6,7 +6,7 @@
 #include "fiducial.h"
 
 #define DEBUG 0
-#define ROBOT 0
+#define ROBOT 1
 
 using namespace cv;
 using namespace std;
@@ -138,8 +138,9 @@ int main(int argc, char **argv) {
         average_cups(&cups);
         draw_cups(&rgbMat, cups);
         if (cups.size() > 0) {
-            cupOffset = cups[0].size ? 10 : 6;
-            Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset)));
+            cupOffset = cups[0].size ? 10-5.5 : 6-5.5;
+            //Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset)));
+	    Point2f prediction =  Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset));
             if (ready) {
                 cup_info(cups);
                 fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
