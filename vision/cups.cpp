@@ -184,13 +184,11 @@ void draw_cups(Mat *rgbMat, vector<Cup> cups) {
 
 time_t get_time(void) {
     time_t t = time(0);   // get time now
-    //struct tm * now = localtime( & t );
     return t;
 }
 
 double elapsed_time(time_t previous) {
     time_t t = time(0);   // get time now
-    //struct tm * now = localtime( & t );
     return difftime(t, previous);
 }
 
@@ -288,7 +286,7 @@ vector<uint8_t> take_order(void) {
         orders.push_back((ns << 6) | (nt << 4) | (nc << 2) | (cs-1));
     }
 
-    cout << "Orders left: " << orders.size() << endl;
+    cout << "Orders taken: " << orders.size() << endl;
     return orders;
 
 }
