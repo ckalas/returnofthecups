@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-    take_order();
+    vector<uint8_t> orders = take_order();
 
     // Pipe, fork, exec (to run robot as child)
  
@@ -141,11 +141,11 @@ int main(int argc, char **argv) {
             cupOffset = cups[0].size ? 10 : 6;
             Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset)));
             if (ready) {
-		cup_info(cups);
+                cup_info(cups);
                 fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
                 fflush(output);
+                print_next_order(cups[0].size, &orders);
                 ready = false;
-		cout << "sent message" << endl;
             }
             // Non-blocking read of pipe
 	    //int ret;

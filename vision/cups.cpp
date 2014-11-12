@@ -72,7 +72,6 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
 
         // 1 -> large, 0 -> medium
         newCup.size = size > 72 ? 1 : 0;
-        cout << "cup type..." << newCup.size << "," << size << endl;
 
         cups->push_back(newCup);
     }
@@ -271,17 +270,32 @@ vector<uint8_t> take_order(void) {
 
      // First line contains the number of orders
     infile >> numOrders;
-    cout << numOrders << endl;
-
     vector<uint8_t> orders(numOrders);
 
     // Read lines cup size, ncoffee, ntea, nsugar, - , -
     while (infile >> cs >> nc >> nt >> ns >> blank >> blank) {
-        cout << cs << ", " << nc << ", " << nt << ", " << ns << endl;
-        orders.push_back((ns << 6) | (nt << 4) | (nc << 2) | cs);
+        orders.push_back((ns << 6) | (nt << 4) | (nc << 2) | (cs-1));
     }
 
     return orders;
+
+}
+
+void print_next_order(int cupsize, vector<uint8_t> *orders) {
+        // Su Su T T C C S
+        for (auto it = orders->begin(); it != orders->end(); it++) {
+            int data = *it;
+            if (((data)&1) == cupsize) {
+                int nc = (data >> 2) & 3;
+                int nt = (data >> 4) & 3;
+                int ns = (data >> 6) & 3;
+                cout << "-------------------------" << endl << "Large Cup Order" << endl << "Coffee: " << nc << endl 
+                        << "Tea: " << nt <<endl << "Sugar: " << ns << endl << "-----------------------" << endl;
+
+                orders->erase(it);
+                return;
+            }
+        }
 
 }
 
