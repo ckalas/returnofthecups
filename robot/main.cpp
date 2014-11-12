@@ -9,11 +9,11 @@
 #define WRIST_OFFSET 30.0
 #define ELBOW_OFFSET 0 //2.0
 #define HEIGHT       200
-#define DROP_HEIGHT  110
+#define DROP_HEIGHT  90 
 
 using namespace std;
 
-enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_ACROSS, MOVE_DOWN, DROP, RESET};
+enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_ACROSS, MOVE_DOWN, MOVE_UP, COASTER, COASTER_DOWN, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
@@ -28,8 +28,8 @@ int main(int argc, char **argv) {
     vector<double> angles (4);
     vector<double> coords (4);
     vector<double> autofill(4);
-    vector<double> tmp(4);
     vector<double> coaster(4);
+    vector<double> tmp(4);
     vector<double> curr_coords (4);
     vector<int> motor_bit_angle (4);
     coords.at(0) = 0;
@@ -87,16 +87,31 @@ int main(int argc, char **argv) {
 		switch (state) {
 			// Init state - get location of various markers
 			case INIT:
+				//autofill read in
 				cin >> autofill.at(0); //x
 				autofill.at(0) = autofill.at(0) * 10; //scaling main is cm
 				cin >> autofill.at(1); //y
 				autofill.at(1) = autofill.at(1) * 10; //scaling main is cm
 				cin >> autofill.at(2); //z
 				autofill.at(2) = DROP_HEIGHT; //hardcord autofill height
-                                                    cerr << "Autofill location at: " << endl;
+
+				//coaster read in
+				cin >> coaster.at(0);
+				coaster.at(0) = coaster.at(0) * 10;
+				cin >> coaster.at(1);
+				coaster.at(1) = coaster.at(1) * 10;
+				autofill.at(2) = DROP_HEIGHT;
+
+				cerr << "Autofill location at: " << endl;
 				cerr << "x: "<< autofill.at(0) << endl; 
 				cerr << "y: " << autofill.at(1) << endl;
 				cerr << "z: "<< autofill.at(2) << endl;
+
+				cerr << "Coaster location at: " << endl;
+				cerr << "x: " << autofill.at(0) << endl;
+				cerr << "y: " << autofill.at(1) << endl;
+				cerr << "z: " << autofill.at(2) << endl;
+
 				fflush(stdin);
 				state = GO_TO_CUP;
 				break;
@@ -194,8 +209,73 @@ int main(int argc, char **argv) {
 				Motors.stillMoving();
 
 				// Go to next state
-				state = DROP;
+				state = MOVE_UP;
+				sleep(5);
 				break;
+			case MOVE_UP:
+				validRead = false;
+				// Ensure the current motor position is a valid result
+				while(!get_motor_angles(&motor_bit_angle, &Motors));
+				//move to tmp as per location of move accross
+				if(!generate_path(&pathGen, &tmp, &motor_bit_angle, CLOSED)) {
+					break;
+				}
+
+				// Perform the interpolation
+				for (size_t i = 0; i<pathGen.size(); i++) {
+				    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
+				    usleep(UPDATE_INTERVAL);
+				}
+				Motors.stillMoving();
+
+				// Go to next state
+				state = COASTER;
+				sleep(5);
+				break;
+			case COASTER:
+				tmp.at(0) = coaster.at(0);
+				tmp.at(1) = coaster.at(1);
+				tmp.at(2) = tmp.at(2); //leave at the same height as the previous state
+				validRead = false;
+				// Ensure the current motor position is a valid result
+				while(!get_motor_angles(&motor_bit_angle, &Motors));
+				//move to tmp as per location of move across
+				if(!generate_path(&pathGen, &tmp, &motor_bit_angle, CLOSED)) {
+					break;
+				}
+
+				// Perform the interpolation
+				for (size_t i = 0; i<pathGen.size(); i++) {
+				    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
+				    usleep(UPDATE_INTERVAL);
+				}
+				Motors.stillMoving();
+
+				// Go to next state
+				state = COASTER_DOWN;
+				sleep(5);
+				break;
+			case COASTER_DOWN:
+				validRead = false;
+				// Ensure the current motor position is a valid result
+				while(!get_motor_angles(&motor_bit_angle, &Motors));
+				//move to tmp as per location of move accross
+				if(!generate_path(&pathGen, &coaster, &motor_bit_angle, CLOSED)) {
+					break;
+				}
+
+				// Perform the interpolation
+				for (size_t i = 0; i<pathGen.size(); i++) {
+				    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
+				    usleep(UPDATE_INTERVAL);
+				}
+				Motors.stillMoving();
+
+				// Go to next state
+				state = DROP;
+				sleep(5);
+				break;
+
 			case DROP:
 			    autofill.at(2) = DROP_HEIGHT;
 				ikine(&autofill, &angles, OPEN);
