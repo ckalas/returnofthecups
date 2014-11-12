@@ -128,6 +128,10 @@ int main(int argc, char **argv) {
 
     cout << "Commencing main loop" << endl;
     double cupOffset;
+
+    namedWindow("rgb");
+    moveWindow("rgb", 0, 0);
+
     // Main loop
     while (!finished) {
 

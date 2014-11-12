@@ -169,8 +169,8 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
         Mat temp2;
         (temp).push_back(add);
         temp2 = HT*temp;
-        xt = -(temp2.at<double>(0)-17);
-        yt = (temp2.at<double>(2) +9);
+        xt = -(temp2.at<double>(0)-13);
+        yt = (temp2.at<double>(2) +15);
         zt = temp2.at<double>(1);
         fprintf(output, "%f\n%f\n0\n", xt,yt);
         fflush(output);
@@ -186,7 +186,7 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
         (temp).push_back(add);
         temp2 = HT*temp;
         xt = -(temp2.at<double>(0) - 16);
-        yt = (temp2.at<double>(2) + 17);
+        yt = (temp2.at<double>(2) + 14);
         zt = temp2.at<double>(1);
         fprintf(output, "%f\n%f\n0\n", xt,yt);
         fflush(output);
