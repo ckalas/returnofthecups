@@ -304,7 +304,7 @@ bool print_next_order(int cupsize, vector<uint8_t> *orders) {
                     << "Tea: " << nt <<endl << "Sugar: " << ns << endl << "-----------------------" << endl;
 
             orders->erase(orders->begin());
-            cout << "Orders left: " << orders.size() << endl;
+            cout << "Orders left: " << orders->size() << endl;
             return true;
         }
         return false;
