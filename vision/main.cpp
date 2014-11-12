@@ -14,7 +14,7 @@ using namespace std;
 int main(int argc, char **argv) {
 
     take_order();
-    
+
     // Pipe, fork, exec (to run robot as child)
  
     int toParent[2], fromParent[2];
@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
     fflush(output);
 
     cout << "Commencing main loop" << endl;
-    double sizeOffset;
+    double cupOffset;
     // Main loop
     while (!finished) {
 

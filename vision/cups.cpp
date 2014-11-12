@@ -271,13 +271,14 @@ vector<uint8_t> take_order(void) {
 
      // First line contains the number of orders
     infile >> numOrders;
+    cout << numOrders << endl;
 
     vector<uint8_t> orders(numOrders);
 
     // Read lines cup size, ncoffee, ntea, nsugar, - , -
     while (infile >> cs >> nc >> nt >> ns >> blank >> blank) {
         cout << cs << ", " << nc << ", " << nt << ", " << ns << endl;
-        numOrders.push_back((ns << 6) | (nt << 4) | << nc << 2 | cs);
+        orders.push_back((ns << 6) | (nt << 4) | (nc << 2) | cs);
     }
 
     return orders;
