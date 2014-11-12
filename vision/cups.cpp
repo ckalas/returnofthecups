@@ -288,6 +288,7 @@ vector<uint8_t> take_order(void) {
         orders.push_back((ns << 6) | (nt << 4) | (nc << 2) | (cs-1));
     }
 
+    cout << "Orders left: " << orders.size() << endl;
     return orders;
 
 }
