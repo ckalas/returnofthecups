@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
 				validRead = false;
 				tmp.at(0) = autofill.at(0);
 				tmp.at(1) = autofill.at(1);
-				tmp.at(2) = coords.at(2)- 10;
+				tmp.at(2) = coords.at(2);
 				//print_vector(&autofill);
 				//print_vector(&tmp);
 			
