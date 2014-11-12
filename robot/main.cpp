@@ -9,7 +9,7 @@
 #define WRIST_OFFSET 30.0
 #define ELBOW_OFFSET 0 //2.0
 #define HEIGHT       260
-#define DROP_HEIGHT  150
+#define DROP_HEIGHT  120
 
 using namespace std;
 
@@ -143,6 +143,17 @@ int main(int argc, char **argv) {
 			// Wait for input and move the cup there
 		case UP:
 			    validRead = false;
+
+			    // Move to reset
+			    coords.at(0) = 0.0;
+			    coords.at(1) = 150.0;
+			    coords.at(2) = 300.0;
+			    ikine(&coords, &angles, CLOSED);
+			    set_goals(&goal_pos, angles);
+			    Motors.move_to_goal_pos(&goal_pos, curr_pos);
+			    Motors.stillMoving();
+
+
 			    coords.at(2) = HEIGHT; //+= 180; //move the cup directly up 120
 			    // Ensure the current motor position is a valid result
 			    while(!get_motor_angles(&motor_bit_angle, &Motors));
@@ -229,6 +240,14 @@ int main(int argc, char **argv) {
 				    Motors.move_to_goal_pos( &pathGen.at(i), curr_pos );
 				    usleep(UPDATE_INTERVAL);
 				}
+				Motors.stillMoving();
+
+				coords.at(0) = 0.0;
+				coords.at(1) = 150.0;
+				coords.at(2) = 300.0;
+				ikine(&coords, &angles, CLOSED);
+				set_goals(&goal_pos, angles);
+				Motors.move_to_goal_pos(&goal_pos, curr_pos);
 				Motors.stillMoving();
 
 				// Go to next state
