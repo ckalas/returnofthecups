@@ -151,18 +151,6 @@ int main(int argc, char **argv) {
 	    FD_ZERO(&set);
 	    FD_SET(toParent[0],&set);
 
-	    //	    cout << "Ret: " << ret << endl;
-            /*
-=======
-            Point2f prediction = cup_prediction(0, Point2f(xt, yt));
-            fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
-            fflush(output);
->>>>>>> Stashed changes
-            cout << "blocking in vision " << endl;
-            char temp = fgetc(input);
-            cout << "Temp: " << temp << endl;
-            */
-
         }
 
         if (showTarget) {
