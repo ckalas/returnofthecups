@@ -13,6 +13,8 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
+    vector<uint8_t> orders = take_order();
+
     // Pipe, fork, exec (to run robot as child)
  
     int toParent[2], fromParent[2];
@@ -53,6 +55,7 @@ int main(int argc, char **argv) {
 
     string robot = "id7.png";
     string autoFill = "id11.png";
+    string coaster = "id12.png";
     string classifier = "rectCup.xml";
     // Load Haar classifier
     CascadeClassifier rectCup;
@@ -101,7 +104,7 @@ int main(int argc, char **argv) {
         device.getDepth(depthMat);
 	//usleep(10000);
     }
-    while(!check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
+    while(!check_sift(rgbMat, depthMat, robot, cameraMatrix, dist, 500, 750, 3, HT, output));
     HT.convertTo(HT, CV_64F);
     cout << "Located robot" << endl;
 
@@ -110,17 +113,18 @@ int main(int argc, char **argv) {
     do {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
-	//usleep(10000);
     }
-    while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT, &tvec_r1));
+    while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT, output));
     cout << "Located auto fill" << endl;
 
-
-    cout << "Transform to auto fill "<< endl << tvec_r1[0] << ", " << endl  << tvec_r1[1] << ", "  << tvec_r1[2] << ", " <<endl;
-
-    // Send XYZ of autofill to child
-    fprintf(output, "%f\n%f\n0\n", tvec_r1[0],tvec_r1[1]);
-    fflush(output);
+    // Locate fiducial at auto fill
+    cout << "Locating coaster..." << endl;
+    do {
+        device.getVideo(rgbMat);
+        device.getDepth(depthMat);
+    }
+    while(!check_sift(rgbMat, depthMat, coaster, cameraMatrix, dist, 500, 750, 3, HT, output));
+    cout << "Located coaster" << endl;
 
     cout << "Commencing main loop" << endl;
     double cupOffset;
@@ -137,11 +141,13 @@ int main(int argc, char **argv) {
             cupOffset = cups[0].size ? 10 : 6;
             Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset)));
             if (ready) {
-		cup_info(cups);
+                cup_info(cups);
                 fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
                 fflush(output);
+                if(orders.size() > 0) {
+                    print_next_order(cups[0].size, &orders);
+                }
                 ready = false;
-		cout << "sent message" << endl;
             }
             // Non-blocking read of pipe
 	    //int ret;

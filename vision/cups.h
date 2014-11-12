@@ -1,6 +1,7 @@
 #ifndef CUPS_H
 #define CUPS_H
 #include <cv.h>
+#include <stdint.h>
 
 using namespace std;
 using namespace cv;
@@ -25,6 +26,8 @@ void draw_cups(Mat *rgbMat, vector<Cup> cup);
 void cup_info(vector<Cup> cups);
 Point2f cup_prediction(float t, Point2f p_0);
 int cup_classify(Mat depth,Point2f centre);
+vector<uint8_t> take_order(void);
+void print_next_order(int cupsize, vector<uint8_t> *orders);
 
 time_t get_time(void) ;
 double elapsed_time(time_t previous);
