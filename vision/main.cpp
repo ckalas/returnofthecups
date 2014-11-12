@@ -123,6 +123,7 @@ int main(int argc, char **argv) {
     fflush(output);
 
     cout << "Commencing main loop" << endl;
+    double sizeOffset;
     // Main loop
     while (!finished) {
 
@@ -133,8 +134,8 @@ int main(int argc, char **argv) {
         average_cups(&cups);
         draw_cups(&rgbMat, cups);
         if (cups.size() > 0) {
-            
-            Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+6)));
+            cupOffset = cups[0].size ? 10 : 6;
+            Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset)));
             if (ready) {
 		cup_info(cups);
                 fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
@@ -155,8 +156,7 @@ int main(int argc, char **argv) {
 
         if (showTarget) {
             rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
-	    //rectangle( rgbMat, Point(270,150), Point(420, 250), Scalar(255,0,0), 3); at 90 cm
-	    //rectangle(rgbMat, Point(200,200), Point(420, 350), Scalar(255,0,0), 3); // at ~70 cm
+
         }
 
         imshow("rgb", rgbMat);
@@ -166,11 +166,6 @@ int main(int argc, char **argv) {
         switch(c) {
             case 27:
                 finished = true;
-                break;
-            case 'i':
-                if (cups.size() > 0) {
-                    cup_info(cups);
-                }
                 break;
             case 'n':
                 cout << "Cleared cups" << endl;

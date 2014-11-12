@@ -64,8 +64,16 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
         fidCoords = HT*cameraCoords;
         newCup.worldLocation = Point3f(fidCoords.at<double>(0)-8,fidCoords.at<double>(1),
                                        fidCoords.at<double>(2));
+        int size = cup_classify(depthMat, newCup.pixelLocation);
 
-        newCup.sorted = false;
+        // Threshold cup size values
+        if (size <= 60 || size > 80 || (size >= 67 && size <= 72)) {
+            continue;
+        }
+
+        // 1 -> large, 0 -> medium
+        newCup.size = size > 72 ? 1 : 0;
+        cout << "cup type..." << newCup.size << "," << size << endl;
 
         cups->push_back(newCup);
     }
@@ -207,47 +215,59 @@ void print_mat3(Mat points, string label) {
 }
 
 
-cup_classify(Mat depth) {
-    int img_midh = depth.rows; //y
-    int img_midw = depth.cols; //x
+int cup_classify(Mat depth, Point2f centre) {
+    int img_midh = centre.y; //y
+    int img_midw = centre.x; //x
     int diff;
     bool edge = false;
     int i = 0;
-    
+
+    Mat depthf (Size(depth.cols,depth.rows),CV_8UC1);
+    depth.convertTo(depthf, CV_8UC1, 255.0/2048.0);
     //init the next_depth
+   int next_depth = depth.at<unsigned short>(img_midh, img_midw), cur_depth;
+
+    while (!edge) {	
+        cur_depth = next_depth;
+        next_depth = depth.at<unsigned short>(img_midh + i, img_midw);
+
+        if ((diff = abs(cur_depth - next_depth)) >= 3.5) {
+            edge = true;
+        }
+        //if at the top of the image and haven't found edge
+        if ((img_midh + i) == (depth.rows - 1)) {
+            return 0;
+        }
+        i++;
+    }
+
+    int bottom = img_midh + i;
+    i = 0;
+    //init the next_depth
+    edge = false;
     next_depth = depth.at<unsigned short>(img_midh, img_midw);
 
     while (!edge) {	
-	cur_depth = next_depth;
+        cur_depth = next_depth;
         next_depth = depth.at<unsigned short>(img_midh + i, img_midw);
-	if ((diff = abs(cur_depth - next_depth)) >= 5) {
-	    edge = true;
-	}
-	//if at the top of the image and haven't found edge
-	if ((img_midh + i) == (depth.rows - 1)) {
-	    return 0;
-	}
-	i++;
+        if ((diff = abs(cur_depth - next_depth)) >= 10) {
+            edge = true;
+        }
+        //if at the bottom of the image and haven't found edge
+        if ((img_midh + i) == 0) {
+            return 0;
+        }
+        i--;
     }
-
     int top = img_midh + i;
-    i = 0;
-
-    while (!edge) {	
-	cur_depth = next_depth;
-        next_depth = depth.at<unsigned short>(img_midh + i, img_midw);
-	if ((diff = abs(cur_depth - next_depth)) >= 5) {
-	    edge = true;
-	}
-	//if at the bottom of the image and haven't found edge
-	if ((img_midh + i) == 0) {
-	    return 0;
-	}
-	i--;
-    }
-    int bottom = img_midh + i;
     
-    int height = top - bottom;
+    int height = abs(top - bottom);
+     /*
+    line(depthf,  Point2f(0,top), Point2f(depth.cols,top), Scalar(255,255,255), 4);
+    line(depthf,  Point2f(0,bottom), Point2f(depth.cols,bottom), Scalar(255,255,255), 4);
+    imshow(":(", depthf);
+    waitKey(0);
+    destroyWindow(":("); */
     return height;
 }
 
