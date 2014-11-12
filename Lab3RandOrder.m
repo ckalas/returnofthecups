@@ -43,7 +43,7 @@ for ii=1:NumberOfDrinks
 end
 
 %% Display Order Vector
-csvwrite('orders', Order);
+csvwrite('./orders', Order);
 celldisp(Order)
 
 %% Nested function to make a drink
