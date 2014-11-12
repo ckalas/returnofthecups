@@ -144,7 +144,9 @@ int main(int argc, char **argv) {
                 cup_info(cups);
                 fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
                 fflush(output);
-                print_next_order(cups[0].size, &orders);
+                if(orders.size() > 0) {
+                    print_next_order(cups[0].size, &orders);
+                }
                 ready = false;
             }
             // Non-blocking read of pipe
