@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
     fflush(output);
 
     cout << "Commencing main loop" << endl;
-    double sizeOffset;
+    double cupOffset;
     // Main loop
     while (!finished) {
 

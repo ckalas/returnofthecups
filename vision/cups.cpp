@@ -73,7 +73,7 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
 
         // 1 -> large, 0 -> medium
         newCup.size = size > 72 ? 1 : 0;
-        cout << "cup type..." << newCup.size << "," << size << endl;
+        //cout << "cup type..." << newCup.size << "," << size << endl;
 
         cups->push_back(newCup);
     }
@@ -137,25 +137,36 @@ void cup_info(vector<Cup> cups) {
 //x_init - initial x distance from base to cup  
 //y_init - initial y distance from base to cup
 Point2f cup_prediction(float t, Point2f p_0) {
+    
     //float y_t = 0; //distance between arm and centre of table
     float RPM = 2;
 
     //offset the coord with table at the center
     Point2f offSet; //offset from fiducial to center of turn table
-    offSet.x = 16.5;  //14;
-    offSet.y = 16; //18.5;
+    //offSet.x = 14;  //14;
+    //offSet.y = 18; //18.5;
+    offSet.x = 16;
+    offSet.y = 20 - 4.5;
     
     Point2f pointOnTable;
-    pointOnTable.x = p_0.x + offSet.x;
-    pointOnTable.y = p_0.y + offSet.y;
+    pointOnTable.x = p_0.x - offSet.x;
+    pointOnTable.y = p_0.y - offSet.y;
 
-    Point2f moveArm;
+    Point2f moveArm = p_0;
 
+    
     //theta = 0 corresponds to the +x_axis in rectangular coords
-    moveArm.x = (sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2)) * 
-        cos(atan(pointOnTable.y / pointOnTable.x) + (M_PI / 30) * t * RPM)) - offSet.x;
-    moveArm.y = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2)) * 
-        sin(atan(pointOnTable.y / pointOnTable.x) + (M_PI / 30) * t * RPM) - offSet.y;
+    moveArm.x = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2)); /** 
+	(cos(atan(pointOnTable.y / pointOnTable.x)) + cos((M_PI / 30) * t * RPM)) + offSet.x;
+    */
+	moveArm.y = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2));/* * 
+    (sin(atan(pointOnTable.y / pointOnTable.x)) + sin((M_PI / 30) * t * RPM)) + offSet.y;*/
+
+    
+	cerr << "radius " << moveArm << endl
+	 << "point on table: " << pointOnTable << endl
+	 << "original cup position: " << p_0 << endl;
+
     return moveArm;
 }
 
