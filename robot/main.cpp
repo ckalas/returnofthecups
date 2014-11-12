@@ -70,14 +70,6 @@ int main(int argc, char **argv) {
 
     // Main program loop
 
-    /*
-    // for testing
-    autofill.at(0) = 200;
-    autofill.at(1) = 100;
-    autofill.at(2) = 90;
-    autofill.at(3) = CLOSED;
-    */
-
     // NOTES : curr_pos is not used at all, probably get rid of it.
 
     while (!finished) {
@@ -100,17 +92,18 @@ int main(int argc, char **argv) {
 				coaster.at(0) = coaster.at(0) * 10;
 				cin >> coaster.at(1);
 				coaster.at(1) = coaster.at(1) * 10;
-				autofill.at(2) = DROP_HEIGHT;
+				cin >> coaster.at(2);
+				coaster.at(2) = DROP_HEIGHT;
 
 				cerr << "Autofill location at: " << endl;
 				cerr << "x: "<< autofill.at(0) << endl; 
-				cerr << "y: " << autofill.at(1) << endl;
+				cerr << "y: "<< autofill.at(1) << endl;
 				cerr << "z: "<< autofill.at(2) << endl;
 
 				cerr << "Coaster location at: " << endl;
-				cerr << "x: " << autofill.at(0) << endl;
-				cerr << "y: " << autofill.at(1) << endl;
-				cerr << "z: " << autofill.at(2) << endl;
+				cerr << "x: " << coaster.at(0) << endl;
+				cerr << "y: " << coaster.at(1) << endl;
+				cerr << "z: " << coaster.at(2) << endl;
 
 				fflush(stdin);
 				state = GO_TO_CUP;

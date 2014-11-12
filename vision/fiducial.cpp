@@ -19,7 +19,7 @@
  */
 
 bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat distortion,
-    int minFeat, int minDist, int multi, Mat &HT, vector<double> *tvec_r1 ) {
+    int minFeat, int minDist, int multi, Mat &HT, File *output) {
     Mat img_object = imread(filename, 0);
     Mat img_scene = src;
 
@@ -172,9 +172,24 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
         xt = -(temp2.at<double>(0)-18);
         yt = (temp2.at<double>(2)+20);
         zt = temp2.at<double>(1);
-        (*tvec_r1)[0] = xt;
-        (*tvec_r1)[1] = yt;
-        (*tvec_r1)[2] = zt;
+        fprintf(output, "%f\n%f\n0\n", xt,yt);
+        fflush(output);
+
+    }
+    if( filename == "id12.png" ) {
+        tvec.at<double>(2)= -tvec.at<double>(2); 
+        Mat temp = Mat(tvec);
+        cout << "tvec: " << tvec << endl;
+        double xt, yt, zt;
+        Mat add = Mat::ones(1,1, CV_64F);
+        Mat temp2;
+        (temp).push_back(add);
+        temp2 = HT*temp;
+        xt = -(temp2.at<double>(0)-18);
+        yt = (temp2.at<double>(2)+20);
+        zt = temp2.at<double>(1);
+        fprintf(output, "%f\n%f\n0\n", xt,yt);
+        fflush(output);
 
     }
     return true;

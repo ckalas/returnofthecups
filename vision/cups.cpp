@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <highgui.h>
 #include <ctime>
 #include "cups.h"
@@ -6,8 +7,6 @@
 #define DEBUG 1
 
 
-
-//Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 350));
 
 Rect roi = Rect(Point(OFF_X,OFF_Y), Point(500,430)); // original
 //Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 250)); // at 90 cm
@@ -262,12 +261,26 @@ int cup_classify(Mat depth, Point2f centre) {
     int top = img_midh + i;
     
     int height = abs(top - bottom);
-     /*
-    line(depthf,  Point2f(0,top), Point2f(depth.cols,top), Scalar(255,255,255), 4);
-    line(depthf,  Point2f(0,bottom), Point2f(depth.cols,bottom), Scalar(255,255,255), 4);
-    imshow(":(", depthf);
-    waitKey(0);
-    destroyWindow(":("); */
+
     return height;
+}
+
+vector<uint8_t> take_order(void) {
+    ifstream infile("orders.txt");
+    int numOrders, cs, nc, nt, ns, blank;
+
+     // First line contains the number of orders
+    infile >> numOrders;
+
+    vector<uint8_t> orders(numOrders);
+
+    // Read lines cup size, ncoffee, ntea, nsugar, - , -
+    while (infile >> cs >> nc >> nt >> ns >> blank >> blank) {
+        cout << cs << ", " << nc << ", " << nt << ", " << ns << endl;
+        numOrders.push_back((ns << 6) | (nt << 4) | << nc << 2 | cs);
+    }
+
+    return orders;
+
 }
 

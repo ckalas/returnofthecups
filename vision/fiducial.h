@@ -20,7 +20,7 @@
 using namespace std;
 using namespace cv;
 
-bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion, int minFeat, int minDist, int multi,  Mat &HT,vector<double> *tvec_r1);
+bool check_sift(Mat src, Mat depthMat, string objectString, Mat intrinsics, Mat distortion, int minFeat, int minDist, int multi,  Mat &HT, File *output);
 Mat reconfigure_reference(Mat rvec, Mat tvec);
 
 
