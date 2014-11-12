@@ -292,21 +292,21 @@ vector<uint8_t> take_order(void) {
 
 }
 
-void print_next_order(int cupsize, vector<uint8_t> *orders) {
+bool print_next_order(int cupsize, vector<uint8_t> *orders) {
         // Su Su T T C C S
-        for (auto it = orders->begin(); it != orders->end(); it++) {
-            int data = *it;
-            if (((data)&1) == cupsize) {
-                int nc = (data >> 2) & 3;
-                int nt = (data >> 4) & 3;
-                int ns = (data >> 6) & 3;
-                cout << "-------------------------" << endl << "Large Cup Order" << endl << "Coffee: " << nc << endl 
-                        << "Tea: " << nt <<endl << "Sugar: " << ns << endl << "-----------------------" << endl;
+        int data = orders->at(0);
+        if (((data)&1) == cupsize) {
+            string size = cupsize ? "Large" : "Medium";
+            int nc = (data >> 2) & 3;
+            int nt = (data >> 4) & 3;
+            int ns = (data >> 6) & 3;
+            cout << "-------------------------" << endl << size << " Cup Order" << endl << "Coffee: " << nc << endl 
+                    << "Tea: " << nt <<endl << "Sugar: " << ns << endl << "-----------------------" << endl;
 
-                orders->erase(it);
-                return;
-            }
+            orders->erase(orders->begin());
+            return true;
         }
+        return false;
 
 }
 
