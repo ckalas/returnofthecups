@@ -220,7 +220,7 @@ cup_classify(Mat depth) {
     while (!edge) {	
 	cur_depth = next_depth;
         next_depth = depth.at<unsigned short>(img_midh + i, img_midw);
-	if ((diff = (cur_depth - next_depth)) >= 5) {
+	if ((diff = abs(cur_depth - next_depth)) >= 5) {
 	    edge = true;
 	}
 	//if at the top of the image and haven't found edge
@@ -230,13 +230,13 @@ cup_classify(Mat depth) {
 	i++;
     }
 
-    int top = diff;
+    int top = img_midh + i;
     i = 0;
 
     while (!edge) {	
 	cur_depth = next_depth;
         next_depth = depth.at<unsigned short>(img_midh + i, img_midw);
-	if ((diff = (cur_depth - next_depth)) >= 5) {
+	if ((diff = abs(cur_depth - next_depth)) >= 5) {
 	    edge = true;
 	}
 	//if at the bottom of the image and haven't found edge
@@ -245,7 +245,7 @@ cup_classify(Mat depth) {
 	}
 	i--;
     }
-    int bottom = diff;
+    int bottom = img_midh + i;
     
     int height = top - bottom;
     return height;

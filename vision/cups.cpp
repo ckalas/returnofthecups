@@ -64,6 +64,9 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
         fidCoords = HT*cameraCoords;
         newCup.worldLocation = Point3f(fidCoords.at<double>(0)-8,fidCoords.at<double>(1),
                                        fidCoords.at<double>(2));
+
+        newCup.sorted = false;
+
         cups->push_back(newCup);
     }
 
@@ -78,6 +81,8 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
 
 void average_cups(vector<Cup> *cups) {
 
+
+    // REMOVE OLD CUPS
     for (auto it = cups->begin(); it != cups->end(); ) {
         for (auto jt = std::next(it); jt != cups->end(); ) {
             if (norm((*it).pixelLocation-(*jt).pixelLocation) <= 25) {
@@ -215,7 +220,7 @@ cup_classify(Mat depth) {
     while (!edge) {	
 	cur_depth = next_depth;
         next_depth = depth.at<unsigned short>(img_midh + i, img_midw);
-	if ((diff = (cur_depth - next_depth)) >= 5) {
+	if ((diff = abs(cur_depth - next_depth)) >= 5) {
 	    edge = true;
 	}
 	//if at the top of the image and haven't found edge
@@ -225,13 +230,13 @@ cup_classify(Mat depth) {
 	i++;
     }
 
-    int top = diff;
+    int top = img_midh + i;
     i = 0;
 
     while (!edge) {	
 	cur_depth = next_depth;
         next_depth = depth.at<unsigned short>(img_midh + i, img_midw);
-	if ((diff = (cur_depth - next_depth)) >= 5) {
+	if ((diff = abs(cur_depth - next_depth)) >= 5) {
 	    edge = true;
 	}
 	//if at the bottom of the image and haven't found edge
@@ -240,7 +245,7 @@ cup_classify(Mat depth) {
 	}
 	i--;
     }
-    int bottom = diff;
+    int bottom = img_midh + i;
     
     int height = top - bottom;
     return height;
