@@ -123,15 +123,8 @@ int main(int argc, char **argv) {
         device.getVideo(rgbMat);
         device.getDepth(depthMat);
     }
-    while(!check_sift(rgbMat, depthMat, autoFill, cameraMatrix, dist, 500, 750, 3, HT, output));
+    while(!check_sift(rgbMat, depthMat, coaster, cameraMatrix, dist, 500, 750, 3, HT, output));
     cout << "Located coaster" << endl;
-
-
-    //cout << "Transform to auto fill "<< endl << tvec_r1[0] << ", " << endl  << tvec_r1[1] << ", "  << tvec_r1[2] << ", " <<endl;
-
-    // Send XYZ of autofill to child
-    fprintf(output, "%f\n%f\n0\n", tvec_r1[0],tvec_r1[1]);
-    fflush(output);
 
     cout << "Commencing main loop" << endl;
     double cupOffset;
