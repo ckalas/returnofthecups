@@ -141,12 +141,19 @@ int main(int argc, char **argv) {
             cupOffset = cups[0].size ? 10-5.5 : 6-5.5;
             Point2f prediction =  Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset));
             if (ready) {
-                if(orders.size() > 0 && print_next_order(cups[0].size, &orders)) {
-                    cup_info(cups);
-                    fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
-                    fflush(output);
-                    ready = false;
+                if(orders.size() > 0 ) {
+                    if(print_next_order(cups[0].size, &orders)) {
+                        cup_info(cups);
+                        fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
+                        fflush(output);
+                        ready = false;
+                    }
                 }
+                else {
+                    cout << "All orders completed" << endl;
+                    finished = true;
+                }
+
             }
             // Non-blocking read of pipe
             if (select(toParent[0]+1, &set, NULL, NULL, &timeout) > 0) {
