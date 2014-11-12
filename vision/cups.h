@@ -24,6 +24,7 @@ void average_cups(vector<Cup> *cups);
 void draw_cups(Mat *rgbMat, vector<Cup> cup);
 void cup_info(vector<Cup> cups);
 Point2f cup_prediction(float t, Point2f p_0);
+int cup_classify(Mat depth,Point2f centre);
 
 time_t get_time(void) ;
 double elapsed_time(time_t previous);
