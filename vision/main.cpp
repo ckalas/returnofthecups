@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
         }
 
         if (showTarget) {
-            rectangle(rgbMat, Point(180,220), Point(500,430), Scalar(255,0,0), 3);
+            rectangle(rgbMat, Point(250,220), Point(450,430), Scalar(255,0,0), 3);
 
         }
 
