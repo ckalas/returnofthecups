@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     Motors.initialization(1);
     Motors.set_compliance();
     Motors.set_torque(1023);
-    Motors.set_speed(1023);
+    Motors.set_speed(750);
 
     //Motors.test_registers();
 
@@ -217,6 +217,7 @@ int main(int argc, char **argv) {
 
 				// Go to next state
 				state = MOVE_UP;
+				cerr << endl << "Please dispense" << endl;
 				sleep(3);
 				break;
 			case MOVE_UP:
@@ -306,6 +307,7 @@ int main(int argc, char **argv) {
 				set_goals(&goal_pos, angles);
 				Motors.move_to_goal_pos(&goal_pos, curr_pos);
 				Motors.stillMoving();
+				cerr << endl << "Cup of coffee or tea served" << endl;
 				state = RESET;
 				break;
 			// Go back to starting position

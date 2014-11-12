@@ -141,15 +141,17 @@ int main(int argc, char **argv) {
         accumlate_cups(&rgbMat, depthMat, rectCup, &cups, cameraInv, HT);
         average_cups(&cups);
         draw_cups(&rgbMat, cups);
-        if (cups.size() > 0) {
-            cupOffset = cups[0].size ? 10-5.5 : 6-5.5;
+        for(size_t i = 0; i < cups.size(); i++) {
+            cupOffset = cups[0].size ? 10-4.75 : 6-4.75;
             Point2f prediction =  Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset));
+	    bool breakFlag(false);
             if (ready) {
                 if(orders.size() > 0 ) {
                     if(print_next_order(cups[0].size, &orders)) {
-                        cup_info(cups);
+                        //cup_info(cups);
                         fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
                         fflush(output);
+			breakFlag = true;
                         ready = false;
                     }
                 }
@@ -166,7 +168,10 @@ int main(int argc, char **argv) {
             }
 	    FD_ZERO(&set);
 	    FD_SET(toParent[0],&set);
-
+	    
+	    if (breakFlag) {
+		break;
+	    }
         }
 
         if (showTarget) {

@@ -279,10 +279,11 @@ vector<uint8_t> take_order(void) {
 
      // First line contains the number of orders
     infile >> numOrders;
-    vector<uint8_t> orders(numOrders);
+    vector<uint8_t> orders;
 
     // Read lines cup size, ncoffee, ntea, nsugar, - , -
     while (infile >> cs >> nc >> nt >> ns >> blank >> blank) {
+	cout << "Cup size:" << cs << "," << "C/T/S: " << nc << nt << ns << endl; 
         orders.push_back((ns << 6) | (nt << 4) | (nc << 2) | (cs-1));
     }
 
@@ -295,7 +296,7 @@ bool print_next_order(int cupsize, vector<uint8_t> *orders) {
         // Su Su T T C C S
         int data = orders->at(0);
         if (((data)&1) == cupsize) {
-            string size = cupsize ? "Large" : "Medium";
+            string size = cupsize == 1 ? "Large" : "Medium";
             int nc = (data >> 2) & 3;
             int nt = (data >> 4) & 3;
             int ns = (data >> 6) & 3;
