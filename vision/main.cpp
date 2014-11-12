@@ -143,19 +143,23 @@ int main(int argc, char **argv) {
         draw_cups(&rgbMat, cups);
         if (cups.size() > 0) {
             cupOffset = cups[0].size ? 10-5.5 : 6-5.5;
-            //Point2f prediction = cup_prediction(0, Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset)));
-	    Point2f prediction =  Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset));
+            Point2f prediction =  Point2f(-(cups[0].worldLocation.x-18), -(cups[0].worldLocation.z+cupOffset));
             if (ready) {
-                cup_info(cups);
-                fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
-                fflush(output);
-                if(orders.size() > 0) {
-                    print_next_order(cups[0].size, &orders);
+                if(orders.size() > 0 ) {
+                    if(print_next_order(cups[0].size, &orders)) {
+                        cup_info(cups);
+                        fprintf(output, "%f\n%f\n0\n", prediction.x, prediction.y);
+                        fflush(output);
+                        ready = false;
+                    }
                 }
-                ready = false;
+                else {
+                    cout << "All orders completed" << endl;
+                    finished = true;
+                }
+
             }
             // Non-blocking read of pipe
-	    //int ret;
             if (select(toParent[0]+1, &set, NULL, NULL, &timeout) > 0) {
 		fgetc(input);
                 ready = true;
