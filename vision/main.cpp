@@ -6,7 +6,7 @@
 #include "fiducial.h"
 
 #define DEBUG 0
-#define ROBOT 1
+#define ROBOT 0
 
 using namespace cv;
 using namespace std;

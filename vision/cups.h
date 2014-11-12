@@ -13,7 +13,6 @@ using namespace cv;
 enum cup_size {LARGE, MEDIUM};
 typedef struct cup_t {
     int size;
-    bool sorted;
     double depth;
     time_t timestamp;
     Point2f pixelLocation;
