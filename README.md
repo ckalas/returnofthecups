@@ -17,11 +17,18 @@ are correctly installed.
 ---
 
 ##Operation
+* Navigate to __/vision__
+* Type __make__
+* If successful, type __sudo ./main__
+
+Unfortunately the dynamixel code only runs on Linux. If testing the vision on its own (Linux OR OSX), change __#define ROBOT__ to __0__ in /vision/main.cpp and re-make.
+
+
 The main program creates an instance of the vision program, which directs the location of cups and other markers to another process that handles the dynamixel movement. Both programs block at certain stages waiting for input from the other.
 
 To locate the cups a Haar-cascade classifier is used, whereas to find the various dropoff locations standard feature matching techniques are used.
 
-The dynamixels used are 3 AX-12A models and one __MX something__. 
+The dynamixels used are 3 AX-12A models and one MX model. 
 
 ###FILES
 
@@ -48,4 +55,4 @@ The dynamixels used are 3 AX-12A models and one __MX something__.
 
 ###Notes
 
-Currently the dynamixel code runs only on __Linux__. The vision code compiles and runs on both __Linux__ and __OSX__.
+Currently the dynamixel code runs only on __Linux__. The vision code compiles and runs on both __Linux__ and __OSX__. Other things to keep in mind are the frame transformations from the __camera__ to the first __fiducial__ and to the __robot base__.

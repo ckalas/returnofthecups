@@ -9,9 +9,6 @@
 
 
 Rect roi = Rect(Point(OFF_X,OFF_Y), Point(450,430)); // original
-//Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 250)); // at 90 cm
-//Rect roi = Rect(Point(OFF_X, OFF_Y), Point(420, 350));
-
 
 /**
  * Stores the pixel locations of all the cups that are present in the frame.
@@ -23,10 +20,10 @@ Rect roi = Rect(Point(OFF_X,OFF_Y), Point(450,430)); // original
  */
 
 // TODO: Take out the unnecessary pointer and pass the reference instead 
-void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vector<Cup> *cups,
+void accumlate_cups(Mat &rgbMat,  Mat depthMat, CascadeClassifier cascade, vector<Cup> *cups,
                                         Mat inverseCamera, Mat HT) {
     // Only consider a smaller region of the picture - increase speed and reduce false positives
-    Mat slice = (*rgbMat)(roi).clone();
+    Mat slice = (rgbMat)(roi).clone();
     Mat cameraCoords, fidCoords;
     std::vector<cv::Rect> matches;
     Mat gray;
@@ -87,8 +84,7 @@ void accumlate_cups(Mat *rgbMat,  Mat depthMat, CascadeClassifier cascade, vecto
 
 void average_cups(vector<Cup> *cups) {
 
-
-    // REMOVE OLD CUPS
+    // NOTE: Works best with motion of cups
     for (auto it = cups->begin(); it != cups->end(); ) {
         for (auto jt = std::next(it); jt != cups->end(); ) {
             if (norm((*it).pixelLocation-(*jt).pixelLocation) <= 25) {
@@ -101,6 +97,7 @@ void average_cups(vector<Cup> *cups) {
 
         }
 
+        // Remove old cups
         if (elapsed_time((*it).timestamp) > 0) {
             it = cups->erase(it);
         }
@@ -110,6 +107,12 @@ void average_cups(vector<Cup> *cups) {
     }
 }
 
+/**
+ * Reduces the vector containing cup points based on euclidean distance between points.
+ *
+ * @param   cups  a vector containing the information of current cups
+ * @returns void
+ */
 void cup_info(vector<Cup> cups) {
     double x,xt,y,yt,z,zt;
 
@@ -132,23 +135,22 @@ void cup_info(vector<Cup> cups) {
 }
 
 
-//x_init - initial x distance from base to cup  
-//y_init - initial y distance from base to cup
+/**
+ * Predicts where the cup will be based on clockwise motion of a turntable.
+ * Doesn't really work.
+ *
+ * @param   t    the time in the future to predict location for (seconds)
+ * @param   p_0  current cup location
+ * @returns void
+ */
 Point2f cup_prediction(float t, Point2f p_0) {
     
     //float y_t = 0; //distance between arm and centre of table
     float RPM = 2;
 
-    //offset the coord with table at the center
-    Point2f offSet; //offset from fiducial to center of turn table
-    //offSet.x = 14;  //14;
-    //offSet.y = 18; //18.5;
-    offSet.x = 16;
-    offSet.y = 20 - 4.5;
+    Point2f offSet = Point2f(16.0, (20-4.5)); //offset from fiducial to center of turn table
     
-    Point2f pointOnTable;
-    pointOnTable.x = p_0.x - offSet.x;
-    pointOnTable.y = p_0.y - offSet.y;
+    Point2f pointOnTable = Point2f(p_0.x - offSet.x, p_0.y - offSet.y);
 
     Point2f moveArm = p_0;
 
@@ -160,11 +162,12 @@ Point2f cup_prediction(float t, Point2f p_0) {
     moveArm.y = sqrt(pow(pointOnTable.x, 2) + pow(pointOnTable.y, 2)) * 
 	(sin(atan(pointOnTable.y / pointOnTable.x) + sin((M_PI / 30) * t * RPM))) + offSet.y;
 
-	/*
+	#if DEBUG
 	cerr << "radius " << moveArm << endl
 	 << "point on table: " << pointOnTable << endl
 	 << "original cup position: " << p_0 << endl;
-	*/
+     #endif
+	
     return moveArm;
 }
 
@@ -176,9 +179,9 @@ Point2f cup_prediction(float t, Point2f p_0) {
  * @returns  void
  */
 
-void draw_cups(Mat *rgbMat, vector<Cup> cups) {
+void draw_cups(Mat &rgbMat, vector<Cup> cups) {
     for (size_t i = 0; i < cups.size(); i++) {
-        circle(*rgbMat, cups[i].pixelLocation, 3, Scalar(0,0,255), 2);
+        circle(rgbMat, cups[i].pixelLocation, 3, Scalar(0,0,255), 2);
     }
 }
 
@@ -221,7 +224,14 @@ void print_mat3(Mat points, string label) {
     cout << label << endl << points.at<double>(0)<< ", " << points.at<double>(1)<< ", " << points.at<double>(2)<< endl;
 }
 
-
+/**
+ * Classifies a cup as either large or medium based on changing depth. The results are
+ * subject to thresholding in the function accumulate_cups().
+ *
+ * @param   depth  the current depth image
+ * @param   centre the centre of the current cup
+ * @returns void
+ */
 int cup_classify(Mat depth, Point2f centre) {
     int img_midh = centre.y; //y
     int img_midw = centre.x; //x
@@ -273,6 +283,18 @@ int cup_classify(Mat depth, Point2f centre) {
     return height;
 }
 
+/**
+ * Reads the order file and stores the data away with some bit shifting.
+ *
+ * Each order is condensed into a single byte as follows:
+ * MSB -> LSB
+ * (num_sugar << 6 ) | (num_tea << 4) | (num_coffee << 2) | size
+ *       2                2                  2                1     (bits)
+ *
+ * @param   points  vector of points
+ * @param   label   the label for print
+ * @returns void
+ */
 vector<uint8_t> take_order(void) {
     ifstream infile("orders.txt");
     int numOrders, cs, nc, nt, ns, blank;
@@ -292,6 +314,15 @@ vector<uint8_t> take_order(void) {
 
 }
 
+/**
+ * Checks if there the current order is for the cup passed in - based on size.
+ *
+ * Does simple decoding by shifting bits and bit masking.
+ *
+ * @param   cupsize 1 for large, 0 for medium
+ * @param   orders  a vector containing the order bytes
+ * @returns void
+ */
 bool print_next_order(int cupsize, vector<uint8_t> *orders) {
         // Su Su T T C C S
         int data = orders->at(0);

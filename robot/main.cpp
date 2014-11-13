@@ -13,7 +13,8 @@
 
 using namespace std;
 
-enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_ACROSS, MOVE_DOWN, MOVE_UP, COASTER, COASTER_DOWN, DROP, RESET};
+// States for the state machine - could use some renaming
+enum state_t {INIT, GO_TO_CUP, GRIP, UP, MOVE_ACROSS, MOVE_DOWN, MOVE_UP_TWO, COASTER, COASTER_DOWN, DROP, RESET};
 
 
 void print_coords(vector<double> *coords) {
@@ -24,6 +25,7 @@ void print_coords(vector<double> *coords) {
 
 int main(int argc, char **argv) {
 
+	// init some vectors
     vector<int> fkine_vector (4);
     vector<double> angles (4);
     vector<double> coords (4);
@@ -32,6 +34,7 @@ int main(int argc, char **argv) {
     vector<double> tmp(4);
     vector<double> curr_coords (4);
     vector<int> motor_bit_angle (4);
+    // put some starting values in
     coords.at(0) = 0;
     coords.at(1) = (L2 + L3)/2;
     coords.at(2) = L1;
@@ -42,6 +45,7 @@ int main(int argc, char **argv) {
     vector<vector<int>> pathGen;
     vector<vector<double>> generalPath; // used to storage interpolated values of bits
 
+    // Create a multi dynamixel motor object
     CMulti_DNMX_Motor Motors;
 
     vector<int> goal_pos(4);
@@ -52,7 +56,7 @@ int main(int argc, char **argv) {
 
     int curr_pos[4] ={0,0,0,0};
 
-    // Init with baud 1Mbps, refer to bauds.txt for mapping
+    // Init with baud 1Mbps, refer to bauds.txt for mappings
 
     Motors.initialization(1);
     Motors.set_compliance();
@@ -70,11 +74,12 @@ int main(int argc, char **argv) {
 
     // Main program loop
 
-    // NOTES : curr_pos is not used at all, probably get rid of it.
+    // NOTES : curr_pos is not used at all, probably get rid of it or actuall use it
+    //         in move_to_goal().
+    // TODO: write function to do the repetivive moving procedure that has literally
+    //       just been copy pasted.
 
     while (!finished) {
-
-    	//cerr << "Current state: " << state << endl;
 
 		switch (state) {
 			// Init state - get location of various markers
@@ -216,11 +221,11 @@ int main(int argc, char **argv) {
 				Motors.stillMoving();
 
 				// Go to next state
-				state = MOVE_UP;
+				state = MOVE_UP_TWO;
 				cerr << endl << "Please dispense" << endl;
 				sleep(3);
 				break;
-			case MOVE_UP:
+			case MOVE_UP_TWO:
 				validRead = false;
 				
 				tmp.at(0) = autofill.at(0);

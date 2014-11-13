@@ -20,17 +20,16 @@ typedef struct cup_t {
     Point3f worldLocation;
 } Cup;
 
-void accumlate_cups(Mat *rgbMat, Mat depthMat, CascadeClassifier cascade, vector<Cup> *cups,Mat inverseCamera, Mat HT);
+void accumlate_cups(Mat &rgbMat, Mat depthMat, CascadeClassifier cascade, vector<Cup> *cups,Mat inverseCamera, Mat HT);
 void average_cups(vector<Cup> *cups);
-void draw_cups(Mat *rgbMat, vector<Cup> cup);
+void draw_cups(Mat &rgbMat, vector<Cup> cup);
 void cup_info(vector<Cup> cups);
 Point2f cup_prediction(float t, Point2f p_0);
 int cup_classify(Mat depth,Point2f centre);
 vector<uint8_t> take_order(void);
 bool print_next_order(int cupsize, vector<uint8_t> *orders);
-
 time_t get_time(void) ;
 double elapsed_time(time_t previous);
-void show_fps(Mat *rgbMat, int fps);
+void show_fps(Mat &rgbMat, int fps);
 void print_mat3(Mat points, string label);
 #endif

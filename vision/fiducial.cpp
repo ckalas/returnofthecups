@@ -155,11 +155,12 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
          || rotz > max_angle) {
         return false;
     }
-    // Compute the homogeneous transform
+    // Compute the homogeneous transform only for base marker
     tvec.at<double>(2) = -depth;
     if (filename == "id7.png") {
         HT = reconfigure_reference(rvec,tvec);
     }
+    // Send location of this coaster over pipe
     if( filename == "id11.png" ) {
         tvec.at<double>(2)= -tvec.at<double>(2); 
         Mat temp = Mat(tvec);
@@ -176,6 +177,8 @@ bool check_sift(Mat src, Mat depthMat, string filename, Mat intrinsics, Mat dist
         fflush(output);
 
     }
+
+    // Send location of this coaster over pipe
     if( filename == "id12.png" ) {
         tvec.at<double>(2)= -tvec.at<double>(2); 
         Mat temp = Mat(tvec);
@@ -214,7 +217,7 @@ Mat reconfigure_reference(Mat rvec, Mat tvec) {
 
     float x = -tvec.at<double>(0), y = -tvec.at<double>(1), z = tvec.at<double>(2);
     float rotx = -rvec.at<double>(0), roty = -rvec.at<double>(1), rotz = -rvec.at<double>(2);
-    // This seems to make it work
+    // This is dodgy - there are problems with the results of this. Needs investigation.
     std::swap(roty,rotx);
     Mat HT;
 
